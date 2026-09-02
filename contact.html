@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kontakt — NoLimits</title>
+  <meta name="description" content="Kontaktirajte NoLimits portal - pošaljite pitanje ili predlog vezan za igračke za decu sa smetnjama u razvoju.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Font: Outfit za zakrivljen i moderan logo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+<a href="index.html" class="logo" aria-label="NoLimits Početna">
+  <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Linija beskonačnosti/slagalice obojena u primarnu plavu boju -->
+    <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+          stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Akcentne krugovi u narandžastoj boji -->
+    <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+    <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+  </svg>
+  <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+</a>
+
+    <nav class="main-nav" aria-label="Glavna navigacija">
+      <ul>
+        <li><a href="index.html">Početna</a></li>
+        <li><a href="catalog.html">Katalog igračaka</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
+        <li><a href="contact.html" class="active">Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="contact-hero">
+    <div class="container">
+      <h1>Kontaktirajte nas</h1>
+      <p class="contact-subtitle">
+        Imate pitanje o igračkama, predlog za katalog ili vam je potrebna pomoć oko
+        konfiguratora? Pišite nam — rado ćemo odgovoriti.
+      </p>
+    </div>
+  </section>
+
+  <section class="contact-section">
+    <div class="container contact-grid">
+      <div class="contact-form-wrapper">
+        <h2>Pošaljite nam poruku</h2>
+        <form id="contact-form" novalidate>
+          <div class="form-group">
+            <label for="ime">Ime i prezime</label>
+            <input type="text" id="ime" name="ime" class="form-input" placeholder="Unesite ime i prezime" required>
+            <span class="form-error" id="error-ime"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email adresa</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="vasa.adresa@primer.com" required>
+            <span class="form-error" id="error-email"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="tema">Tema poruke</label>
+            <select id="tema" name="tema" class="form-input" required>
+              <option value="">Izaberite temu</option>
+              <option value="Pitanje o katalogu">Pitanje o katalogu igračaka</option>
+              <option value="Pomoć oko konfiguratora">Pomoć oko konfiguratora</option>
+              <option value="Predlog ili sugestija">Predlog ili sugestija</option>
+              <option value="Saradnja">Saradnja / partnerstvo</option>
+              <option value="Ostalo">Ostalo</option>
+            </select>
+            <span class="form-error" id="error-tema"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="poruka">Poruka</label>
+            <textarea id="poruka" name="poruka" class="form-input form-textarea" rows="6" placeholder="Unesite vašu poruku..." required></textarea>
+            <span class="form-error" id="error-poruka"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Pošalji poruku</button>
+
+          <p id="form-success" class="form-success" hidden>
+            Hvala vam! Vaš email klijent je otvoren sa popunjenom porukom — samo je potrebno da je pošaljete.
+          </p>
+        </form>
+      </div>
+
+      <aside class="contact-info">
+        <h2>Podaci o portalu</h2>
+        <div class="contact-info-item">
+          <span class="contact-info-icon" aria-hidden="true">📧</span>
+          <div>
+            <h3>Email</h3>
+            <p>info@nolimits.rs</p>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <span class="contact-info-icon" aria-hidden="true">📞</span>
+          <div>
+            <h3>Telefon</h3>
+            <p>011/123-456</p>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <span class="contact-info-icon" aria-hidden="true">📍</span>
+          <div>
+            <h3>Adresa</h3>
+            <p>Bulevar Kralja Aleksandra 73, Beograd</p>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <span class="contact-info-icon" aria-hidden="true">🕒</span>
+          <div>
+            <h3>Radno vreme</h3>
+            <p>Ponedeljak – petak, 09:00 – 17:00h</p>
+          </div>
+        </div>
+
+        <p class="contact-info-note">
+          NoLimits je nastao kao deo diplomskog rada sa ciljem da olakša pronalaženje i
+          prilagođavanje igračaka za decu sa smetnjama u razvoju. Ako ste roditelj, terapeut
+          ili vaspitač i imate ideju kako portal može biti bolji, slobodno nam pišite.
+        </p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <h3>NoLimits</h3>
+      <p>Portal igračaka za decu sa smetnjama u razvoju.</p>
+    </div>
+    <div>
+      <h3>Kontakt</h3>
+      <p>Email: info@nolimits.rs</p>
+      <p>Telefon: 011/123-456</p>
+    </div>
+    <div>
+      <h3>Linkovi</h3>
+      <ul class="footer-links">
+        <li><a href="catalog.html">Katalog</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2026 NoLimits</p>
+</footer>
+
+<!-- ELEMENTI ZA PRISTUPAČNOST -->
+<button id="accessibility-toggle" class="accessibility-floating-btn" aria-label="Otvori meni za pristupačnost" aria-expanded="false">
+  ♿
+</button>
+
+<aside id="accessibility-menu" class="accessibility-menu" aria-hidden="true">
+  <h2>Pristupačnost</h2>
+  <button id="btn-font-increase" type="button">🔍 Povećaj font</button>
+  <button id="btn-font-decrease" type="button">🔍 Smanji font</button>
+  <button id="btn-high-contrast" type="button">🌓 Visoki kontrast</button>
+  <button id="btn-dyslexia-font" type="button">📖 Font za disleksiju</button>
+  <button id="btn-highlight-links" type="button">🔗 Istakni linkove</button>
+  <button id="btn-reset-accessibility" type="button">🔄 Resetuj</button>
+</aside>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,1095 @@
+/* ===================== RESET & OSNOVNI STILOVI ===================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-primary: #2b6cb0;
+  --color-primary-dark: #1a4971;
+  --color-secondary: #ff8800;
+  --color-bg: #ffffff;
+  --color-bg-alt: #f5f7fa;
+  --color-text: #1a202c;
+  --color-text-light: #4a5568;
+  --color-border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  --font-main: "Segoe UI", Roboto, Arial, sans-serif;
+  --font-size-base: 16px;
+  --max-width: 1200px;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: var(--font-size-base);
+  overflow-y: scroll; /* Osigurava da vertikalni scrollbar uvek postoji i da se raspored nikada ne pomera */
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Fokus stanje - vazno za pristupacnost */
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* ===================== DUGMICI ===================== */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+/* Osnovno primarno plavo dugme */
+.btn-primary {
+  background-color: var(--color-primary); /* #2b6cb0 */
+  color: #ffffff;
+  border-color: var(--color-primary);
+}
+
+/* Hover efekat - potamnjivanje plavog dugmeta */
+.btn-primary:hover {
+  background-color: var(--color-primary-dark); /* #1a4971 (tamnija nijansa) */
+  border-color: var(--color-primary-dark);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+/* Prilagođavanje za dugmad unutar kartica da zauzmu punu širinu ili da budu lepo centrirana */
+.category-card .btn-primary {
+  width: auto;             /* Dugme ne zauzima više celu širinu kartice */
+  padding: 8px 16px;       /* Manje unutrašnje margine (visina i širina) */
+  font-size: 0.88rem;      /* Blago smanjen font */
+  margin-top: 8px;
+}
+/* ===================== HEADER ===================== */
+.site-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+.site-header .container {
+  max-width: var(--max-width); /* 1200px */
+  margin: 0 auto;
+  padding: 0 20px;
+  width: 100%;
+}
+.header-inner {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 80px; /* Fiksna visina za sve stranice */
+  width: 100%;
+}
+
+/* ===================== NOVI STILOVI ZA LOGO ===================== */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover svg {
+  transform: scale(1.08);
+}
+
+.logo-text {
+  font-family: 'Outfit', 'Segoe UI', sans-serif; /* Zakrivljen, zaobljen i moderan font */
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-primary-dark); /* Osnovna boja teksta ("o" i "imits") */
+  letter-spacing: -0.3px;
+}
+
+/* Narandžasta akcentna boja za slova N i L */
+.logo-accent {
+  color: var(--color-secondary) !important; /* Koristi #f6ad55 narandžastu boju iz narandžastih tačaka */
+}
+/* Podrška za Visoki Kontrast za Logo */
+body.high-contrast .logo-text {
+  color: #ffffff !important; /* Osnovni tekst ("o" i "imits") postaje beo */
+}
+
+body.high-contrast .logo-accent {
+  color: #ffff00 !important; /* Akcentna slova N i L postaju svetlo žuta */
+}
+
+body.high-contrast .logo svg path {
+  stroke: #ffff00 !important; /* Linija beskonačnosti prelazi u žutu */
+}
+
+body.high-contrast .logo svg circle {
+  fill: #ffffff !important; /* Krugovi prelaze u belu boju */
+}
+.main-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.main-nav a {
+  white-space: nowrap;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
+
+/* ===================== FIKSIRANO DUGME I MENI ZA PRISTUPAČNOST ===================== */
+.accessibility-floating-btn {
+  position: fixed !important;
+  right: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 99999 !important;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: 2px solid var(--color-border);
+  border-right: none;
+  border-radius: 12px 0 0 12px;
+  padding: 12px 14px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.accessibility-floating-btn:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.accessibility-menu {
+  position: fixed;
+  top: 50%;
+  right: -300px;
+  transform: translateY(-50%);
+  width: 270px;
+  background-color: #ffffff;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  z-index: 9998;
+  transition: right 0.3s ease;
+}
+
+.accessibility-menu.open {
+  right: 65px;
+}
+
+.accessibility-menu h2 {
+  font-size: 1.15rem;
+  margin-bottom: 14px;
+  color: var(--color-primary-dark);
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 8px;
+}
+
+.accessibility-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background-color: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.accessibility-menu button:hover {
+  background-color: var(--color-border);
+}
+
+/* ===================== HERO ===================== */
+.hero {
+  background: linear-gradient(135deg, var(--color-bg-alt), #bfddff);
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero-inner {
+  max-width: 800px;
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 18px;
+  line-height: 1.3;
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  margin-bottom: 32px;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* ===================== KATEGORIJE ===================== */
+.categories {
+  padding: 70px 0;
+}
+
+.categories h2 {
+  text-align: center;
+  font-size: 1.9rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 40px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.category-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 30px 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-6px);
+}
+
+.category-icon {
+  font-size: 2.6rem;
+  margin-bottom: 14px;
+}
+
+.category-card h3 {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  color: var(--color-primary-dark);
+}
+
+.category-card p {
+  color: var(--color-text-light);
+  margin-bottom: 16px;
+  min-height: 66px;
+}
+
+.card-link {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.card-link:hover {
+  text-decoration: underline;
+}
+
+/* ===================== O NAMA ===================== */
+.about {
+  background-color: var(--color-bg-alt);
+  padding: 60px 0;
+}
+
+.about-inner {
+  max-width: 800px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.about h2 {
+  font-size: 1.8rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 18px;
+}
+
+.about p {
+  color: var(--color-text-light);
+}
+
+/* ===================== FOOTER ===================== */
+.site-footer {
+  background-color: var(--color-primary-dark);
+  color: #f0f4f8;
+  padding: 36px 0 16px;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 20px;
+  text-align: center;
+  justify-items: center;
+}
+
+.site-footer h3 {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.site-footer p {
+  color: #cbd5e0;
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-links li {
+  margin-bottom: 6px;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  padding-top: 12px;
+  font-size: 0.8rem;
+  color: #cbd5e0;
+}
+
+/* ===================== KATALOG ===================== */
+.catalog-hero {
+  background: linear-gradient(135deg, var(--color-bg-alt), #bfddff);
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.catalog-hero h1 {
+  font-size: 2.2rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 14px;
+}
+
+.catalog-subtitle {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+}
+
+.filters {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--color-border);
+  padding: 20px 0;
+  position: sticky;
+  top: 68px;
+  z-index: 90;
+}
+
+.filters-inner {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  background-color: var(--color-bg-alt);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-btn.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.catalog-grid-section {
+  padding: 50px 0 80px;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 26px;
+}
+
+.toy-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.toy-card:hover {
+  transform: translateY(-6px);
+}
+
+.toy-card-image {
+  width: 100%;
+  height: 170px;
+  background-color: var(--color-bg-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+.toy-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.toy-card-body h3 {
+  font-size: 1.15rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 8px;
+}
+
+.toy-card-body p {
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+  flex-grow: 1;
+}
+
+.toy-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.toy-tag {
+  background-color: #eaf2fb;
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.no-results {
+  text-align: center;
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+  padding: 40px 0;
+}
+
+/* ===================== KONFIGURATOR ===================== */
+.configurator-hero {
+  background: linear-gradient(135deg, var(--color-bg-alt), #bfddff);
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.configurator-hero h1 {
+  font-size: 2.2rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 14px;
+}
+
+.configurator-subtitle {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+}
+
+.configurator-workspace {
+  padding: 50px 0 80px;
+}
+
+.configurator-inner {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.configurator-palette {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 90px;
+}
+
+.configurator-palette h2 {
+  font-size: 1.2rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 8px;
+}
+
+.palette-hint {
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+  margin-bottom: 18px;
+}
+
+.palette-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-bg-alt);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: grab;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  text-align: left;
+}
+
+.palette-item:hover {
+  border-color: var(--color-primary);
+  background-color: #eaf2fb;
+}
+
+.palette-item:active {
+  cursor: grabbing;
+}
+
+.palette-icon {
+  font-size: 1.3rem;
+}
+
+.configurator-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+}
+
+.configurator-actions .btn {
+  width: 100%;
+  text-align: center;
+  padding: 12px 16px;
+  font-size: 0.92rem;
+}
+
+.configurator-canvas-wrapper {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  text-align: center;
+}
+
+#konva-container {
+  width: 100%;
+  max-width: 700px;
+  height: 500px;
+  margin: 0 auto;
+  background-color: var(--color-bg-alt);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.canvas-hint {
+  margin-top: 14px;
+  font-size: 0.88rem;
+  color: var(--color-text-light);
+}
+
+/* ===================== KAKO FUNKCIONIŠE ===================== */
+.how-it-works {
+  padding: 70px 0;
+  background-color: var(--color-bg-alt);
+}
+
+.how-it-works h2 {
+  text-align: center;
+  font-size: 1.9rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 40px;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.step-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 30px 22px;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.step-number {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.step-card h3 {
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 10px;
+}
+
+.step-card p {
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+}
+
+.how-it-works-cta {
+  text-align: center;
+}
+
+/* ===================== ZAŠTO PRILAGOĐENE IGRAČKE ===================== */
+.why-toys {
+  padding: 70px 0;
+}
+
+.why-toys h2 {
+  text-align: center;
+  font-size: 1.9rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 40px;
+}
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.why-card {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+}
+
+.why-card:hover {
+  transform: translateY(-4px);
+}
+
+.why-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.why-card h3 {
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 8px;
+}
+
+.why-card p {
+  color: var(--color-text-light);
+  font-size: 0.92rem;
+}
+
+/* ===================== KONTAKT ===================== */
+.contact-hero {
+  background: linear-gradient(135deg, var(--color-bg-alt), #bfddff);
+  padding: 60px 0 40px;
+  text-align: center;
+}
+
+.contact-hero h1 {
+  font-size: 2.2rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 14px;
+}
+
+.contact-subtitle {
+  max-width: 700px;
+  margin: 0 auto;
+  color: var(--color-text-light);
+  font-size: 1.05rem;
+}
+
+.contact-section {
+  padding: 60px 0 90px;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 34px;
+  align-items: start;
+}
+
+.contact-form-wrapper {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+}
+
+.contact-form-wrapper h2 {
+  font-size: 1.3rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 22px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+  color: var(--color-text);
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-error {
+  display: block;
+  color: #c53030;
+  font-size: 0.82rem;
+  margin-top: 5px;
+  min-height: 1em;
+}
+
+.form-success {
+  margin-top: 16px;
+  background-color: #f0fff4;
+  border: 1px solid #38a169;
+  color: #276749;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 0.92rem;
+}
+
+.contact-info {
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+}
+
+.contact-info h2 {
+  font-size: 1.3rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 22px;
+}
+
+.contact-info-item {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.contact-info-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.contact-info-item h3 {
+  font-size: 1rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 3px;
+}
+
+.contact-info-item p {
+  color: var(--color-text-light);
+  font-size: 0.92rem;
+}
+
+.contact-info-note {
+  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+  margin-top: 6px;
+  color: var(--color-text-light);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* ===================== KLASE ZA PRISTUPAČNOST ===================== */
+body.dyslexia-font,
+body.dyslexia-font * {
+  font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif !important;
+}
+
+body.highlight-links a {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+  text-decoration: underline !important;
+}
+
+/* High Contrast Mode */
+body.high-contrast,
+body.high-contrast * {
+  background-color: #000000 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: #ffffff !important;
+}
+
+body.high-contrast #konva-container {
+  background-color: #1a1a1a !important;
+}
+
+body.high-contrast button,
+body.high-contrast .btn-secondary,
+body.high-contrast .filter-btn,
+body.high-contrast .accessibility-menu button,
+body.high-contrast .accessibility-floating-btn,
+body.high-contrast .palette-item {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+}
+
+body.high-contrast .btn-primary,
+body.high-contrast .filter-btn.active,
+body.high-contrast .filter-btn:hover,
+body.high-contrast button:hover,
+body.high-contrast .accessibility-floating-btn:hover,
+body.high-contrast .palette-item:hover,
+body.high-contrast .step-number {
+  background-color: #ffff00 !important;
+  color: #000000 !important;
+  border-color: #ffff00 !important;
+}
+
+body.high-contrast .site-footer {
+  border-top: 3px solid #ffffff !important;
+}
+
+body.high-contrast .form-success {
+  border-color: #38a169 !important;
+  color: #9ae6b4 !important;
+}
+
+/* ===================== RESPONZIVNOST ===================== */
+@media (max-width: 900px) {
+  .configurator-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .configurator-palette {
+    position: static;
+  }
+
+  .palette-items {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .palette-item {
+    flex: 1 1 auto;
+    min-width: 160px;
+  }
+
+  .why-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .main-nav ul {
+    gap: 14px;
+  }
+
+  .hero h1 {
+    font-size: 1.9rem;
+  }
+
+  .filters {
+    top: 0;
+    position: static;
+  }
+
+  .filters-inner {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 6px;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .why-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 50px 0;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  #konva-container {
+    height: 380px;
+  }
+
+  .contact-form-wrapper,
+  .contact-info {
+    padding: 22px;
+  }
+
+  .accessibility-menu.open {
+    right: 10px;
+    width: 240px;
+  }
+}

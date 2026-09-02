@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konfigurator igračaka — NoLimits</title>
+  <meta name="description" content="Interaktivni konfigurator koji omogućava prilagođavanje igračke potrebama deteta.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Font: Outfit za zakrivljen i moderan logo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/konva@9/konva.min.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+<a href="index.html" class="logo" aria-label="NoLimits Početna">
+  <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Linija beskonačnosti/slagalice obojena u primarnu plavu boju -->
+    <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+          stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Akcentne krugovi u narandžastoj boji -->
+    <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+    <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+  </svg>
+  <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+</a>
+    <nav class="main-nav" aria-label="Glavna navigacija">
+      <ul>
+        <li><a href="index.html">Početna</a></li>
+        <li><a href="catalog.html">Katalog igračaka</a></li>
+        <li><a href="configurator.html" class="active">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="configurator-hero">
+    <div class="container">
+      <h1>Konfigurator igračaka</h1>
+      <p class="configurator-subtitle">
+        Prevucite elemente na igračku i prilagodite je potrebama deteta — dodajte
+        teksture, zvučne oznake ili veće delove za lakše hvatanje.
+      </p>
+    </div>
+  </section>
+
+  <section class="configurator-workspace">
+    <div class="container configurator-inner">
+      <aside class="configurator-palette" aria-label="Paleta elemenata za prevlačenje">
+        <h2>Dostupni elementi</h2>
+        <p class="palette-hint">Prevucite element na igračku ili kliknite na dugme da ga dodate.</p>
+
+        <div class="palette-items">
+          <button class="palette-item" data-element="krug" draggable="true">
+            <span class="palette-icon" aria-hidden="true">🔵</span>
+            Dodaj krug (dugme)
+          </button>
+          <button class="palette-item" data-element="tekstura" draggable="true">
+            <span class="palette-icon" aria-hidden="true">🟨</span>
+            Dodaj teksturu
+          </button>
+          <button class="palette-item" data-element="zvuk" draggable="true">
+            <span class="palette-icon" aria-hidden="true">🔔</span>
+            Dodaj zvučnu oznaku
+          </button>
+          <button class="palette-item" data-element="rucka" draggable="true">
+            <span class="palette-icon" aria-hidden="true">🟩</span>
+            Dodaj veliku ručku
+          </button>
+        </div>
+
+        <div class="configurator-actions">
+          <button id="btn-obrisi-element" class="btn btn-secondary">Obriši izabrani element</button>
+          <button id="btn-reset-canvas" class="btn btn-secondary">Resetuj igračku</button>
+          <button id="btn-preuzmi-sliku" class="btn btn-primary">Preuzmi kao sliku</button>
+        </div>
+      </aside>
+
+      <div class="configurator-canvas-wrapper">
+        <div id="konva-container" aria-label="Radna površina za konfigurisanje igračke"></div>
+        <p class="canvas-hint">Kliknite na element da ga selektujete, prevucite da ga pomerite.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div>
+      <h3>NoLimits</h3>
+      <p>Portal igračaka za decu sa smetnjama u razvoju.</p>
+    </div>
+    <div>
+      <h3>Kontakt</h3>
+      <p>Email: info@nolimits.rs</p>
+      <p>Telefon: 011/123-456</p>
+    </div>
+    <div>
+      <h3>Linkovi</h3>
+      <ul class="footer-links">
+        <li><a href="catalog.html">Katalog</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2026 NoLimits</p>
+</footer>
+
+<!-- ELEMENTI ZA PRISTUPAČNOST -->
+<button id="accessibility-toggle" class="accessibility-floating-btn" aria-label="Otvori meni za pristupačnost" aria-expanded="false">
+  ♿
+</button>
+
+<aside id="accessibility-menu" class="accessibility-menu" aria-hidden="true">
+  <h2>Pristupačnost</h2>
+  <button id="btn-font-increase" type="button">🔍 Povećaj font</button>
+  <button id="btn-font-decrease" type="button">🔍 Smanji font</button>
+  <button id="btn-high-contrast" type="button">🌓 Visoki kontrast</button>
+  <button id="btn-dyslexia-font" type="button">📖 Font za disleksiju</button>
+  <button id="btn-highlight-links" type="button">🔗 Istakni linkove</button>
+  <button id="btn-reset-accessibility" type="button">🔄 Resetuj</button>
+</aside>
+
+<script src="js/main.js" defer></script>
+<script src="js/configurator.js" defer></script>
+</body>
+</html>
