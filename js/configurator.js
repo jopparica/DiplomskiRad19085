@@ -16,13 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const sloj = new Konva.Layer();
   stage.add(sloj);
 
-  // Transformer za promenu veličine i rotaciju dodataka
+  // Transformer za promenu veličine i rotaciju dodataka (veće ručke za mobilni)
   let transformer = new Konva.Transformer({
     rotateEnabled: true,
     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     borderStroke: '#2b6cb0',
     anchorFill: '#ff8800',
-    anchorSize: 10
+    anchorSize: 14 // Povećano radi lakšeg hvatanja prstom
   });
   sloj.add(transformer);
 
@@ -32,19 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===================== BEZBEDNO ČIŠĆENJE CANVASA =====================
 
   function ocistiCeliCanvas() {
-    // Odveži selektovane objekte od transformera
     transformer.nodes([]);
-    
-    // Obriši sve objekte osim transformera
     sloj.destroyChildren();
     
-    // Ponovo vrati transformer na sloj
     transformer = new Konva.Transformer({
       rotateEnabled: true,
       enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
       borderStroke: '#2b6cb0',
       anchorFill: '#ff8800',
-      anchorSize: 10
+      anchorSize: 14
     });
     sloj.add(transformer);
   }
@@ -59,7 +55,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switch (tip) {
       case "meda":
-        // Plišani meda
         sloj.add(new Konva.Circle({ x: cX - 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
         sloj.add(new Konva.Circle({ x: cX + 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
         sloj.add(new Konva.Circle({ x: cX - 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
@@ -78,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
 
       case "lopta":
-        // Senzorna lopta
         sloj.add(new Konva.Ellipse({ x: cX, y: cY + 125, radiusX: 115, radiusY: 18, fill: "#cbd5e0", name: "osnova" }));
         sloj.add(new Konva.Circle({
           x: cX, y: cY, radius: 130,
@@ -92,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
 
       case "tabla":
-        // Velika drvena tabla
         const sirinaTable = 530;
         const visinaTable = 360;
         sloj.add(new Konva.Rect({ x: cX - sirinaTable/2, y: cY - visinaTable/2, width: sirinaTable, height: visinaTable, fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, cornerRadius: 12, name: "osnova" }));
@@ -311,11 +304,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     noviObjekat.name("dodatak");
 
-    // KLJUČNA IZMENA 1: Registrujemo dodir bez brkanja sa skrolom
-    noviObjekat.on("click tap touchstart", (e) => {
+    // Selekcija na tap/klik
+    noviObjekat.on("click tap", (e) => {
       e.cancelBubble = true;
       transformer.nodes([noviObjekat]);
       sloj.draw();
+    });
+
+    // Osigurava da element ostane selektovan pri pomeranju i transformaciji
+    noviObjekat.on("dragstart transformstart", (e) => {
+      e.cancelBubble = true;
+      if (transformer.nodes()[0] !== noviObjekat) {
+        transformer.nodes([noviObjekat]);
+        sloj.draw();
+      }
     });
 
     sloj.add(noviObjekat);
@@ -323,16 +325,36 @@ document.addEventListener("DOMContentLoaded", () => {
     sloj.draw();
   }
 
-  // KLJUČNA IZMENA 2: Pratimo skrolovanje na mobilnom da ne odselektuje element pri skrolu
+  // ===================== LOGIKA SKROLOVANJA I DESELEKCIJE =====================
+
   let isScrolling = false;
-  window.addEventListener('touchmove', () => { isScrolling = true; }, { passive: true });
-  window.addEventListener('touchstart', () => { isScrolling = false; }, { passive: true });
+  let startX = 0;
+  let startY = 0;
 
-  // Klik na praznu površinu skida selekciju SAMO ako se nije desio skrol
+  window.addEventListener('touchstart', (e) => {
+    isScrolling = false;
+    if (e.touches.length > 0) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }
+  }, { passive: true });
+
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches.length > 0) {
+      const deltaX = Math.abs(e.touches[0].clientX - startX);
+      const deltaY = Math.abs(e.touches[0].clientY - startY);
+      // Ako se prst pomeri više od 10px, tretiraj kao skrol stranice
+      if (deltaX > 10 || deltaY > 10) {
+        isScrolling = true;
+      }
+    }
+  }, { passive: true });
+
+  // Deselekcija na klik/tap u prazno (samo ako nije u pitanju skrol)
   stage.on("click tap", (e) => {
-    if (isScrolling) return; // Ignoriši ako je korisnik samo skrolovao stranu
+    if (isScrolling) return;
 
-    if (e.target === stage) {
+    if (e.target === stage || e.target.name() === "osnova") {
       transformer.nodes([]);
       sloj.draw();
     }
@@ -422,13 +444,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // KLJUČNA IZMENA 3: Proveravamo širinu pre poziva ponovnog crtanja 
-  // (da skrolovanje i skupljanje adrese u mobilnom pregledaču ne briše dodate elemente)
+  // Sprečavanje brisanja elemenata pri promeni visine pregledača na mobilnom
   let prethodnaSirina = containerEl.clientWidth;
 
   window.addEventListener("resize", () => {
     const novaSirina = containerEl.clientWidth;
-    // Samo ako se stvarno promenila širina ekrana (npr. rotacija telefona) prilagođavamo canvas
     if (Math.abs(novaSirina - prethodnaSirina) > 10) {
       prethodnaSirina = novaSirina;
       stage.width(containerEl.clientWidth);
