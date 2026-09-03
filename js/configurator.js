@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ===================== CRTANJE TAČNO 1 OSNOVNOG MODELA =====================
-function nacrtajOsnovniModel(tip) {
+  function nacrtajOsnovniModel(tip) {
     ocistiCeliCanvas();
     brojacElemenata = 0;
 
@@ -112,31 +112,27 @@ function nacrtajOsnovniModel(tip) {
         });
         break;
 
-case "kocke":
-        // Povećane 3D Kocke bez slova sa sve 3 vidljive stranice
+      case "kocke":
         function nacrtajVeliku3DKocku(x, y, velicina) {
           const h = velicina;
           const w = velicina * 0.86;
 
-          // Leva strana
           sloj.add(new Konva.Line({
             points: [x, y, x - w, y - h/2, x - w, y + h/2, x, y + h],
             fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
           }));
-          // Desna strana
           sloj.add(new Konva.Line({
             points: [x, y, x + w, y - h/2, x + w, y + h/2, x, y + h],
             fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
           }));
-          // Gornja strana
           sloj.add(new Konva.Line({
             points: [x, y, x - w, y - h/2, x, y - h, x + w, y - h/2],
             fill: "#f6e0b5", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
           }));
         }
 
-        const velicinaKocke = 110; // Povećane na 110px
-        const razmakKocki = 220;   // Dovoljno prostora za lepljenje sa svih strana
+        const velicinaKocke = 110;
+        const razmakKocki = 220;
 
         nacrtajVeliku3DKocku(cX - razmakKocki, cY, velicinaKocke);
         nacrtajVeliku3DKocku(cX, cY, velicinaKocke);
@@ -144,11 +140,9 @@ case "kocke":
         break;
 
       case "ksilofon":
-        // Uvećan drveni ksilofon sa komotnim ramom unutar koga lepo leže sve pločice
         const sRama = 420;
         const vRama = 260;
 
-        // Drvena podloga/ram
         sloj.add(new Konva.Line({
           points: [
             cX - sRama/2, cY - vRama/2,
@@ -159,7 +153,6 @@ case "kocke":
           fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, closed: true, name: "osnova"
         }));
 
-        // Pločice lepo uklopljene unutar braon podloge
         const plocice = [
           { x: -140, sirina: 48, visina: 180, boja: "#e53e3e" },
           { x: -75,  sirina: 48, visina: 160, boja: "#dd6b20" },
@@ -174,14 +167,14 @@ case "kocke":
             width: p.sirina, height: p.visina,
             fill: p.boja, stroke: "#1a202c", strokeWidth: 2, cornerRadius: 5, name: "osnova"
           }));
-          // Beli šrafovi
           sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY - p.visina/2 + 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova" }));
           sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY + p.visina/2 - 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova" }));
         });
         break;
-      }
+    }
     sloj.draw();
   }
+
   // ===================== KREIRANJE DODATAKA =====================
 
   function kreirajElement(tip, customX = null, customY = null) {
@@ -192,13 +185,11 @@ case "kocke":
 
     let noviObjekat;
 
-switch (tip) {
+    switch (tip) {
       // 1. TAKTILNE TEKSTURE
       case "hrapavo":
-        // Hrapava ploča sa tačkicama (tekstura)
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
         noviObjekat.add(new Konva.Rect({ x: -25, y: -25, width: 50, height: 50, fill: "#dd6b20", stroke: "#7b341e", strokeWidth: 3, cornerRadius: 6 }));
-        // Dodavanje unutrašnjih tačkica za utisak hrapavosti
         for (let ix = -15; ix <= 15; ix += 15) {
           for (let iy = -15; iy <= 15; iy += 15) {
             noviObjekat.add(new Konva.Circle({ x: ix, y: iy, radius: 2, fill: "#7b341e" }));
@@ -207,14 +198,12 @@ switch (tip) {
         break;
 
       case "meko":
-        // Plišana površina sa zaobljenim ivicama i unutrašnjim sjajem
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 24, fill: "#f6ad55", stroke: "#c05621", strokeWidth: 3 }));
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 16, fill: "#fbd38d" }));
         break;
 
       case "reljef":
-        // Reljefna ploča sa poprečnim linijama
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
         noviObjekat.add(new Konva.Rect({ x: -30, y: -18, width: 60, height: 36, fill: "#319795", stroke: "#234e52", strokeWidth: 3, cornerRadius: 8 }));
         noviObjekat.add(new Konva.Line({ points: [-20, -10, -20, 10], stroke: "#234e52", strokeWidth: 3 }));
@@ -231,27 +220,21 @@ switch (tip) {
 
       // 2. ZVUK & SIGNALIZACIJA
       case "zvonce":
-        // Pravo trodimenzionalno zvono sa drškom na vrhu i klatnom na dnu
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Gornja alka/drška
         noviObjekat.add(new Konva.Circle({ x: 0, y: -22, radius: 5, stroke: "#744210", strokeWidth: 3 }));
-        // Telo zvona
         noviObjekat.add(new Konva.Arc({ x: 0, y: 5, innerRadius: 0, outerRadius: 22, angle: 180, fill: "#ecc94b", stroke: "#744210", strokeWidth: 3, rotation: 180 }));
-        // Donji obod zvona
         noviObjekat.add(new Konva.Rect({ x: -24, y: 3, width: 48, height: 5, fill: "#d69e2e", stroke: "#744210", strokeWidth: 2, cornerRadius: 2 }));
-        // Klatno
         noviObjekat.add(new Konva.Circle({ x: 0, y: 12, radius: 5, fill: "#744210" }));
         break;
 
       case "zvucni-cip":
-        // Zvučni modul sa rešetkom zvučnika
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
         noviObjekat.add(new Konva.Rect({ x: -22, y: -22, width: 44, height: 44, fill: "#805ad5", stroke: "#44337a", strokeWidth: 3, cornerRadius: 10 }));
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 12, fill: "#b794f4", stroke: "#44337a", strokeWidth: 2 }));
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 4, fill: "#44337a" }));
         break;
 
-        case "nota":
+      case "nota":
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
         noviObjekat.add(new Konva.Circle({ x: -10, y: 10, radius: 8, fill: "#3182ce" }));
         noviObjekat.add(new Konva.Circle({ x: 10, y: 5, radius: 8, fill: "#3182ce" }));
@@ -262,11 +245,9 @@ switch (tip) {
 
       // 3. LAKŠE HVATANJE & MOTORIKA
       case "veliko-dugme":
-        // Realistično šiveno ili pritisno dugme sa 4 rupice u sredini
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 26, fill: "#e53e3e", stroke: "#742a2a", strokeWidth: 4 }));
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 18, fill: "#feb2b2", stroke: "#742a2a", strokeWidth: 2 }));
-        // 4 rupice
         noviObjekat.add(new Konva.Circle({ x: -6, y: -6, radius: 2.5, fill: "#742a2a" }));
         noviObjekat.add(new Konva.Circle({ x: 6, y: -6, radius: 2.5, fill: "#742a2a" }));
         noviObjekat.add(new Konva.Circle({ x: -6, y: 6, radius: 2.5, fill: "#742a2a" }));
@@ -274,42 +255,24 @@ switch (tip) {
         break;
 
       case "rucka":
-        // Ergonomska ručka sa šrafovima/uškama za pričvršćivanje na krajevima
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Osnovni luk/most ručke
         noviObjekat.add(new Konva.Rect({ x: -35, y: -12, width: 70, height: 24, fill: "#38a169", stroke: "#1c4532", strokeWidth: 3, cornerRadius: 12 }));
-        // Unutrašnji otvor za prste
         noviObjekat.add(new Konva.Rect({ x: -22, y: -5, width: 44, height: 10, fill: "#ffffff", stroke: "#1c4532", strokeWidth: 2, cornerRadius: 5 }));
-        // Šrafovi na krajevima
         noviObjekat.add(new Konva.Circle({ x: -28, y: 0, radius: 3, fill: "#1c4532" }));
         noviObjekat.add(new Konva.Circle({ x: 28, y: 0, radius: 3, fill: "#1c4532" }));
         break;
 
       case "zupcanik":
-        // Industrijski zupčanik sa zubcima i unutrašnjim otvorom
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Zupci (kombinacija zvezde sa zaravnjenim ivicama)
         noviObjekat.add(new Konva.Star({ x: 0, y: 0, numPoints: 8, innerRadius: 18, outerRadius: 26, fill: "#ed8936", stroke: "#7b341e", strokeWidth: 3 }));
-        // Središnji prsten zupčanika
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 12, fill: "#feebc8", stroke: "#7b341e", strokeWidth: 2 }));
-        // Unutrašnja rupa
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 6, fill: "#7b341e" }));
         break;
 
-case "cicak":
-        // Čičak traka sa jasno vidljivom mikroteksturom
+      case "cicak":
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Osnovna tekstilna traka sa ivicama
-        noviObjekat.add(new Konva.Rect({ 
-          x: -30, y: -14, width: 60, height: 28, 
-          fill: "#2d3748", stroke: "#1a202c", strokeWidth: 3, cornerRadius: 4 
-        }));
-        // Svetlije unutrašnje polje
-        noviObjekat.add(new Konva.Rect({ 
-          x: -26, y: -10, width: 52, height: 20, 
-          fill: "#4a5568", stroke: "#2d3748", strokeWidth: 1, cornerRadius: 2 
-        }));
-        // Gusti redovi vidljivih čičak-kukica
+        noviObjekat.add(new Konva.Rect({ x: -30, y: -14, width: 60, height: 28, fill: "#2d3748", stroke: "#1a202c", strokeWidth: 3, cornerRadius: 4 }));
+        noviObjekat.add(new Konva.Rect({ x: -26, y: -10, width: 52, height: 20, fill: "#4a5568", stroke: "#2d3748", strokeWidth: 1, cornerRadius: 2 }));
         for (let ix = -20; ix <= 20; ix += 8) {
           for (let iy = -6; iy <= 6; iy += 6) {
             noviObjekat.add(new Konva.Circle({ x: ix, y: iy, radius: 2, fill: "#e2e8f0" }));
@@ -319,37 +282,25 @@ case "cicak":
 
       // 4. VISOKI KONTRAST
       case "traka-kontrast":
-        // Sigurnosna žuto-crna kosa traka
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Žuta baza
         noviObjekat.add(new Konva.Rect({ x: -40, y: -12, width: 80, height: 24, fill: "#ffff00", stroke: "#000000", strokeWidth: 3, cornerRadius: 4 }));
-        // Kose crne štrafte
         for (let offset = -30; offset <= 30; offset += 15) {
           noviObjekat.add(new Konva.Line({ points: [offset, -10, offset + 8, 10], stroke: "#000000", strokeWidth: 4 }));
         }
         break;
 
       case "markacija":
-        // Precizno centrirana fokusna meta (rešava problem razvučenog okvira)
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Spoljašnji krug
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 22, fill: "#ffffff", stroke: "#e53e3e", strokeWidth: 5 }));
-        // Srednji prsten
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 14, fill: "transparent", stroke: "#e53e3e", strokeWidth: 3 }));
-        // Centar (fokus tačka)
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 6, fill: "#e53e3e" }));
         break;
 
       case "ogledalo":
-        // Čisto okruglo ogledalce BEZ drške
         noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
-        // Drveni/plastični zaštitni ram
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 25, fill: "#f6e0b5", stroke: "#744210", strokeWidth: 3.5 }));
-        // Unutrašnji okvir
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 20, fill: "#cbd5e0", stroke: "#a0aec0", strokeWidth: 1.5 }));
-        // Staklena površina sa odsjajem svetla
         noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 18, fillLinearGradientStartPoint: { x: -15, y: -15 }, fillLinearGradientEndPoint: { x: 15, y: 15 }, fillLinearGradientColorStops: [0, '#ffffff', 0.5, '#e2e8f0', 1, '#cbd5e0'] }));
-        // Beli dijagonalni odsjaji
         noviObjekat.add(new Konva.Line({ points: [-10, -5, 2, -17], stroke: "#ffffff", strokeWidth: 3, lineCap: "round", opacity: 0.9 }));
         noviObjekat.add(new Konva.Line({ points: [-5, 3, 8, -10], stroke: "#ffffff", strokeWidth: 2, lineCap: "round", opacity: 0.7 }));
         break;
@@ -360,7 +311,8 @@ case "cicak":
 
     noviObjekat.name("dodatak");
 
-    noviObjekat.on("click tap", (e) => {
+    // KLJUČNA IZMENA 1: Registrujemo dodir bez brkanja sa skrolom
+    noviObjekat.on("click tap touchstart", (e) => {
       e.cancelBubble = true;
       transformer.nodes([noviObjekat]);
       sloj.draw();
@@ -371,8 +323,15 @@ case "cicak":
     sloj.draw();
   }
 
-  // Klik na praznu površinu skida selekciju
+  // KLJUČNA IZMENA 2: Pratimo skrolovanje na mobilnom da ne odselektuje element pri skrolu
+  let isScrolling = false;
+  window.addEventListener('touchmove', () => { isScrolling = true; }, { passive: true });
+  window.addEventListener('touchstart', () => { isScrolling = false; }, { passive: true });
+
+  // Klik na praznu površinu skida selekciju SAMO ako se nije desio skrol
   stage.on("click tap", (e) => {
+    if (isScrolling) return; // Ignoriši ako je korisnik samo skrolovao stranu
+
     if (e.target === stage) {
       transformer.nodes([]);
       sloj.draw();
@@ -463,10 +422,19 @@ case "cicak":
     });
   }
 
+  // KLJUČNA IZMENA 3: Proveravamo širinu pre poziva ponovnog crtanja 
+  // (da skrolovanje i skupljanje adrese u mobilnom pregledaču ne briše dodate elemente)
+  let prethodnaSirina = containerEl.clientWidth;
+
   window.addEventListener("resize", () => {
-    stage.width(containerEl.clientWidth);
-    stage.height(containerEl.clientHeight);
-    nacrtajOsnovniModel(trenutniModel);
+    const novaSirina = containerEl.clientWidth;
+    // Samo ako se stvarno promenila širina ekrana (npr. rotacija telefona) prilagođavamo canvas
+    if (Math.abs(novaSirina - prethodnaSirina) > 10) {
+      prethodnaSirina = novaSirina;
+      stage.width(containerEl.clientWidth);
+      stage.height(containerEl.clientHeight);
+      nacrtajOsnovniModel(trenutniModel);
+    }
   });
 
   // Inicijalno iscrtavanje (Meda)
