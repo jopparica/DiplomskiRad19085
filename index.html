@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal igračaka za decu sa smetnjama u razvoju — NoLimits</title>
+  <meta name="description" content="Web portal za igračke prilagođene deci sa smetnjama u razvoju - katalog, konfigurator i saveti za roditelje.">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google Font: Outfit za zakrivljen i moderan logo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+<a href="index.html" class="logo" aria-label="NoLimits Početna">
+  <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Linija beskonačnosti/slagalice obojena u primarnu plavu boju -->
+    <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+          stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Akcentne krugovi u narandžastoj boji -->
+    <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+    <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+  </svg>
+  <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+</a>
+
+    <nav class="main-nav" aria-label="Glavna navigacija">
+      <ul>
+        <li><a href="index.html" class="active">Početna</a></li>
+        <li><a href="catalog.html">Katalog igračaka</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero hero-split">
+  <div class="container hero-split-inner">
+    
+    <div class="hero-text-content">
+
+      <!-- STATIČKI I VEĆI LOGO (NIJE LINK) -->
+      <div class="hero-logo-brand" aria-hidden="true">
+        <svg width="52" height="52" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Linija beskonačnosti/slagalice obojena u primarnu plavu boju -->
+          <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+                stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Akcentni krugovi u narandžastoj boji -->
+          <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+          <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+        </svg>
+        <span class="logo-text hero-logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+      </div>
+
+      <h1>Igračke koje razumeju svako dete</h1>
+      <p class="hero-subtitle">
+        Portal je posvećen igračkama koje su prilagođene deci sa različitim smetnjama u razvoju. Da svaki od
+        mališana ima lepo sećanje na detinjstvo uprkos svim iskušenjima i problemima.
+      </p>
+      <div class="hero-actions">
+        <a href="catalog.html" class="btn btn-primary">KATALOG</a>
+        <a href="configurator.html" class="btn btn-secondary">KONFIGURATOR</a>
+      </div>
+    </div>
+
+    <div class="hero-image-container">
+      <img src="slike/draw2.png" alt="Ilustracija prilagođenih igračaka" class="hero-split-img">
+    </div>
+
+  </div>
+</section>
+
+<!-- KATEGORIJE IGRAČAKA (SLAJDER SA NOVIM RASPOREDOM UNUTAR KARTICE) -->
+<section class="categories-slider-section" aria-labelledby="kategorije-naslov">
+  <div class="container">
+    
+    <h2 id="kategorije-naslov" class="section-title">razvojne kategorije igračaka</h2>
+
+    <div class="single-slide-wrapper">
+      
+      <!-- Kontejner sa slajdovima -->
+      <div class="categories-track" id="categoriesTrack">
+
+        <!-- 1. Senzorno-motorne table -->
+        <article class="slide-card">
+          <div class="slide-header">
+            <div class="slide-icon" aria-hidden="true">🛠️</div>
+            <h3>Senzorno-motorne table i paneli</h3>
+          </div>
+          <p>Služe za vežbanje fine motorike i svakodnevnih veština. Posebno su značajni kod dece sa autizmom i dece sa motoričkim poremećajima jer podstiču samostalnost i koordinaciju pokreta.</p>
+          <a href="catalog.html?tip=table" class="btn btn-primary slide-btn">Pogledaj u katalogu</a>
+        </article>
+
+        <!-- 2. Taktilne i visokokontrastne igre -->
+        <article class="slide-card">
+          <div class="slide-header">
+            <div class="slide-icon" aria-hidden="true">🎲</div>
+            <h3>Taktilne i visokokontrastne društvene igre</h3>
+          </div>
+          <p>Inkluzivne društvene igre poput "Ne ljuti se čoveče" ili "IX-OX" koje deca sa invaliditetom ravnopravno igraju sa vršnjacima. Posebno su značajne za slepu, slabovidu i decu sa ADHD-om.</p>
+          <a href="catalog.html?tip=taktilne" class="btn btn-primary slide-btn">Pogledaj u katalogu</a>
+        </article>
+
+        <!-- 3. Logopedski i grafomotorički šabloni -->
+        <article class="slide-card">
+          <div class="slide-header">
+            <div class="slide-icon" aria-hidden="true">✏️</div>
+            <h3>Logopedski i grafomotorički šabloni</h3>
+          </div>
+          <p>Didaktičke table za "prohodavanje ruku". Značajne su za pripremu šake za pisanje, jačanje mišića prstiju i direktnu stimulaciju mozga i govora.</p>
+          <a href="catalog.html?tip=grafomotorika" class="btn btn-primary slide-btn">Pogledaj u katalogu</a>
+        </article>
+
+        <!-- 4. Emocionalne i komunikacijske kartice -->
+        <article class="slide-card">
+          <div class="slide-header">
+            <div class="slide-icon" aria-hidden="true">💬</div>
+            <h3>Emocionalne i komunikacijske kartice</h3>
+          </div>
+          <p>Pomagala izuzetno značajna u radu sa decom sa autizmom i govorno-jezičkim problemima. Pomažu u vizuelnom izražavanju emocija, potreba i praćenju dnevnih rutina.</p>
+          <a href="catalog.html?tip=kartice" class="btn btn-primary slide-btn">Pogledaj u katalogu</a>
+        </article>
+
+        <!-- 5. Balanseri i krupno-motorne igračke -->
+        <article class="slide-card">
+          <div class="slide-header">
+            <div class="slide-icon" aria-hidden="true">⚖️</div>
+            <h3>Balanseri i krupno-motorne igračke</h3>
+          </div>
+          <p>Predstavljaju poligone za senzornu integraciju. Veoma su značajne kod dece sa problemom senzorne integracije, održavanja balansa i opšte koordinacije tela.</p>
+          <a href="catalog.html?tip=balans" class="btn btn-primary slide-btn">Pogledaj u katalogu</a>
+        </article>
+
+      </div>
+
+      <!-- KONTROLNE STRELICE LEVO I DESNO ISPOD CELE KARTICE -->
+      <div class="slider-controls-bottom">
+        <button type="button" class="slider-btn" id="btnPrevCategory" aria-label="Prethodna kategorija">❮</button>
+        <button type="button" class="slider-btn" id="btnNextCategory" aria-label="Sledeća kategorija">❯</button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+  <!-- ZAŠTO PRILAGOĐENE IGRAČKE -->
+  <section class="why-toys" aria-labelledby="zasto-naslov">
+    <div class="container">
+      <h2 id="zasto-naslov">Zašto prilagođene igračke?</h2>
+      <div class="why-grid">
+        <article class="why-card">
+          <div class="why-icon" aria-hidden="true">🎯</div>
+          <h3>Ciljani razvoj</h3>
+          <p>Svaka modifikacija je osmišljena da podstakne konkretnu razvojnu oblast kod deteta.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon" aria-hidden="true">🤝</div>
+          <h3>Inkluzivna igra</h3>
+          <p>Prilagođene igračke omogućavaju deci sa smetnjama da se igraju ravnopravno sa vršnjacima.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon" aria-hidden="true">🧠</div>
+          <h3>Senzorna stimulacija</h3>
+          <p>Različite teksture, zvuci i boje podstiču senzorni razvoj i pažnju deteta.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon" aria-hidden="true">😊</div>
+          <h3>Radost igre</h3>
+          <p>Svako dete zaslužuje da oseti radost igre, bez obzira na fizička ili razvojna ograničenja.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon" aria-hidden="true">👨‍👩‍👧</div>
+          <h3>Podrška porodici</h3>
+          <p>Roditeljima, terapeutima i vaspitačima portal pruža jasne smernice pri izboru odgovarajuće igračke.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon" aria-hidden="true">🔧</div>
+          <h3>Sloboda prilagođavanja</h3>
+          <p>Konfigurator omogućava da igračku menjate dok ne pronađete kombinaciju koja detetu najviše odgovara.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+ <!-- REDIZAJNIRANA PROMO SEKCIJA ZA KONFIGURATOR -->
+<section class="configurator-promo">
+  <div class="container">
+    <div class="promo-card">
+      
+      <!-- LEVA STRANA: PROVIDAN PNG MEDA DIREKTNO NA GRADIENTU -->
+      <div class="promo-image-container">
+        <img src="slike/tedi.png" alt="Plišani meda Tedi - NoLimits Konfigurator" class="promo-image">
+      </div>
+
+      <!-- DESNA STRANA: BALANSIRAN TEKST I DUGME -->
+      <div class="promo-content">
+        <h2>INTERAKTIVNI KONFIGURATOR IGRAČAKA</h2>
+        <p>
+          Isprobajte naš jedinstveni alat! Izaberite osnovni model, prilagodite boje i dodajte različite senzorne elemente spram specifičnih potreba vašeg deteta.
+        </p>
+
+        <ul class="promo-features">
+          <li><span class="feature-icon">✨</span> Taktilne i zvučne modifikacije</li>
+          <li><span class="feature-icon">🎨</span> Personalizacija boja i oblika</li>
+          <li><span class="feature-icon">📥</span> Trenutni izvoz i preuzimanje modela</li>
+        </ul>
+
+        <div class="promo-actions">
+          <a href="configurator.html" class="btn btn-primary">ISPROBAJ KONFIGURATOR &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+ <!-- SEKCIJA: O NAMA -->
+<section class="about-section">
+  <div class="container">
+    <h2 class="section-title">O NAMA</h2>
+    
+    <div class="values-grid">
+      <!-- Misija -->
+      <div class="value-card">
+        <div class="value-icon">🎯</div>
+        <h3>MISIJA</h3>
+        <p>
+          Omogućiti deci sa smetnjama u razvoju potpunu inkluziju kroz samu igru. 
+          Na taj način omogućavamo im da se bez granica i ravnopravno igraju sa svojim vršnjacima u svom okruženju.
+        </p>
+      </div>
+
+      <!-- Vizija -->
+      <div class="value-card">
+        <div class="value-icon">🚀</div>
+        <h3>VIZIJA</h3>
+        <p>
+          Vizija kompanije "NoLimits d.o.o." jeste da postane moderno, socijalno i društveno odgovorno 
+          preduzeće koje proizvodi igračke i društvene igre visokog kvaliteta i u budućnosti razvija poslovanje na tržištima u regionu.
+        </p>
+      </div>
+
+      <!-- Ciljevi -->
+      <div class="value-card">
+        <div class="value-icon">🏆</div>
+        <h3>CILJEVI</h3>
+        <ul class="goals-list">
+          <li>Proizvodnja kvalitetnih i inkluzivnih igračaka i društvenih igara.</li>
+          <li>Razvoj i proširenje poslovanja na tržištu u regionu.</li>
+          <li>Sprovođenje kampanja i saradnja sa neprofitnim organizacijama i udruženjima koja pomažu rast i razvoj osoba sa invaliditetom.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+<!-- PRVI BLOK U FOOTERU SA LOGOM -->
+<div class="footer-brand">
+  <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+            stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+      <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+    </svg>
+    <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+  </a>
+  <p>Portal igračaka za decu sa smetnjama u razvoju.</p>
+</div>
+    <div>
+      <h3>Kontakt</h3>
+      <p>Email: info@nolimits.rs</p>
+      <p>Telefon: 011/123-456</p>
+    </div>
+    <div>
+      <h3>Linkovi</h3>
+      <ul class="footer-links horizontal-links">
+        <li><a href="catalog.html">Katalog</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2026 NoLimits</p>
+</footer>
+
+<!-- ELEMENTI ZA PRISTUPAČNOST -->
+<button id="accessibility-toggle" class="accessibility-floating-btn" aria-label="Otvori meni za pristupačnost" aria-expanded="false">
+  ♿
+</button>
+
+<aside id="accessibility-menu" class="accessibility-menu" aria-hidden="true">
+  <h2>Pristupačnost</h2>
+  <button id="btn-font-increase" type="button">🔍 Povećaj font</button>
+  <button id="btn-font-decrease" type="button">🔍 Smanji font</button>
+  <button id="btn-high-contrast" type="button">🌓 Visoki kontrast</button>
+  <button id="btn-dyslexia-font" type="button">📖 Font za disleksiju</button>
+  <button id="btn-highlight-links" type="button">🔗 Istakni linkove</button>
+  <button id="btn-reset-accessibility" type="button">🔄 Resetuj</button>
+</aside>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

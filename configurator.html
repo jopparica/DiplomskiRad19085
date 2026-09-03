@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konfigurator igračaka — NoLimits</title>
+  <meta name="description" content="Interaktivni konfigurator koji omogućava prilagođavanje igračke specifičnim potrebama deteta.">
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Google Font: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Konva.js biblioteka -->
+  <script src="https://cdn.jsdelivr.net/npm/konva@9/konva.min.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo" aria-label="NoLimits Početna">
+      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+              stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+        <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+      </svg>
+      <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+    </a>
+
+    <nav class="main-nav" aria-label="Glavna navigacija">
+      <ul>
+        <li><a href="index.html">Početna</a></li>
+        <li><a href="catalog.html">Katalog igračaka</a></li>
+        <li><a href="configurator.html" class="active">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO SEKCIJA KONFIGURATORA -->
+  <section class="configurator-hero">
+    <div class="container">
+      <h1>Interaktivni Konfigurator Igračaka</h1>
+      <p class="configurator-subtitle">
+        Interaktivni konfigurator igračaka služi za samostalno pravljenje igračaka sa različitim senzorskim elementima
+        u zavisnosti od smetnje koju dete poseduje.
+      </p>
+    </div>
+  </section>
+
+  <!-- TIMELINE / UPUTSTVO -->
+  <section class="configurator-guide">
+    <div class="container">
+      <h2 class="guide-title">KAKO FUNKCIONIŠE KONFIGURATOR</h2>
+      
+      <div class="timeline-steps">
+        <div class="timeline-step">
+          <div class="step-badge">1</div>
+          <div class="step-content">
+            <h3>IZABERITE JEDAN OSNOVNI MODEL</h3>
+            <p>Odaberite jedan model igračke na koji želite da dodajete modifikacije.</p>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-badge">2</div>
+          <div class="step-content">
+            <h3>IZABERITE KATEGORIJU MODIFIKACIJA</h3>
+            <p>Dostupni su taktilni, zvučni, motorički i kontrasni dodaci.</p>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-badge">3</div>
+          <div class="step-content">
+            <h3>PRILAGODITE ELEMENTE NA EKRANU</h3>
+            <p>Prevucite elemente na igračku, menjajte im veličinu i rotirajte ih.</p>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-badge">4</div>
+          <div class="step-content">
+            <h3>PREUZMITE U PNG FORMATU</h3>
+            <p>Sačuvajte gotov 2D prikaz igračke radi lakše narudžbine i izrade.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RADNI PROSTOR SA VODORAVNOM KONTROLNOM TABLOM IZNAD CANVAS-A -->
+  <section class="configurator-workspace">
+    <div class="container">
+      
+      <div class="configurator-top-panel">
+        
+        <!-- KORAK 1: IZBOR 1 OSNOVNOG MODELA -->
+        <div class="config-section">
+          <span class="config-section-title">1. Izaberite osnovni model (samo 1 može biti aktivan)</span>
+          <div class="model-select-row">
+            <button class="btn-model active" data-model="meda">🧸 Plišani meda</button>
+            <button class="btn-model" data-model="lopta">⚽ Senzorna lopta</button>
+            <button class="btn-model" data-model="tabla">🛠️ Senzorna tabla</button>
+            <button class="btn-model" data-model="kocke">🧱 Drvene kocke</button>
+            <button class="btn-model" data-model="ksilofon">🎵 Drveni ksilofon</button>
+          </div>
+        </div>
+
+        <!-- KORAK 2: KATEGORIJE DODAJA / MODIFIKACIJA -->
+        <div class="config-section">
+          <span class="config-section-title">2. Dodajte modifikacije po kategorijama (prevucite ili kliknite)</span>
+          
+          <div class="categories-wrapper">
+            
+            <!-- Kat 1: Senzorno & Taktilno -->
+            <div class="mod-category-group">
+              <span class="category-tag">Taktilne teksture</span>
+              <div class="palette-row">
+                <button class="palette-item" data-element="hrapavo" draggable="true" title="Dodaj hrapavu površinu">
+                  <span class="palette-icon">🟧</span> Hrapavo
+                </button>
+                <button class="palette-item" data-element="meko" draggable="true" title="Dodaj meku pliš površinu">
+                  <span class="palette-icon">🟨</span> Meko / Pliš
+                </button>
+                <button class="palette-item" data-element="reljef" draggable="true" title="Dodaj reljefnu teksturu">
+                  <span class="palette-icon">🟩</span> Reljef
+                </button>
+                <button class="palette-item" data-element="magnet" draggable="true" title="Dodaj magnetsku spojnicu">
+                  <span class="palette-icon">🧲</span> Magnet
+                </button>
+              </div>
+            </div>
+
+            <!-- Kat 2: Zvuk & Svetlo -->
+            <div class="mod-category-group">
+              <span class="category-tag">Zvuk & Signalizacija</span>
+              <div class="palette-row">
+                <button class="palette-item" data-element="zvonce" draggable="true" title="Dodaj zvučnu oznaku sa zvoncem">
+                  <span class="palette-icon">🔔</span> Zvonce
+                </button>
+              <button class="palette-item" data-element="zvucni-cip" draggable="true" title="Dodaj modul sa zvučnim čipom">
+                <span class="palette-icon">🎵</span> Zvučni čip
+              </button>
+              <button class="palette-item" data-element="nota" draggable="true" title="Dodaj muzičku notu">
+                <span class="palette-icon">🎶</span> Pesmica
+              </button>
+              </div>
+            </div>
+
+            <!-- Kat 3: Motorički elementi -->
+            <div class="mod-category-group">
+              <span class="category-tag">Lakše hvatanje & Motorika</span>
+              <div class="palette-row">
+                <button class="palette-item" data-element="veliko-dugme" draggable="true" title="Krupno dugme za pritisak">
+                  <span class="palette-icon">🔴</span> Krupno dugme
+                </button>
+                <button class="palette-item" data-element="rucka" draggable="true" title="Ergonomska ručka">
+                  <span class="palette-icon">🟩</span> Ručka
+                </button>
+                <button class="palette-item" data-element="zupcanik" draggable="true" title="Pokretni zupčanik">
+                  <span class="palette-icon">⚙️</span> Zupčanik
+                </button>
+                <button class="palette-item" data-element="cicak" draggable="true" title="Dodaj čičak traku">
+                  <span class="palette-icon">🩹</span> Čičak
+                </button>
+              </div>
+            </div>
+
+            <!-- Kat 4: Vizuelni kontrasti -->
+            <div class="mod-category-group">
+              <span class="category-tag">Visoki kontrast (Slabovidost)</span>
+              <div class="palette-row">
+                <button class="palette-item" data-element="traka-kontrast" draggable="true" title="Žuto-crna traka">
+                  <span class="palette-icon">🟨</span> Žuta traka
+                </button>
+                <button class="palette-item" data-element="markacija" draggable="true" title="Fokusna tačka">
+                  <span class="palette-icon">🎯</span> Fokus tačka
+                </button>
+                <button class="palette-item" data-element="ogledalo" draggable="true" title="Dodaj bezbedno ogledalce">
+                  <span class="palette-icon">🪞</span> Ogledalce
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- KORAK 3: AKCIJE I UPRAVLJANJE -->
+        <div class="config-actions-row">
+          <button id="btn-obrisi-element" class="btn btn-secondary btn-sm">Obriši selektovani dodatak</button>
+          <button id="btn-reset-canvas" class="btn btn-secondary btn-sm">Resetuj igračku</button>
+          <button id="btn-preuzmi-sliku" class="btn btn-primary btn-sm">Preuzmi kao PNG sliku</button>
+        </div>
+
+      </div>
+
+      <!-- RADNA POVRŠINA (CANVAS) -->
+      <div class="configurator-canvas-wrapper">
+        <div id="konva-container" aria-label="Radna površina za konfigurisanje igračke"></div>
+        <p class="canvas-hint">Kliknite na dodati element radi promenu veličine, rotacije i pomeranja.</p>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+        <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+                stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+          <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+        </svg>
+        <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+      </a>
+      <p>Portal igračaka za decu sa smetnjama u razvoju.</p>
+    </div>
+    <div>
+      <h3>Kontakt</h3>
+      <p>Email: info@nolimits.rs</p>
+      <p>Telefon: 011/123-456</p>
+    </div>
+    <div>
+      <h3>Linkovi</h3>
+      <ul class="footer-links horizontal-links">
+        <li><a href="catalog.html">Katalog</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
+        <li><a href="contact.html">Kontakt</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="footer-bottom">&copy; 2026 NoLimits</p>
+</footer>
+
+<!-- ELEMENTI ZA PRISTUPAČNOST -->
+<button id="accessibility-toggle" class="accessibility-floating-btn" aria-label="Otvori meni za pristupačnost" aria-expanded="false">
+  ♿
+</button>
+
+<aside id="accessibility-menu" class="accessibility-menu" aria-hidden="true">
+  <h2>Pristupačnost</h2>
+  <button id="btn-font-increase" type="button">🔍 Povećaj font</button>
+  <button id="btn-font-decrease" type="button">🔍 Smanji font</button>
+  <button id="btn-high-contrast" type="button">🌓 Visoki kontrast</button>
+  <button id="btn-dyslexia-font" type="button">📖 Font za disleksiju</button>
+  <button id="btn-highlight-links" type="button">🔗 Istakni linkove</button>
+  <button id="btn-reset-accessibility" type="button">🔄 Resetuj</button>
+</aside>
+
+<script src="js/main.js" defer></script>
+<script src="js/configurator.js" defer></script>
+</body>
+</html>

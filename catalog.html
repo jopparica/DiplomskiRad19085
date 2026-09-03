@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Katalog igračaka — NoLimits</title>
+  <meta name="description" content="Katalog igračaka prilagođenih deci sa oštećenjem vida, motoričkim smetnjama i decom iz spektra autizma.">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google Font: Outfit za zakrivljen i moderan logo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+    <div class="container header-inner">
+<a href="index.html" class="logo" aria-label="NoLimits Početna">
+  <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Linija beskonačnosti/slagalice obojena u primarnu plavu boju -->
+    <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+          stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Akcentne krugovi u narandžastoj boji -->
+    <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+    <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+  </svg>
+  <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+</a>
+
+      <nav class="main-nav" aria-label="Glavna navigacija">
+        <ul>
+          <li><a href="index.html">Početna</a></li>
+          <li><a href="catalog.html" class="active">Katalog igračaka</a></li>
+          <li><a href="configurator.html">Konfigurator</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+  <aside id="accessibility-menu" class="accessibility-menu" aria-hidden="true">
+    <h2>Podešavanja pristupačnosti</h2>
+    <button id="btn-font-increase">Povećaj veličinu teksta</button>
+    <button id="btn-font-decrease">Smanji veličinu teksta</button>
+    <button id="btn-high-contrast">Visoki kontrast</button>
+    <button id="btn-dyslexia-font">Font za disleksiju</button>
+    <button id="btn-highlight-links">Istakni linkove</button>
+    <button id="btn-reset-accessibility">Vrati na podrazumevano</button>
+  </aside>
+
+  <!-- ===================== NASLOV STRANICE ===================== -->
+  <main>
+    <section class="catalog-hero">
+      <div class="container">
+        <h1>Katalog igračaka</h1>
+        <p class="catalog-subtitle">
+          Istražite našu ponudu inkluzivnih igračaka podeljenih po razvojnim kategorijama. 
+          Svaki model sadrži detaljan opis, istaknute cene i opciju za brzo naručivanje ili slanje upita. 
+          Filtrirajte igračke prema specifičnim potrebama deteta, saznajte kako podstiču senzorno-motorni razvoj, 
+          ili iskoristite naš interaktivni konfigurator da prilagodite igračku po vašoj meri.
+        </p>
+      </div>
+    </section>
+
+    <!-- ===================== FILTERI ===================== -->
+    <section class="filters" aria-label="Filteri kataloga">
+      <div class="container">
+        <div class="filters-grid">
+          <button class="filter-btn active" data-filter="sve">Sve igračke</button>
+          <button class="filter-btn" data-filter="table">Senzorno-motorne table</button>
+          <button class="filter-btn" data-filter="taktilne">Taktilne društvene igre</button>
+          <button class="filter-btn" data-filter="grafomotorika">Grafomotorika i jezik</button>
+          <button class="filter-btn" data-filter="kartice">Emocije i komunikacija</button>
+          <button class="filter-btn" data-filter="balans">Balans i krupna motorika</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GRID SA IGRAČKAMA ===================== -->
+    <section class="catalog-grid-section">
+      <div class="container">
+        <div id="catalog-grid" class="catalog-grid">
+          <!-- Kartice igračaka se generišu dinamički preko JavaScript-a (main.js) -->
+        </div>
+
+        <p id="no-results" class="no-results" hidden>
+          Nema pronađenih igračaka za izabrani filter.
+        </p>
+      </div>
+
+      
+ <!-- MODAL PROZOR ZA NARUČIVANJE IGRAČKE -->
+<div id="toy-modal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-toy-title">
+    <button id="modal-close" class="modal-close-btn" aria-label="Zatvori prozor">&times;</button>
+    
+    <div class="modal-grid">
+      <!-- LEVA STRANA: Naziv i Slika -->
+      <div class="modal-left">
+        <h2 id="modal-toy-title">Naziv Igračke</h2>
+        <div class="modal-image-wrapper">
+          <img id="modal-toy-image" src="" alt="" class="modal-toy-img">
+        </div>
+        <p id="modal-toy-desc" class="modal-description"></p>
+      </div>
+
+      <!-- DESNA STRANA: Cena i Forma za naručivanje -->
+      <div class="modal-right">
+        <div class="modal-price-box">
+          <span class="price-label">Cena:</span>
+          <span id="modal-toy-price" class="price-amount">0 RSD</span>
+        </div>
+
+        <form id="modal-order-form" class="modal-form">
+          <h3>Slanje upita za narudžbinu</h3>
+          
+          <div class="form-group">
+            <label for="order-fullname">Ime i prezime</label>
+            <input type="text" id="order-fullname" class="form-input" placeholder="Petar Petrović" required>
+          </div>
+
+          <div class="form-group">
+            <label for="order-email">Email adresa</label>
+            <input type="email" id="order-email" class="form-input" placeholder="vasa@adresa.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="order-phone">Broj telefona</label>
+            <input type="tel" id="order-phone" class="form-input" placeholder="06X/XXX-XXXX" required>
+          </div>
+
+          <div class="form-group">
+            <label for="order-address">Adresa za dostavu</label>
+            <input type="text" id="order-address" class="form-input" placeholder="Ulica i broj, Grad" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-buy">POŠALJI UPIT za narudžbinu</button>
+          <p id="order-success" class="form-success buy-success-msg" hidden>
+            Hvala vam! Otvoren je vaš email klijent sa popunjenim podacima za narudžbinu.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    </section>
+
+    
+  </main>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+  <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+            stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+      <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+    </svg>
+    <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+  </a>
+  <p>Portal igračaka za decu sa smetnjama u razvoju.</p>
+</div>
+      <div>
+        <h3>Kontakt</h3>
+        <p>Email: info@nolimits.rs</p>
+        <p>Telefon: 011/123-456</p>
+      </div>
+      <div>
+        <h3>Linkovi</h3>
+        <ul class="footer-links horizontal-links">
+          <li><a href="catalog.html">Katalog</a></li>
+          <li><a href="configurator.html">Konfigurator</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer-bottom">&copy; 2026 NoLimits</p>
+  </footer>
+
+      <!-- Dugme za pristupačni meni - logiku dodajemo kasnije u main.js -->
+      <button id="accessibility-toggle" class="accessibility-floating-btn" aria-label="Otvori meni za pristupačnost" aria-expanded="false">
+        <span aria-hidden="true">♿</span> 
+      </button>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>

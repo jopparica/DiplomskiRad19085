@@ -1,0 +1,475 @@
+// ===================== NAPREDNI KONFIGURATOR IGRAČAKA (Konva.js) =====================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const containerEl = document.getElementById("konva-container");
+  if (!containerEl) return; // Nismo na configurator.html
+
+  // ===================== INICIJALIZACIJA CANVASA =====================
+
+  const stage = new Konva.Stage({
+    container: "konva-container",
+    width: containerEl.clientWidth,
+    height: containerEl.clientHeight
+  });
+
+  const sloj = new Konva.Layer();
+  stage.add(sloj);
+
+  // Transformer za promenu veličine i rotaciju dodataka
+  let transformer = new Konva.Transformer({
+    rotateEnabled: true,
+    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+    borderStroke: '#2b6cb0',
+    anchorFill: '#ff8800',
+    anchorSize: 10
+  });
+  sloj.add(transformer);
+
+  let trenutniModel = "meda";
+  let brojacElemenata = 0;
+
+  // ===================== BEZBEDNO ČIŠĆENJE CANVASA =====================
+
+  function ocistiCeliCanvas() {
+    // Odveži selektovane objekte od transformera
+    transformer.nodes([]);
+    
+    // Obriši sve objekte osim transformera
+    sloj.destroyChildren();
+    
+    // Ponovo vrati transformer na sloj
+    transformer = new Konva.Transformer({
+      rotateEnabled: true,
+      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+      borderStroke: '#2b6cb0',
+      anchorFill: '#ff8800',
+      anchorSize: 10
+    });
+    sloj.add(transformer);
+  }
+
+  // ===================== CRTANJE TAČNO 1 OSNOVNOG MODELA =====================
+function nacrtajOsnovniModel(tip) {
+    ocistiCeliCanvas();
+    brojacElemenata = 0;
+
+    const cX = stage.width() / 2;
+    const cY = stage.height() / 2;
+
+    switch (tip) {
+      case "meda":
+        // Plišani meda
+        sloj.add(new Konva.Circle({ x: cX - 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX + 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX - 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX + 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX, y: cY + 30, radius: 85, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 4, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX, y: cY + 35, radius: 55, fill: "#f6e0b5", stroke: "#b7791f", strokeWidth: 2, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 25, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 14, fill: "#f6e0b5", name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 25, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 14, fill: "#f6e0b5", name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX, y: cY - 60, radius: 65, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 4, name: "osnova" }));
+        sloj.add(new Konva.Ellipse({ x: cX, y: cY - 48, radiusX: 22, radiusY: 16, fill: "#feebc8", stroke: "#b7791f", strokeWidth: 2, name: "osnova" }));
+        sloj.add(new Konva.Ellipse({ x: cX, y: cY - 55, radiusX: 10, radiusY: 7, fill: "#322659", name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX - 22, y: cY - 72, radius: 6, fill: "#000", name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX + 22, y: cY - 72, radius: 6, fill: "#000", name: "osnova" }));
+        break;
+
+      case "lopta":
+        // Senzorna lopta
+        sloj.add(new Konva.Ellipse({ x: cX, y: cY + 125, radiusX: 115, radiusY: 18, fill: "#cbd5e0", name: "osnova" }));
+        sloj.add(new Konva.Circle({
+          x: cX, y: cY, radius: 130,
+          fillLinearGradientStartPoint: { x: -60, y: -60 },
+          fillLinearGradientEndPoint: { x: 100, y: 100 },
+          fillLinearGradientColorStops: [0, '#63b3ed', 0.85, '#2b6cb0', 1, '#1a365d'],
+          stroke: "#1a365d", strokeWidth: 5, name: "osnova"
+        }));
+        sloj.add(new Konva.Arc({ x: cX - 80, y: cY, innerRadius: 118, outerRadius: 123, angle: 100, fill: "#ffffff", rotation: -50, opacity: 0.6, name: "osnova" }));
+        sloj.add(new Konva.Arc({ x: cX + 80, y: cY, innerRadius: 118, outerRadius: 123, angle: 100, fill: "#ffffff", rotation: 130, opacity: 0.6, name: "osnova" }));
+        break;
+
+      case "tabla":
+        // Velika drvena tabla
+        const sirinaTable = 530;
+        const visinaTable = 360;
+        sloj.add(new Konva.Rect({ x: cX - sirinaTable/2, y: cY - visinaTable/2, width: sirinaTable, height: visinaTable, fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, cornerRadius: 12, name: "osnova" }));
+        sloj.add(new Konva.Rect({ x: cX - sirinaTable/2 + 18, y: cY - visinaTable/2 + 18, width: sirinaTable - 36, height: visinaTable - 36, fill: "#f6e0b5", stroke: "#b7791f", strokeWidth: 3, cornerRadius: 6, name: "osnova" }));
+        for (let i = -110; i <= 110; i += 45) {
+          sloj.add(new Konva.Line({ points: [cX - sirinaTable/2 + 25, cY + i, cX + sirinaTable/2 - 25, cY + i], stroke: "#edd095", strokeWidth: 2, name: "osnova" }));
+        }
+        const uglovi = [
+          {x: cX - sirinaTable/2 + 10, y: cY - visinaTable/2 + 10},
+          {x: cX + sirinaTable/2 - 25, y: cY - visinaTable/2 + 10},
+          {x: cX - sirinaTable/2 + 10, y: cY + visinaTable/2 - 25},
+          {x: cX + sirinaTable/2 - 25, y: cY + visinaTable/2 - 25}
+        ];
+        uglovi.forEach(u => {
+          sloj.add(new Konva.Rect({ x: u.x, y: u.y, width: 15, height: 15, fill: "#a0aec0", stroke: "#4a5568", strokeWidth: 1, name: "osnova" }));
+          sloj.add(new Konva.Circle({ x: u.x + 7.5, y: u.y + 7.5, radius: 2, fill: "#2d3748", name: "osnova" }));
+        });
+        break;
+
+case "kocke":
+        // Povećane 3D Kocke bez slova sa sve 3 vidljive stranice
+        function nacrtajVeliku3DKocku(x, y, velicina) {
+          const h = velicina;
+          const w = velicina * 0.86;
+
+          // Leva strana
+          sloj.add(new Konva.Line({
+            points: [x, y, x - w, y - h/2, x - w, y + h/2, x, y + h],
+            fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
+          }));
+          // Desna strana
+          sloj.add(new Konva.Line({
+            points: [x, y, x + w, y - h/2, x + w, y + h/2, x, y + h],
+            fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
+          }));
+          // Gornja strana
+          sloj.add(new Konva.Line({
+            points: [x, y, x - w, y - h/2, x, y - h, x + w, y - h/2],
+            fill: "#f6e0b5", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
+          }));
+        }
+
+        const velicinaKocke = 110; // Povećane na 110px
+        const razmakKocki = 220;   // Dovoljno prostora za lepljenje sa svih strana
+
+        nacrtajVeliku3DKocku(cX - razmakKocki, cY, velicinaKocke);
+        nacrtajVeliku3DKocku(cX, cY, velicinaKocke);
+        nacrtajVeliku3DKocku(cX + razmakKocki, cY, velicinaKocke);
+        break;
+
+      case "ksilofon":
+        // Uvećan drveni ksilofon sa komotnim ramom unutar koga lepo leže sve pločice
+        const sRama = 420;
+        const vRama = 260;
+
+        // Drvena podloga/ram
+        sloj.add(new Konva.Line({
+          points: [
+            cX - sRama/2, cY - vRama/2,
+            cX + sRama/2, cY - vRama/2,
+            cX + sRama/2 - 40, cY + vRama/2,
+            cX - sRama/2 + 40, cY + vRama/2
+          ],
+          fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, closed: true, name: "osnova"
+        }));
+
+        // Pločice lepo uklopljene unutar braon podloge
+        const plocice = [
+          { x: -140, sirina: 48, visina: 180, boja: "#e53e3e" },
+          { x: -75,  sirina: 48, visina: 160, boja: "#dd6b20" },
+          { x: -10,  sirina: 48, visina: 140, boja: "#ecc94b" },
+          { x: 55,   sirina: 48, visina: 120, boja: "#38a169" },
+          { x: 120,  sirina: 48, visina: 100, boja: "#3182ce" }
+        ];
+
+        plocice.forEach(p => {
+          sloj.add(new Konva.Rect({
+            x: cX + p.x, y: cY - p.visina/2,
+            width: p.sirina, height: p.visina,
+            fill: p.boja, stroke: "#1a202c", strokeWidth: 2, cornerRadius: 5, name: "osnova"
+          }));
+          // Beli šrafovi
+          sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY - p.visina/2 + 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova" }));
+          sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY + p.visina/2 - 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova" }));
+        });
+        break;
+      }
+    sloj.draw();
+  }
+  // ===================== KREIRANJE DODATAKA =====================
+
+  function kreirajElement(tip, customX = null, customY = null) {
+    brojacElemenata++;
+
+    let posX = customX !== null ? customX : 100 + (brojacElemenata % 4) * 20;
+    let posY = customY !== null ? customY : 100 + Math.floor(brojacElemenata / 4) * 20;
+
+    let noviObjekat;
+
+switch (tip) {
+      // 1. TAKTILNE TEKSTURE
+      case "hrapavo":
+        // Hrapava ploča sa tačkicama (tekstura)
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Rect({ x: -25, y: -25, width: 50, height: 50, fill: "#dd6b20", stroke: "#7b341e", strokeWidth: 3, cornerRadius: 6 }));
+        // Dodavanje unutrašnjih tačkica za utisak hrapavosti
+        for (let ix = -15; ix <= 15; ix += 15) {
+          for (let iy = -15; iy <= 15; iy += 15) {
+            noviObjekat.add(new Konva.Circle({ x: ix, y: iy, radius: 2, fill: "#7b341e" }));
+          }
+        }
+        break;
+
+      case "meko":
+        // Plišana površina sa zaobljenim ivicama i unutrašnjim sjajem
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 24, fill: "#f6ad55", stroke: "#c05621", strokeWidth: 3 }));
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 16, fill: "#fbd38d" }));
+        break;
+
+      case "reljef":
+        // Reljefna ploča sa poprečnim linijama
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Rect({ x: -30, y: -18, width: 60, height: 36, fill: "#319795", stroke: "#234e52", strokeWidth: 3, cornerRadius: 8 }));
+        noviObjekat.add(new Konva.Line({ points: [-20, -10, -20, 10], stroke: "#234e52", strokeWidth: 3 }));
+        noviObjekat.add(new Konva.Line({ points: [0, -10, 0, 10], stroke: "#234e52", strokeWidth: 3 }));
+        noviObjekat.add(new Konva.Line({ points: [20, -10, 20, 10], stroke: "#234e52", strokeWidth: 3 }));
+        break;
+
+      case "magnet":
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Arc({ x: 0, y: -5, innerRadius: 10, outerRadius: 22, angle: 180, fill: "#e53e3e", stroke: "#742a2a", strokeWidth: 2, rotation: 180 }));
+        noviObjekat.add(new Konva.Rect({ x: -22, y: -5, width: 12, height: 18, fill: "#e53e3e", stroke: "#742a2a", strokeWidth: 2 }));
+        noviObjekat.add(new Konva.Rect({ x: 10, y: -5, width: 12, height: 18, fill: "#3182ce", stroke: "#2b6cb0", strokeWidth: 2 }));
+        break;    
+
+      // 2. ZVUK & SIGNALIZACIJA
+      case "zvonce":
+        // Pravo trodimenzionalno zvono sa drškom na vrhu i klatnom na dnu
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Gornja alka/drška
+        noviObjekat.add(new Konva.Circle({ x: 0, y: -22, radius: 5, stroke: "#744210", strokeWidth: 3 }));
+        // Telo zvona
+        noviObjekat.add(new Konva.Arc({ x: 0, y: 5, innerRadius: 0, outerRadius: 22, angle: 180, fill: "#ecc94b", stroke: "#744210", strokeWidth: 3, rotation: 180 }));
+        // Donji obod zvona
+        noviObjekat.add(new Konva.Rect({ x: -24, y: 3, width: 48, height: 5, fill: "#d69e2e", stroke: "#744210", strokeWidth: 2, cornerRadius: 2 }));
+        // Klatno
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 12, radius: 5, fill: "#744210" }));
+        break;
+
+      case "zvucni-cip":
+        // Zvučni modul sa rešetkom zvučnika
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Rect({ x: -22, y: -22, width: 44, height: 44, fill: "#805ad5", stroke: "#44337a", strokeWidth: 3, cornerRadius: 10 }));
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 12, fill: "#b794f4", stroke: "#44337a", strokeWidth: 2 }));
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 4, fill: "#44337a" }));
+        break;
+
+        case "nota":
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Circle({ x: -10, y: 10, radius: 8, fill: "#3182ce" }));
+        noviObjekat.add(new Konva.Circle({ x: 10, y: 5, radius: 8, fill: "#3182ce" }));
+        noviObjekat.add(new Konva.Rect({ x: -4, y: -15, width: 4, height: 25, fill: "#2b6cb0" }));
+        noviObjekat.add(new Konva.Rect({ x: 16, y: -20, width: 4, height: 25, fill: "#2b6cb0" }));
+        noviObjekat.add(new Konva.Line({ points: [-4, -15, 20, -20, 20, -12, -4, -7], fill: "#2b6cb0", closed: true }));
+        break;
+
+      // 3. LAKŠE HVATANJE & MOTORIKA
+      case "veliko-dugme":
+        // Realistično šiveno ili pritisno dugme sa 4 rupice u sredini
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 26, fill: "#e53e3e", stroke: "#742a2a", strokeWidth: 4 }));
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 18, fill: "#feb2b2", stroke: "#742a2a", strokeWidth: 2 }));
+        // 4 rupice
+        noviObjekat.add(new Konva.Circle({ x: -6, y: -6, radius: 2.5, fill: "#742a2a" }));
+        noviObjekat.add(new Konva.Circle({ x: 6, y: -6, radius: 2.5, fill: "#742a2a" }));
+        noviObjekat.add(new Konva.Circle({ x: -6, y: 6, radius: 2.5, fill: "#742a2a" }));
+        noviObjekat.add(new Konva.Circle({ x: 6, y: 6, radius: 2.5, fill: "#742a2a" }));
+        break;
+
+      case "rucka":
+        // Ergonomska ručka sa šrafovima/uškama za pričvršćivanje na krajevima
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Osnovni luk/most ručke
+        noviObjekat.add(new Konva.Rect({ x: -35, y: -12, width: 70, height: 24, fill: "#38a169", stroke: "#1c4532", strokeWidth: 3, cornerRadius: 12 }));
+        // Unutrašnji otvor za prste
+        noviObjekat.add(new Konva.Rect({ x: -22, y: -5, width: 44, height: 10, fill: "#ffffff", stroke: "#1c4532", strokeWidth: 2, cornerRadius: 5 }));
+        // Šrafovi na krajevima
+        noviObjekat.add(new Konva.Circle({ x: -28, y: 0, radius: 3, fill: "#1c4532" }));
+        noviObjekat.add(new Konva.Circle({ x: 28, y: 0, radius: 3, fill: "#1c4532" }));
+        break;
+
+      case "zupcanik":
+        // Industrijski zupčanik sa zubcima i unutrašnjim otvorom
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Zupci (kombinacija zvezde sa zaravnjenim ivicama)
+        noviObjekat.add(new Konva.Star({ x: 0, y: 0, numPoints: 8, innerRadius: 18, outerRadius: 26, fill: "#ed8936", stroke: "#7b341e", strokeWidth: 3 }));
+        // Središnji prsten zupčanika
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 12, fill: "#feebc8", stroke: "#7b341e", strokeWidth: 2 }));
+        // Unutrašnja rupa
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 6, fill: "#7b341e" }));
+        break;
+
+case "cicak":
+        // Čičak traka sa jasno vidljivom mikroteksturom
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Osnovna tekstilna traka sa ivicama
+        noviObjekat.add(new Konva.Rect({ 
+          x: -30, y: -14, width: 60, height: 28, 
+          fill: "#2d3748", stroke: "#1a202c", strokeWidth: 3, cornerRadius: 4 
+        }));
+        // Svetlije unutrašnje polje
+        noviObjekat.add(new Konva.Rect({ 
+          x: -26, y: -10, width: 52, height: 20, 
+          fill: "#4a5568", stroke: "#2d3748", strokeWidth: 1, cornerRadius: 2 
+        }));
+        // Gusti redovi vidljivih čičak-kukica
+        for (let ix = -20; ix <= 20; ix += 8) {
+          for (let iy = -6; iy <= 6; iy += 6) {
+            noviObjekat.add(new Konva.Circle({ x: ix, y: iy, radius: 2, fill: "#e2e8f0" }));
+          }
+        }
+        break;
+
+      // 4. VISOKI KONTRAST
+      case "traka-kontrast":
+        // Sigurnosna žuto-crna kosa traka
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Žuta baza
+        noviObjekat.add(new Konva.Rect({ x: -40, y: -12, width: 80, height: 24, fill: "#ffff00", stroke: "#000000", strokeWidth: 3, cornerRadius: 4 }));
+        // Kose crne štrafte
+        for (let offset = -30; offset <= 30; offset += 15) {
+          noviObjekat.add(new Konva.Line({ points: [offset, -10, offset + 8, 10], stroke: "#000000", strokeWidth: 4 }));
+        }
+        break;
+
+      case "markacija":
+        // Precizno centrirana fokusna meta (rešava problem razvučenog okvira)
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Spoljašnji krug
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 22, fill: "#ffffff", stroke: "#e53e3e", strokeWidth: 5 }));
+        // Srednji prsten
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 14, fill: "transparent", stroke: "#e53e3e", strokeWidth: 3 }));
+        // Centar (fokus tačka)
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 6, fill: "#e53e3e" }));
+        break;
+
+      case "ogledalo":
+        // Čisto okruglo ogledalce BEZ drške
+        noviObjekat = new Konva.Group({ x: posX, y: posY, draggable: true });
+        // Drveni/plastični zaštitni ram
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 25, fill: "#f6e0b5", stroke: "#744210", strokeWidth: 3.5 }));
+        // Unutrašnji okvir
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 20, fill: "#cbd5e0", stroke: "#a0aec0", strokeWidth: 1.5 }));
+        // Staklena površina sa odsjajem svetla
+        noviObjekat.add(new Konva.Circle({ x: 0, y: 0, radius: 18, fillLinearGradientStartPoint: { x: -15, y: -15 }, fillLinearGradientEndPoint: { x: 15, y: 15 }, fillLinearGradientColorStops: [0, '#ffffff', 0.5, '#e2e8f0', 1, '#cbd5e0'] }));
+        // Beli dijagonalni odsjaji
+        noviObjekat.add(new Konva.Line({ points: [-10, -5, 2, -17], stroke: "#ffffff", strokeWidth: 3, lineCap: "round", opacity: 0.9 }));
+        noviObjekat.add(new Konva.Line({ points: [-5, 3, 8, -10], stroke: "#ffffff", strokeWidth: 2, lineCap: "round", opacity: 0.7 }));
+        break;
+
+      default:
+        return;
+    }
+
+    noviObjekat.name("dodatak");
+
+    noviObjekat.on("click tap", (e) => {
+      e.cancelBubble = true;
+      transformer.nodes([noviObjekat]);
+      sloj.draw();
+    });
+
+    sloj.add(noviObjekat);
+    transformer.nodes([noviObjekat]);
+    sloj.draw();
+  }
+
+  // Klik na praznu površinu skida selekciju
+  stage.on("click tap", (e) => {
+    if (e.target === stage) {
+      transformer.nodes([]);
+      sloj.draw();
+    }
+  });
+
+  // ===================== ZAMENA OSNOVNOG MODELA =====================
+
+  const modelButtons = document.querySelectorAll(".btn-model");
+  modelButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      modelButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      trenutniModel = btn.dataset.model;
+      nacrtajOsnovniModel(trenutniModel);
+    });
+  });
+
+  // ===================== PALETA: DODAVANJE (KLIK I DRAG & DROP) =====================
+
+  const paletteItems = document.querySelectorAll(".palette-item");
+  paletteItems.forEach(item => {
+    item.addEventListener("click", () => {
+      kreirajElement(item.dataset.element);
+    });
+
+    item.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", item.dataset.element);
+    });
+  });
+
+  containerEl.addEventListener("dragover", (e) => e.preventDefault());
+
+  containerEl.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const tip = e.dataTransfer.getData("text/plain");
+    if (!tip) return;
+
+    stage.setPointersPositions(e);
+    const pos = stage.getPointerPosition();
+    if (pos) {
+      kreirajElement(tip, pos.x, pos.y);
+    } else {
+      kreirajElement(tip);
+    }
+  });
+
+  // ===================== DUGMAD ZA UPRAVLJANJE =====================
+
+  const btnObrisi = document.getElementById("btn-obrisi-element");
+  const btnReset = document.getElementById("btn-reset-canvas");
+  const btnPreuzmi = document.getElementById("btn-preuzmi-sliku");
+
+  if (btnObrisi) {
+    btnObrisi.addEventListener("click", () => {
+      const selektovani = transformer.nodes();
+      if (selektovani.length > 0) {
+        selektovani.forEach(node => node.destroy());
+        transformer.nodes([]);
+        sloj.draw();
+      } else {
+        alert("Prvo kliknite na dodatak koji želite da obrišete.");
+      }
+    });
+  }
+
+  if (btnReset) {
+    btnReset.addEventListener("click", () => {
+      if (confirm("Da li ste sigurni da želite da resetujete igračku? Sve dodate modifikacije će biti uklonjene.")) {
+        nacrtajOsnovniModel(trenutniModel);
+      }
+    });
+  }
+
+  if (btnPreuzmi) {
+    btnPreuzmi.addEventListener("click", () => {
+      transformer.nodes([]);
+      sloj.draw();
+
+      const dataURL = stage.toDataURL({ pixelRatio: 2 });
+      const link = document.createElement("a");
+      link.download = `nolimits-prilagodjena-igracka-${trenutniModel}.png`;
+      link.href = dataURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
+
+  window.addEventListener("resize", () => {
+    stage.width(containerEl.clientWidth);
+    stage.height(containerEl.clientHeight);
+    nacrtajOsnovniModel(trenutniModel);
+  });
+
+  // Inicijalno iscrtavanje (Meda)
+  nacrtajOsnovniModel("meda");
+
+});
