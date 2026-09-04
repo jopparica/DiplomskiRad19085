@@ -12,9 +12,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnHighlightLinks = document.getElementById("btn-highlight-links");
   const btnReset = document.getElementById("btn-reset-accessibility");
 
-  const MIN_FONT_SIZE = 80;
-  const MAX_FONT_SIZE = 150;
-  const FONT_STEP = 10;
+  const MIN_FONT_SIZE = 85;  // Minimalna veličina (85%)
+  const MAX_FONT_SIZE = 135;  // Maksimalna veličina (135%)
+  const FONT_STEP = 2;        // Smanjen korak na 3% za suptilnije i finije menjanje
+
+  function getStyleTag() {
+    let styleTag = document.getElementById("accessibility-font-style");
+    if (!styleTag) {
+      styleTag = document.createElement("style");
+      styleTag.id = "accessibility-font-style";
+      document.head.appendChild(styleTag);
+    }
+    return styleTag;
+  }
+
+  function primeniVelicinuFonta(velicina) {
+    const styleTag = getStyleTag();
+    if (velicina === 100) {
+      styleTag.innerHTML = "";
+    } else {
+      styleTag.innerHTML = `
+        body, body *, p, h1, h2, h3, h4, h5, h6, span, a, li, button, input, label {
+          font-size: ${velicina}% !important;
+        }
+      `;
+    }
+    localStorage.setItem("fontSize", velicina);
+  }
 
   function ucitajPodesavanja() {
     const sacuvanaVelicina = localStorage.getItem("fontSize");
@@ -23,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const isticanjeLinkova = localStorage.getItem("highlightLinks") === "true";
 
     if (sacuvanaVelicina) {
-      document.documentElement.style.fontSize = sacuvanaVelicina + "%";
+      primeniVelicinuFonta(parseInt(sacuvanaVelicina, 10));
     }
 
     if (visokiKontrast) body.classList.add("high-contrast");
@@ -32,11 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function trenutnaVelicinaFonta() {
-    const stil = document.documentElement.style.fontSize;
-    if (!stil) return 100;
-    return parseInt(stil.replace("%", ""), 10);
+    const sacuvana = localStorage.getItem("fontSize");
+    if (sacuvana) return parseInt(sacuvana, 10);
+    return 100;
   }
 
+  ucitajPodesavanja();
+
+  // Otvaranje / zatvaranje menija
   if (toggleBtn && menu) {
     toggleBtn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -60,22 +87,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Povećanje fonta za finijih 3%
   if (btnFontIncrease) {
     btnFontIncrease.addEventListener("click", () => {
       const nova = Math.min(trenutnaVelicinaFonta() + FONT_STEP, MAX_FONT_SIZE);
-      document.documentElement.style.fontSize = nova + "%";
-      localStorage.setItem("fontSize", nova);
+      primeniVelicinuFonta(nova);
     });
   }
 
+  // Smanjenje fonta za finijih 3%
   if (btnFontDecrease) {
     btnFontDecrease.addEventListener("click", () => {
       const nova = Math.max(trenutnaVelicinaFonta() - FONT_STEP, MIN_FONT_SIZE);
-      document.documentElement.style.fontSize = nova + "%";
-      localStorage.setItem("fontSize", nova);
+      primeniVelicinuFonta(nova);
     });
   }
 
+  // Visoki kontrast
   if (btnHighContrast) {
     btnHighContrast.addEventListener("click", () => {
       const aktivno = body.classList.toggle("high-contrast");
@@ -83,6 +111,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Font za disleksiju
   if (btnDyslexiaFont) {
     btnDyslexiaFont.addEventListener("click", () => {
       const aktivno = body.classList.toggle("dyslexia-font");
@@ -90,6 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Isticanje linkova
   if (btnHighlightLinks) {
     btnHighlightLinks.addEventListener("click", () => {
       const aktivno = body.classList.toggle("highlight-links");
@@ -97,10 +127,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Resetovanje
   if (btnReset) {
     btnReset.addEventListener("click", () => {
       body.classList.remove("high-contrast", "dyslexia-font", "highlight-links");
-      document.documentElement.style.fontSize = "100%";
+      
+      const styleTag = getStyleTag();
+      styleTag.innerHTML = "";
 
       localStorage.removeItem("fontSize");
       localStorage.removeItem("highContrast");
@@ -109,10 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  ucitajPodesavanja();
-
 });
-
 // ===================== KATALOG IGRAČAKA I MODAL NARUČIVANJA =====================
 document.addEventListener("DOMContentLoaded", () => {
 
