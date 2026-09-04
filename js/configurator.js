@@ -7,7 +7,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Provera za mobilne ekrane i određivanje faktora skaliranja
   const isMobile = window.innerWidth < 768;
-  const scaleFactor = isMobile ? 0.65 : 1.0; // 65% veličine na telefonima, 100% na desktopu
+  const scaleFactor = isMobile ? 0.65 : 1.0;
+
+  // Eksterne kontrole iz HTML-a za veličinu i rotaciju
+  const controlsPanel = document.getElementById("selected-element-controls");
+  const scaleInput = document.getElementById("input-element-scale");
+  const rotateBtn = document.getElementById("btn-rotate-element");
 
   // ===================== INICIJALIZACIJA CANVASA =====================
 
@@ -20,19 +25,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const sloj = new Konva.Layer();
   stage.add(sloj);
 
-  // Transformer optimizovan za mobilni i desktop
+  // Transformer služi isključivo kao isprekidana plava linija koja označava šta je trenutno aktivno
   let transformer = new Konva.Transformer({
-    rotateEnabled: true,
-    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+    rotateEnabled: false,
+    enabledAnchors: [],
     borderStroke: '#2b6cb0',
-    anchorFill: '#ff8800',
-    anchorSize: isMobile ? 16 : 10,
-    hitStrokeWidth: 15
+    borderStrokeWidth: 2,
+    borderDash: [4, 4]
   });
   sloj.add(transformer);
 
   let trenutniModel = "meda";
   let brojacElemenata = 0;
+
+  // Prikaz i skrivanje eksternih kontrola (slider i rotacija)
+  function osveziKontrole() {
+    const selektovani = transformer.nodes();
+    if (selektovani.length > 0) {
+      const el = selektovani[0];
+      if (controlsPanel) controlsPanel.style.display = "flex";
+      if (scaleInput) scaleInput.value = el.scaleX().toFixed(1);
+    } else {
+      if (controlsPanel) controlsPanel.style.display = "none";
+    }
+  }
+
+  // Funkcija za označenje izabranog elementa
+  function postaviSelekciju(cvor) {
+    if (!cvor) return;
+    transformer.nodes([cvor]);
+    cvor.moveToTop();
+    transformer.moveToTop();
+    sloj.batchDraw();
+    osveziKontrole();
+  }
+
+  // Uklanjanje selekcije
+  function ukloniSelekciju() {
+    transformer.nodes([]);
+    sloj.batchDraw();
+    osveziKontrole();
+  }
 
   // ===================== BEZBEDNO ČIŠĆENJE CANVASA =====================
 
@@ -41,14 +74,15 @@ document.addEventListener("DOMContentLoaded", () => {
     sloj.destroyChildren();
     
     transformer = new Konva.Transformer({
-      rotateEnabled: true,
-      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+      rotateEnabled: false,
+      enabledAnchors: [],
       borderStroke: '#2b6cb0',
-      anchorFill: '#ff8800',
-      anchorSize: isMobile ? 16 : 10,
-      hitStrokeWidth: 15
+      borderStrokeWidth: 2,
+      borderDash: [4, 4]
     });
     sloj.add(transformer);
+    sloj.batchDraw();
+    osveziKontrole();
   }
 
   // ===================== CRTANJE TAČNO 1 OSNOVNOG MODELA =====================
@@ -131,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const velicinaKocke = 110;
-        const razmakKocki = isMobile ? 140 : 220; // Prilagođen razmak na mobilnom
+        const razmakKocki = isMobile ? 140 : 220;
 
         nacrtajVeliku3DKocku(cX - razmakKocki, cY, velicinaKocke);
         nacrtajVeliku3DKocku(cX, cY, velicinaKocke);
@@ -172,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
     }
 
-    sloj.draw();
+    sloj.batchDraw();
   }
 
   // ===================== KREIRANJE DODATAKA =====================
@@ -216,7 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
         noviObjekat.add(new Konva.Arc({ x: 0, y: -5, innerRadius: 10, outerRadius: 22, angle: 180, fill: "#e53e3e", stroke: "#742a2a", strokeWidth: 2, rotation: 180 }));
         noviObjekat.add(new Konva.Rect({ x: -22, y: -5, width: 12, height: 18, fill: "#e53e3e", stroke: "#742a2a", strokeWidth: 2 }));
         noviObjekat.add(new Konva.Rect({ x: 10, y: -5, width: 12, height: 18, fill: "#3182ce", stroke: "#2b6cb0", strokeWidth: 2 }));
-        break;    
+        break;     
 
       // 2. ZVUK & SIGNALIZACIJA
       case "zvonce":
@@ -310,32 +344,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     noviObjekat.name("dodatak");
-
-    // Prilagođavanje veličine novog objekta na mobilnom
     noviObjekat.scale({ x: scaleFactor, y: scaleFactor });
 
-    // Onemogućavamo da unutrašnji delovi grupe pojedinačno hvataju dodire
-    noviObjekat.getChildren().forEach(child => {
-      child.listening(false);
+    // Sinhronizacija pri pomeranju
+    noviObjekat.on("dragstart dragmove", () => {
+      postaviSelekciju(noviObjekat);
     });
 
-    const aktivirajSelektovanje = (e) => {
-      if (e) {
-        e.cancelBubble = true;
-      }
-      transformer.nodes([noviObjekat]);
-      noviObjekat.moveToTop();
-      transformer.moveToTop();
-      sloj.draw();
-    };
-
-    noviObjekat.on("tap click dragstart transformstart", aktivirajSelektovanje);
-
     sloj.add(noviObjekat);
-    aktivirajSelektovanje();
+    postaviSelekciju(noviObjekat);
   }
 
-  // ===================== DESELEKCIJA SA ZAŠTITOM OD SKROLA =====================
+  // ===================== UNIFIKOVANA SELEKCIJA NA LEVELU STAGE-A =====================
 
   let isScrolling = false;
   let startX = 0;
@@ -359,15 +379,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, { passive: true });
 
-  // Deselekcija na tap/click na praznu površinu
+  // Centralni događaj za selekciju/deselekciju
   stage.on("tap click", (e) => {
     if (isScrolling) return;
 
-    if (e.target === stage) {
-      transformer.nodes([]);
-      sloj.draw();
+    // Klik na prazan prostor ili na osnovni model čisti selekciju
+    if (e.target === stage || e.target.name() === "osnova") {
+      ukloniSelekciju();
+      return;
+    }
+
+    // Tražimo krovnu grupu "dodatak" bez obzira na to koji je unutrašnji oblik kliknut
+    let targetGroup = e.target.findAncestor(node => node.name() === "dodatak", true);
+    if (!targetGroup && e.target.name() === "dodatak") {
+      targetGroup = e.target;
+    }
+
+    if (targetGroup) {
+      postaviSelekciju(targetGroup);
+    } else {
+      ukloniSelekciju();
     }
   });
+
+  // ===================== UPRAVLJANJE EKSTERNIM KONTROLAMA =====================
+
+  if (scaleInput) {
+    scaleInput.addEventListener("input", (e) => {
+      const selektovani = transformer.nodes();
+      if (selektovani.length > 0) {
+        const novaSkala = parseFloat(e.target.value);
+        selektovani[0].scale({ x: novaSkala, y: novaSkala });
+        sloj.batchDraw();
+      }
+    });
+  }
+
+  if (rotateBtn) {
+    rotateBtn.addEventListener("click", () => {
+      const selektovani = transformer.nodes();
+      if (selektovani.length > 0) {
+        const trenutnaRotacija = selektovani[0].rotation();
+        selektovani[0].rotation((trenutnaRotacija + 45) % 360);
+        sloj.batchDraw();
+      }
+    });
+  }
 
   // ===================== ZAMENA OSNOVNOG MODELA =====================
 
@@ -422,8 +479,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const selektovani = transformer.nodes();
       if (selektovani.length > 0) {
         selektovani.forEach(node => node.destroy());
-        transformer.nodes([]);
-        sloj.draw();
+        ukloniSelekciju();
       } else {
         alert("Prvo kliknite na dodatak koji želite da obrišete.");
       }
@@ -440,8 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (btnPreuzmi) {
     btnPreuzmi.addEventListener("click", () => {
-      transformer.nodes([]);
-      sloj.draw();
+      ukloniSelekciju();
 
       const dataURL = stage.toDataURL({ pixelRatio: 2 });
       const link = document.createElement("a");
