@@ -16,13 +16,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const sloj = new Konva.Layer();
   stage.add(sloj);
 
-  // Transformer za promenu veličine i rotaciju dodataka (veće ručke za mobilni)
+  // Transformer za promenu veličine i rotaciju dodataka (optimizovan za mobilni)
   let transformer = new Konva.Transformer({
     rotateEnabled: true,
     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     borderStroke: '#2b6cb0',
     anchorFill: '#ff8800',
-    anchorSize: 14 // Povećano radi lakšeg hvatanja prstom
+    anchorSize: 14
   });
   sloj.add(transformer);
 
@@ -304,28 +304,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     noviObjekat.name("dodatak");
 
-    // Selekcija na tap/klik
-    noviObjekat.on("click tap", (e) => {
-      e.cancelBubble = true;
-      transformer.nodes([noviObjekat]);
-      sloj.draw();
-    });
-
-    // Osigurava da element ostane selektovan pri pomeranju i transformaciji
-    noviObjekat.on("dragstart transformstart", (e) => {
-      e.cancelBubble = true;
-      if (transformer.nodes()[0] !== noviObjekat) {
-        transformer.nodes([noviObjekat]);
-        sloj.draw();
+    // KLJUČNO REŠENJE SELEKCIJE: pointerdown reaguje odmah na dodir i pronalazi celu Grupu
+    const selektujElement = (e) => {
+      if (e) {
+        e.cancelBubble = true;
       }
-    });
+      // Pronalazimo roditeljsku Grupu ako je kliknuta unutrašnja figura
+      const meta = (e && e.target && e.target.findAncestor) ? (e.target.findAncestor('.dodatak', true) || noviObjekat) : noviObjekat;
+      
+      transformer.nodes([meta]);
+      meta.moveToTop();
+      transformer.moveToTop();
+      sloj.draw();
+    };
+
+    noviObjekat.on("pointerdown", selektujElement);
+    noviObjekat.on("dragstart transformstart", selektujElement);
 
     sloj.add(noviObjekat);
-    transformer.nodes([noviObjekat]);
-    sloj.draw();
+    selektujElement();
   }
 
-  // ===================== LOGIKA SKROLOVANJA I DESELEKCIJE =====================
+  // ===================== DESELEKCIJA SA ZAŠTITOM OD SKROLA =====================
 
   let isScrolling = false;
   let startX = 0;
@@ -343,15 +343,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.touches.length > 0) {
       const deltaX = Math.abs(e.touches[0].clientX - startX);
       const deltaY = Math.abs(e.touches[0].clientY - startY);
-      // Ako se prst pomeri više od 10px, tretiraj kao skrol stranice
       if (deltaX > 10 || deltaY > 10) {
         isScrolling = true;
       }
     }
   }, { passive: true });
 
-  // Deselekcija na klik/tap u prazno (samo ako nije u pitanju skrol)
-  stage.on("click tap", (e) => {
+  // Deselekcija se okida na pointerdown ako je kliknuto direktno u prazno ili na osnovu
+  stage.on("pointerdown", (e) => {
     if (isScrolling) return;
 
     if (e.target === stage || e.target.name() === "osnova") {
@@ -444,7 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Sprečavanje brisanja elemenata pri promeni visine pregledača na mobilnom
+  // Sprečavanje brisanja elemenata pri promjeni visine ekrana na mobilnom
   let prethodnaSirina = containerEl.clientWidth;
 
   window.addEventListener("resize", () => {
