@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const containerEl = document.getElementById("konva-container");
   if (!containerEl) return; // Nismo na configurator.html
 
+  // Provera za mobilne ekrane i određivanje faktora skaliranja
+  const isMobile = window.innerWidth < 768;
+  const scaleFactor = isMobile ? 0.65 : 1.0; // 65% veličine na telefonima, 100% na desktopu
+
   // ===================== INICIJALIZACIJA CANVASA =====================
 
   const stage = new Konva.Stage({
@@ -16,13 +20,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const sloj = new Konva.Layer();
   stage.add(sloj);
 
-  // Transformer za promenu veličine i rotaciju dodataka (optimizovan za mobilni)
+  // Transformer optimizovan za mobilni i desktop
   let transformer = new Konva.Transformer({
     rotateEnabled: true,
     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     borderStroke: '#2b6cb0',
     anchorFill: '#ff8800',
-    anchorSize: 14
+    anchorSize: isMobile ? 16 : 10,
+    hitStrokeWidth: 15
   });
   sloj.add(transformer);
 
@@ -40,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
       enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
       borderStroke: '#2b6cb0',
       anchorFill: '#ff8800',
-      anchorSize: 14
+      anchorSize: isMobile ? 16 : 10,
+      hitStrokeWidth: 15
     });
     sloj.add(transformer);
   }
@@ -55,43 +61,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     switch (tip) {
       case "meda":
-        sloj.add(new Konva.Circle({ x: cX - 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX + 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX - 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX + 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX, y: cY + 30, radius: 85, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 4, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX, y: cY + 35, radius: 55, fill: "#f6e0b5", stroke: "#b7791f", strokeWidth: 2, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 25, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 14, fill: "#f6e0b5", name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 25, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 14, fill: "#f6e0b5", name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX, y: cY - 60, radius: 65, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 4, name: "osnova" }));
-        sloj.add(new Konva.Ellipse({ x: cX, y: cY - 48, radiusX: 22, radiusY: 16, fill: "#feebc8", stroke: "#b7791f", strokeWidth: 2, name: "osnova" }));
-        sloj.add(new Konva.Ellipse({ x: cX, y: cY - 55, radiusX: 10, radiusY: 7, fill: "#322659", name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX - 22, y: cY - 72, radius: 6, fill: "#000", name: "osnova" }));
-        sloj.add(new Konva.Circle({ x: cX + 22, y: cY - 72, radius: 6, fill: "#000", name: "osnova" }));
+        sloj.add(new Konva.Circle({ x: cX - 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX + 65, y: cY + 85, radius: 28, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX - 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX + 85, y: cY + 10, radius: 25, fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX, y: cY + 30, radius: 85, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 4, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX, y: cY + 35, radius: 55, fill: "#f6e0b5", stroke: "#b7791f", strokeWidth: 2, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 25, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 14, fill: "#f6e0b5", name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 25, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 14, fill: "#f6e0b5", name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX, y: cY - 60, radius: 65, fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 4, name: "osnova", listening: false }));
+        sloj.add(new Konva.Ellipse({ x: cX, y: cY - 48, radiusX: 22, radiusY: 16, fill: "#feebc8", stroke: "#b7791f", strokeWidth: 2, name: "osnova", listening: false }));
+        sloj.add(new Konva.Ellipse({ x: cX, y: cY - 55, radiusX: 10, radiusY: 7, fill: "#322659", name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX - 22, y: cY - 72, radius: 6, fill: "#000", name: "osnova", listening: false }));
+        sloj.add(new Konva.Circle({ x: cX + 22, y: cY - 72, radius: 6, fill: "#000", name: "osnova", listening: false }));
         break;
 
       case "lopta":
-        sloj.add(new Konva.Ellipse({ x: cX, y: cY + 125, radiusX: 115, radiusY: 18, fill: "#cbd5e0", name: "osnova" }));
+        sloj.add(new Konva.Ellipse({ x: cX, y: cY + 125, radiusX: 115, radiusY: 18, fill: "#cbd5e0", name: "osnova", listening: false }));
         sloj.add(new Konva.Circle({
           x: cX, y: cY, radius: 130,
           fillLinearGradientStartPoint: { x: -60, y: -60 },
           fillLinearGradientEndPoint: { x: 100, y: 100 },
           fillLinearGradientColorStops: [0, '#63b3ed', 0.85, '#2b6cb0', 1, '#1a365d'],
-          stroke: "#1a365d", strokeWidth: 5, name: "osnova"
+          stroke: "#1a365d", strokeWidth: 5, name: "osnova", listening: false
         }));
-        sloj.add(new Konva.Arc({ x: cX - 80, y: cY, innerRadius: 118, outerRadius: 123, angle: 100, fill: "#ffffff", rotation: -50, opacity: 0.6, name: "osnova" }));
-        sloj.add(new Konva.Arc({ x: cX + 80, y: cY, innerRadius: 118, outerRadius: 123, angle: 100, fill: "#ffffff", rotation: 130, opacity: 0.6, name: "osnova" }));
+        sloj.add(new Konva.Arc({ x: cX - 80, y: cY, innerRadius: 118, outerRadius: 123, angle: 100, fill: "#ffffff", rotation: -50, opacity: 0.6, name: "osnova", listening: false }));
+        sloj.add(new Konva.Arc({ x: cX + 80, y: cY, innerRadius: 118, outerRadius: 123, angle: 100, fill: "#ffffff", rotation: 130, opacity: 0.6, name: "osnova", listening: false }));
         break;
 
       case "tabla":
         const sirinaTable = 530;
         const visinaTable = 360;
-        sloj.add(new Konva.Rect({ x: cX - sirinaTable/2, y: cY - visinaTable/2, width: sirinaTable, height: visinaTable, fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, cornerRadius: 12, name: "osnova" }));
-        sloj.add(new Konva.Rect({ x: cX - sirinaTable/2 + 18, y: cY - visinaTable/2 + 18, width: sirinaTable - 36, height: visinaTable - 36, fill: "#f6e0b5", stroke: "#b7791f", strokeWidth: 3, cornerRadius: 6, name: "osnova" }));
+        sloj.add(new Konva.Rect({ x: cX - sirinaTable/2, y: cY - visinaTable/2, width: sirinaTable, height: visinaTable, fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, cornerRadius: 12, name: "osnova", listening: false }));
+        sloj.add(new Konva.Rect({ x: cX - sirinaTable/2 + 18, y: cY - visinaTable/2 + 18, width: sirinaTable - 36, height: visinaTable - 36, fill: "#f6e0b5", stroke: "#b7791f", strokeWidth: 3, cornerRadius: 6, name: "osnova", listening: false }));
         for (let i = -110; i <= 110; i += 45) {
-          sloj.add(new Konva.Line({ points: [cX - sirinaTable/2 + 25, cY + i, cX + sirinaTable/2 - 25, cY + i], stroke: "#edd095", strokeWidth: 2, name: "osnova" }));
+          sloj.add(new Konva.Line({ points: [cX - sirinaTable/2 + 25, cY + i, cX + sirinaTable/2 - 25, cY + i], stroke: "#edd095", strokeWidth: 2, name: "osnova", listening: false }));
         }
         const uglovi = [
           {x: cX - sirinaTable/2 + 10, y: cY - visinaTable/2 + 10},
@@ -100,8 +106,8 @@ document.addEventListener("DOMContentLoaded", () => {
           {x: cX + sirinaTable/2 - 25, y: cY + visinaTable/2 - 25}
         ];
         uglovi.forEach(u => {
-          sloj.add(new Konva.Rect({ x: u.x, y: u.y, width: 15, height: 15, fill: "#a0aec0", stroke: "#4a5568", strokeWidth: 1, name: "osnova" }));
-          sloj.add(new Konva.Circle({ x: u.x + 7.5, y: u.y + 7.5, radius: 2, fill: "#2d3748", name: "osnova" }));
+          sloj.add(new Konva.Rect({ x: u.x, y: u.y, width: 15, height: 15, fill: "#a0aec0", stroke: "#4a5568", strokeWidth: 1, name: "osnova", listening: false }));
+          sloj.add(new Konva.Circle({ x: u.x + 7.5, y: u.y + 7.5, radius: 2, fill: "#2d3748", name: "osnova", listening: false }));
         });
         break;
 
@@ -112,20 +118,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
           sloj.add(new Konva.Line({
             points: [x, y, x - w, y - h/2, x - w, y + h/2, x, y + h],
-            fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
+            fill: "#d69e2e", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova", listening: false
           }));
           sloj.add(new Konva.Line({
             points: [x, y, x + w, y - h/2, x + w, y + h/2, x, y + h],
-            fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
+            fill: "#b7791f", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova", listening: false
           }));
           sloj.add(new Konva.Line({
             points: [x, y, x - w, y - h/2, x, y - h, x + w, y - h/2],
-            fill: "#f6e0b5", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova"
+            fill: "#f6e0b5", stroke: "#5c330a", strokeWidth: 3, closed: true, name: "osnova", listening: false
           }));
         }
 
         const velicinaKocke = 110;
-        const razmakKocki = 220;
+        const razmakKocki = isMobile ? 140 : 220; // Prilagođen razmak na mobilnom
 
         nacrtajVeliku3DKocku(cX - razmakKocki, cY, velicinaKocke);
         nacrtajVeliku3DKocku(cX, cY, velicinaKocke);
@@ -143,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
             cX + sRama/2 - 40, cY + vRama/2,
             cX - sRama/2 + 40, cY + vRama/2
           ],
-          fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, closed: true, name: "osnova"
+          fill: "#8c531b", stroke: "#5c330a", strokeWidth: 5, closed: true, name: "osnova", listening: false
         }));
 
         const plocice = [
@@ -158,13 +164,14 @@ document.addEventListener("DOMContentLoaded", () => {
           sloj.add(new Konva.Rect({
             x: cX + p.x, y: cY - p.visina/2,
             width: p.sirina, height: p.visina,
-            fill: p.boja, stroke: "#1a202c", strokeWidth: 2, cornerRadius: 5, name: "osnova"
+            fill: p.boja, stroke: "#1a202c", strokeWidth: 2, cornerRadius: 5, name: "osnova", listening: false
           }));
-          sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY - p.visina/2 + 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova" }));
-          sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY + p.visina/2 - 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova" }));
+          sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY - p.visina/2 + 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova", listening: false }));
+          sloj.add(new Konva.Circle({ x: cX + p.x + p.sirina/2, y: cY + p.visina/2 - 12, radius: 3.5, fill: "#ffffff", stroke: "#1a202c", strokeWidth: 1, name: "osnova", listening: false }));
         });
         break;
     }
+
     sloj.draw();
   }
 
@@ -173,8 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function kreirajElement(tip, customX = null, customY = null) {
     brojacElemenata++;
 
-    let posX = customX !== null ? customX : 100 + (brojacElemenata % 4) * 20;
-    let posY = customY !== null ? customY : 100 + Math.floor(brojacElemenata / 4) * 20;
+    let posX = customX !== null ? customX : (isMobile ? 50 : 100) + (brojacElemenata % 4) * 15;
+    let posY = customY !== null ? customY : (isMobile ? 50 : 100) + Math.floor(brojacElemenata / 4) * 15;
 
     let noviObjekat;
 
@@ -304,25 +311,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     noviObjekat.name("dodatak");
 
-    // KLJUČNO REŠENJE SELEKCIJE: pointerdown reaguje odmah na dodir i pronalazi celu Grupu
-    const selektujElement = (e) => {
+    // Prilagođavanje veličine novog objekta na mobilnom
+    noviObjekat.scale({ x: scaleFactor, y: scaleFactor });
+
+    // Onemogućavamo da unutrašnji delovi grupe pojedinačno hvataju dodire
+    noviObjekat.getChildren().forEach(child => {
+      child.listening(false);
+    });
+
+    const aktivirajSelektovanje = (e) => {
       if (e) {
         e.cancelBubble = true;
       }
-      // Pronalazimo roditeljsku Grupu ako je kliknuta unutrašnja figura
-      const meta = (e && e.target && e.target.findAncestor) ? (e.target.findAncestor('.dodatak', true) || noviObjekat) : noviObjekat;
-      
-      transformer.nodes([meta]);
-      meta.moveToTop();
+      transformer.nodes([noviObjekat]);
+      noviObjekat.moveToTop();
       transformer.moveToTop();
       sloj.draw();
     };
 
-    noviObjekat.on("pointerdown", selektujElement);
-    noviObjekat.on("dragstart transformstart", selektujElement);
+    noviObjekat.on("tap click dragstart transformstart", aktivirajSelektovanje);
 
     sloj.add(noviObjekat);
-    selektujElement();
+    aktivirajSelektovanje();
   }
 
   // ===================== DESELEKCIJA SA ZAŠTITOM OD SKROLA =====================
@@ -349,11 +359,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, { passive: true });
 
-  // Deselekcija se okida na pointerdown ako je kliknuto direktno u prazno ili na osnovu
-  stage.on("pointerdown", (e) => {
+  // Deselekcija na tap/click na praznu površinu
+  stage.on("tap click", (e) => {
     if (isScrolling) return;
 
-    if (e.target === stage || e.target.name() === "osnova") {
+    if (e.target === stage) {
       transformer.nodes([]);
       sloj.draw();
     }
@@ -443,7 +453,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Sprečavanje brisanja elemenata pri promjeni visine ekrana na mobilnom
+  // Sprečavanje resetovanja pri skrolovanju i promeni visine pregledača
   let prethodnaSirina = containerEl.clientWidth;
 
   window.addEventListener("resize", () => {
