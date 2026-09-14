@@ -1738,46 +1738,55 @@ body.high-contrast .timeline-steps::after {
 }
 
 /* ==========================================================================
-   KONFIGURATOR - ISKLJUČIVO STILOVI ZA RADNI PROSTOR I PANEL
+   KONFIGURATOR - PROŠIRENI LAYOUT I STILOVI ZA RADNI PROSTOR
    ========================================================================== */
 
-/* Osnovni layout konfiguratora */
-.configurator-hero {
-  background: linear-gradient(135deg, #f5f7fa, #bfddff);
-  padding: 40px 0 30px;
-  text-align: center;
-}
-
-.configurator-hero h1 {
-  font-size: 26px;
-  text-transform: uppercase;
-  color: #1a4971;
-  margin-bottom: 8px;
-  font-weight: 800;
-}
-
-.configurator-subtitle {
-  max-width: 680px;
+/* Prošireni kontejner za korišćenje punog prostora ekrana */
+.container-wide {
+  max-width: 1440px !important;
+  width: 95% !important;
   margin: 0 auto;
-  color: #4a5568;
-  font-size: 15px;
+}
+
+.configurator-workspace {
+  padding: 16px 0 50px;
+}
+
+.configurator-page-title {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.configurator-page-title h1 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a4971;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
 }
 
 /* Traka napretka (Tracker) */
+.stepper-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
 .progress-tracker {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: #f5f7fa;
-  padding: 14px 20px;
-  border-radius: 12px;
+  background: #ffffff;
+  padding: 10px 28px;
+  border-radius: 30px;
   border: 1px solid #e2e8f0;
-  margin: 20px 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .step {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   color: #718096;
   text-transform: uppercase;
@@ -1786,7 +1795,7 @@ body.high-contrast .timeline-steps::after {
 
 .step.active {
   color: #2b6cb0;
-  border-bottom: 2px solid #2b6cb0;
+  font-weight: 800;
 }
 
 .step-divider {
@@ -1794,16 +1803,18 @@ body.high-contrast .timeline-steps::after {
   font-weight: bold;
 }
 
-/* Radna površina: 65% Canvas / 35% Panel */
-.configurator-workspace {
-  padding: 10px 0 60px;
-}
-
+/* Layout: 70% Canvas / 30% Panel na širim ekranima */
 .config-split-layout {
   display: grid;
-  grid-template-columns: 1.8fr 1fr;
-  gap: 24px;
-  min-height: 580px;
+  grid-template-columns: 2.2fr 1fr;
+  gap: 20px;
+  min-height: 600px;
+}
+
+.right-sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* Leva zona - Konva Canvas */
@@ -1818,10 +1829,70 @@ body.high-contrast .timeline-steps::after {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
 }
 
+.canvas-header-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.toolbar-centered {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-toolbar {
+  background: #ffffff;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a202c;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-toolbar:hover {
+  background: #edf2f7;
+  border-color: #a0aec0;
+}
+
+.btn-reset-ghost {
+  color: #e53e3e;
+  border-color: #fed7d7;
+  background: #fff5f5;
+}
+
+.btn-reset-ghost:hover {
+  background: #fed7d7;
+}
+
+.btn-preview-accent {
+  background: #ebf8ff;
+  color: #2b6cb0;
+  border-color: #90cdf4;
+}
+
+.btn-preview-accent:hover {
+  background: #2b6cb0;
+  color: #ffffff;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: #cbd5e0;
+}
+
 #konva-container {
+  position: relative;
   flex: 1;
   width: 100%;
-  min-height: 500px;
+  min-height: 540px;
   background-color: #f8fafc;
 }
 
@@ -1830,8 +1901,25 @@ body.high-contrast .timeline-steps::after {
   border-top: 1px solid #e2e8f0;
   padding: 14px 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
+}
+
+.btn-save-dominant {
+  width: 100%;
+  background: linear-gradient(135deg, #2b6cb0, #2c5282);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(43, 108, 176, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.btn-save-dominant:hover {
+  transform: translateY(-2px);
 }
 
 /* Desna zona - Kontekstualni Panel */
@@ -1853,7 +1941,7 @@ body.high-contrast .timeline-steps::after {
 }
 
 .hint-text {
-  font-size: 13px;
+  font-size: 14px;
   color: #4a5568;
   margin-bottom: 16px;
 }
@@ -1892,8 +1980,8 @@ body.high-contrast .timeline-steps::after {
 
 .btn-base {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  gap: 12px;
   padding: 12px 14px;
   background: #f5f7fa;
   border: 2px solid #e2e8f0;
@@ -1906,11 +1994,13 @@ body.high-contrast .timeline-steps::after {
 .btn-base strong {
   font-size: 15px;
   color: #1a4971;
+  display: block;
 }
 
-.btn-base span:last-child {
+.btn-base p {
   font-size: 12px;
   color: #718096;
+  margin: 0;
 }
 
 .btn-base:hover,
@@ -1919,28 +2009,19 @@ body.high-contrast .timeline-steps::after {
   border-color: #2b6cb0;
 }
 
-/* Podešavanje teksture cele igračke */
-.global-texture-group {
-  margin-top: 10px;
-  padding-top: 14px;
-  border-top: 1px solid #e2e8f0;
+.base-icon {
+  font-size: 24px;
 }
 
-.global-texture-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-}
-/* Selektor boja */
+/* Selektor boja i tekstura */
+.global-texture-group,
 .global-option-group {
   margin-top: 14px;
   padding-top: 12px;
   border-top: 1px solid #e2e8f0;
 }
 
+.global-texture-group label,
 .global-option-group label {
   display: block;
   font-size: 13px;
@@ -1949,6 +2030,29 @@ body.high-contrast .timeline-steps::after {
   margin-bottom: 8px;
   text-transform: uppercase;
 }
+
+.color-picker-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.color-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e0;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.color-btn:hover,
+.color-btn.active {
+  transform: scale(1.18);
+  border-color: #1a4971;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
 .btn-global-texture {
   padding: 10px 6px;
   background: #ffffff;
@@ -1972,13 +2076,13 @@ body.high-contrast .timeline-steps::after {
   background: #fefcbf;
   border: 1px solid #f6e05e;
   border-radius: 8px;
-  color: #744210;
-  font-weight: 600;
+  color: #1a202c;
+  font-weight: 700;
   font-size: 13px;
   line-height: 1.4;
 }
 
-/* Grid elemenata po zonama */
+/* Grid elemenata */
 .elements-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2058,17 +2162,6 @@ body.high-contrast .timeline-steps::after {
   padding-top: 20px;
 }
 
-/* Responzivnost */
-@media (max-width: 992px) {
-  .config-split-layout {
-    grid-template-columns: 1fr;
-  }
-  #konva-container {
-    min-height: 420px;
-  }
-}
-
-/* Terapeutski opisi za materijale i module */
 .material-hint,
 .module-medical-hint {
   margin-top: 12px;
@@ -2076,47 +2169,191 @@ body.high-contrast .timeline-steps::after {
   background-color: #eaf2fb;
   border-left: 4px solid #2b6cb0;
   border-radius: 6px;
-  font-size: 12px;
-  color: #1a4971;
+  font-size: 13px;
+  color: #1a202c;
   line-height: 1.45;
 }
 
 .module-medical-hint {
   background-color: #f0fff4;
   border-left-color: #38a169;
-  color: #1c4532;
-  margin-bottom: 16px;
-}
-
-.color-picker-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.color-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e0;
-  cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.color-btn:hover,
-.color-btn.active {
-  transform: scale(1.18);
-  border-color: #1a4971;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  color: #1a202c;
+  margin-bottom: 5px;
 }
 
 .sub-option-hint {
-  margin-top: 6px;
+  margin-top: 15px;
   padding: 8px 10px;
   background-color: #fffaf0;
   border-left: 3px solid #dd6b20;
   border-radius: 4px;
-  font-size: 11px;
-  color: #7b341e;
+  font-size: 13px;
+  color: #1a202c;
   line-height: 1.35;
+  font-weight: 700;
+}
+
+/* Inventar */
+.inventory-section {
+  background: #ffffff;
+  border: 2px solid #cbd5e0;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.inventory-section h4 {
+  font-size: 14px;
+  text-transform: uppercase;
+  color: #1a4971;
+  margin-bottom: 10px;
+  font-weight: 800;
+}
+
+.inventory-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.empty-inventory {
+  font-size: 12px;
+  color: #a0aec0;
+  font-style: italic;
+}
+
+.inventory-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.inventory-item-remove {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #fed7d7;
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inventory-item-remove:hover {
+  background: #e53e3e;
+  color: #ffffff;
+}
+
+/* Preview Modal */
+.preview-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(26, 32, 44, 0.92);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-modal-content {
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-modal-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.btn-exit-preview {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: #ffffff;
+  color: #1a202c;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 800;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.btn-exit-preview:hover {
+  background: #e2e8f0;
+}
+
+/* Responzivnost */
+@media (max-width: 992px) {
+  .config-split-layout {
+    grid-template-columns: 1fr;
+  }
+  #konva-container {
+    min-height: 440px;
+  }
+}
+
+
+
+
+
+/* ==========================================================================
+   GLOBALNA OPTIMIZACIJA ZA VELIKE EKRANE (1920x1080+) ZA CEO SAJT
+   ========================================================================== */
+@media (min-width: 1400px) {
+  /* Proširuje sve kontejnere na sajtu */
+  .container,
+  .container-wide {
+    max-width: 1720px !important;
+    width: 93% !important;
+  }
+
+  /* Prilagođavanje Hero sekcije na Početnoj */
+  .hero-split-inner {
+    gap: 60px !important;
+  }
+
+  /* Prilagođavanje Kataloga - širi raster kartica */
+  .catalog-grid {
+    max-width: 100% !important;
+    gap: 32px !important;
+  }
+
+  /* Prilagođavanje Konfiguratora */
+  .config-split-layout {
+    grid-template-columns: 2.5fr 1fr !important;
+    gap: 28px !important;
+    min-height: 640px !important;
+  }
+
+  #konva-container {
+    min-height: 580px !important;
+  }
+
+  /* Prilagođavanje Kontakt stranice */
+  .contact-grid {
+    gap: 48px !important;
+  }
 }
