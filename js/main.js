@@ -1,20 +1,23 @@
-// ===================== MENI ZA PRISTUPAČNOST =====================
+// ===================== MENI ZA PRISTUPAČNOST (WIDGET) =====================
 document.addEventListener("DOMContentLoaded", () => {
 
-  const toggleBtn = document.getElementById("accessibility-toggle");
-  const menu = document.getElementById("accessibility-menu");
+  const triggerBtn = document.getElementById("accessibility-trigger");
+  const widget = document.getElementById("accessibility-widget");
+  const closeBtn = document.getElementById("close-accessibility");
   const body = document.body;
 
+  // Akciona dugmad u panelu
   const btnFontIncrease = document.getElementById("btn-font-increase");
   const btnFontDecrease = document.getElementById("btn-font-decrease");
   const btnHighContrast = document.getElementById("btn-high-contrast");
   const btnDyslexiaFont = document.getElementById("btn-dyslexia-font");
-  const btnHighlightLinks = document.getElementById("btn-highlight-links");
+  const btnSpacing = document.getElementById("btn-spacing"); // Novo: Prored
+  const btnPauseAnim = document.getElementById("btn-pause-anim"); // Novo: Animacije
   const btnReset = document.getElementById("btn-reset-accessibility");
 
   const MIN_FONT_SIZE = 85;  // Minimalna veličina (85%)
-  const MAX_FONT_SIZE = 135;  // Maksimalna veličina (135%)
-  const FONT_STEP = 2;        // Smanjen korak na 3% za suptilnije i finije menjanje
+  const MAX_FONT_SIZE = 135; // Maksimalna veličina (135%)
+  const FONT_STEP = 2;       // Fini korak za menjanje
 
   function getStyleTag() {
     let styleTag = document.getElementById("accessibility-font-style");
@@ -44,7 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const sacuvanaVelicina = localStorage.getItem("fontSize");
     const visokiKontrast = localStorage.getItem("highContrast") === "true";
     const fontDisleksija = localStorage.getItem("dyslexiaFont") === "true";
-    const isticanjeLinkova = localStorage.getItem("highlightLinks") === "true";
+    const prored = localStorage.getItem("increasedSpacing") === "true";
+    const pauzirajAnim = localStorage.getItem("pauseAnimations") === "true";
 
     if (sacuvanaVelicina) {
       primeniVelicinuFonta(parseInt(sacuvanaVelicina, 10));
@@ -52,7 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (visokiKontrast) body.classList.add("high-contrast");
     if (fontDisleksija) body.classList.add("dyslexia-font");
-    if (isticanjeLinkova) body.classList.add("highlight-links");
+    if (prored) body.classList.add("increased-spacing");
+    if (pauzirajAnim) body.classList.add("pause-animations");
   }
 
   function trenutnaVelicinaFonta() {
@@ -63,31 +68,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   ucitajPodesavanja();
 
-  // Otvaranje / zatvaranje menija
-  if (toggleBtn && menu) {
-    toggleBtn.addEventListener("click", (e) => {
+  // ===================== OTVARANJE I ZATVARANJE WIDGETA =====================
+
+  function otvoriWidget() {
+    widget.classList.add("open");
+    triggerBtn.setAttribute("aria-expanded", "true");
+    widget.setAttribute("aria-hidden", "false");
+  }
+
+  function zatvoriWidget() {
+    widget.classList.remove("open");
+    triggerBtn.setAttribute("aria-expanded", "false");
+    widget.setAttribute("aria-hidden", "true");
+  }
+
+  // Klik na lebdeće dugme
+  if (triggerBtn && widget) {
+    triggerBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      const jeOtvoren = menu.classList.toggle("open");
-      toggleBtn.setAttribute("aria-expanded", jeOtvoren ? "true" : "false");
-      menu.setAttribute("aria-hidden", jeOtvoren ? "false" : "true");
+      if (widget.classList.contains("open")) {
+        zatvoriWidget();
+      } else {
+        otvoriWidget();
+      }
     });
   }
 
+  // Klik na dugme X u headeru widgeta
+  if (closeBtn) {
+    closeBtn.addEventListener("click", zatvoriWidget);
+  }
+
+  // Zatvaranje na klik van panela
   document.addEventListener("click", (e) => {
     if (
-      menu &&
-      menu.classList.contains("open") &&
-      !menu.contains(e.target) &&
-      toggleBtn &&
-      !toggleBtn.contains(e.target)
+      widget &&
+      widget.classList.contains("open") &&
+      !widget.contains(e.target) &&
+      triggerBtn &&
+      !triggerBtn.contains(e.target)
     ) {
-      menu.classList.remove("open");
-      toggleBtn.setAttribute("aria-expanded", "false");
-      menu.setAttribute("aria-hidden", "true");
+      zatvoriWidget();
     }
   });
 
-  // Povećanje fonta za finijih 3%
+  // ===================== FUNKCIONALNOSTI DUGMIĆA =====================
+
+  // Povećanje fonta
   if (btnFontIncrease) {
     btnFontIncrease.addEventListener("click", () => {
       const nova = Math.min(trenutnaVelicinaFonta() + FONT_STEP, MAX_FONT_SIZE);
@@ -95,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Smanjenje fonta za finijih 3%
+  // Smanjenje fonta
   if (btnFontDecrease) {
     btnFontDecrease.addEventListener("click", () => {
       const nova = Math.max(trenutnaVelicinaFonta() - FONT_STEP, MIN_FONT_SIZE);
@@ -119,18 +146,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Isticanje linkova
-  if (btnHighlightLinks) {
-    btnHighlightLinks.addEventListener("click", () => {
-      const aktivno = body.classList.toggle("highlight-links");
-      localStorage.setItem("highlightLinks", aktivno);
+  // Povećan prored (razmak slova)
+  if (btnSpacing) {
+    btnSpacing.addEventListener("click", () => {
+      const aktivno = body.classList.toggle("increased-spacing");
+      localStorage.setItem("increasedSpacing", aktivno);
     });
   }
 
-  // Resetovanje
+  // Pauziranje animacija
+  if (btnPauseAnim) {
+    btnPauseAnim.addEventListener("click", () => {
+      const aktivno = body.classList.toggle("pause-animations");
+      localStorage.setItem("pauseAnimations", aktivno);
+    });
+  }
+
+  // ===================== RESETOVANJE =====================
   if (btnReset) {
     btnReset.addEventListener("click", () => {
-      body.classList.remove("high-contrast", "dyslexia-font", "highlight-links");
+      body.classList.remove(
+        "high-contrast", 
+        "dyslexia-font", 
+        "increased-spacing", 
+        "pause-animations"
+      );
       
       const styleTag = getStyleTag();
       styleTag.innerHTML = "";
@@ -138,11 +178,13 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("fontSize");
       localStorage.removeItem("highContrast");
       localStorage.removeItem("dyslexiaFont");
-      localStorage.removeItem("highlightLinks");
+      localStorage.removeItem("increasedSpacing");
+      localStorage.removeItem("pauseAnimations");
     });
   }
 
 });
+
 // ===================== KATALOG IGRAČAKA I MODAL NARUČIVANJA =====================
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -583,34 +625,39 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-/* ===================== SLAJDER KATEGORIJA (MAIN.JS) ===================== */
+/* ===================== INTERAKTIVNI TABOVI NA POČETNOJ ===================== */
+document.addEventListener("DOMContentLoaded", () => {
+  const tabButtons = document.querySelectorAll('.explore-tab');
+  const tabPanels = document.querySelectorAll('.explore-panel');
 
-document.addEventListener('click', function (e) {
-  var btnNext = e.target.closest('#btnNextCategory');
-  var btnPrev = e.target.closest('#btnPrevCategory');
+  if (tabButtons.length === 0 || tabPanels.length === 0) return;
 
-  if (!btnNext && !btnPrev) return;
+  tabButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // 1. Očisti sve aktivne klase sa tabova
+      tabButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
 
-  e.preventDefault();
+      // 2. Sakrij sve panele sa desne strane
+      tabPanels.forEach(panel => {
+        panel.classList.remove('active');
+        panel.setAttribute('hidden', 'true');
+      });
 
-  var track = document.getElementById('categoriesTrack');
-  if (!track) return;
+      // 3. Dodaj aktivnu klasu na kliknuti tab
+      button.classList.add('active');
+      button.setAttribute('aria-selected', 'true');
 
-  var slideWidth = track.clientWidth;
-
-  if (btnNext) {
-    // Ako stigne do kraja, vraća kružno na prvi
-    if (track.scrollLeft + slideWidth >= track.scrollWidth - 15) {
-      track.scrollTo({ left: 0, behavior: 'smooth' });
-    } else {
-      track.scrollBy({ left: slideWidth, behavior: 'smooth' });
-    }
-  } else if (btnPrev) {
-    // Ako je na početku, prelazi na poslednji
-    if (track.scrollLeft <= 10) {
-      track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
-    } else {
-      track.scrollBy({ left: -slideWidth, behavior: 'smooth' });
-    }
-  }
+      // 4. Pronađi odgovarajući panel i prikaži ga
+      const targetId = button.getAttribute('data-target');
+      const targetPanel = document.getElementById(targetId);
+      
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+        targetPanel.removeAttribute('hidden');
+      }
+    });
+  });
 });

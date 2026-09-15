@@ -13,7 +13,63 @@
 </head>
 <body>
 
-<header class="site-header">
+<!-- ===================== ACCESSIBILITY DUGME I WIDGET ===================== -->
+<!-- 1. Lebdeće dugme u uglu -->
+<button id="accessibility-trigger" class="access-trigger-btn" aria-label="Otvori opcije pristupačnosti">
+  <svg class="access-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
+  </svg>
+  <span class="access-text">Opcije pristupačnosti</span>
+</button>
+
+<!-- 2. Iskačući panel (Widget) -->
+<div id="accessibility-widget" class="access-widget" aria-hidden="true">
+  <div class="access-widget-header">
+    <h3>Pristupačnost</h3>
+    <button id="close-accessibility" aria-label="Zatvori">✖</button>
+  </div>
+  
+  <div class="access-widget-body">
+    <div class="access-grid">
+      <!-- Opcija 1 -->
+      <button class="access-grid-btn" id="btn-font-increase">
+        <span class="access-grid-icon">A+</span>
+        <span class="access-grid-label">Povećaj font</span>
+      </button>
+      <!-- Opcija 2 -->
+      <button class="access-grid-btn" id="btn-font-decrease">
+        <span class="access-grid-icon">A-</span>
+        <span class="access-grid-label">Smanji font</span>
+      </button>
+      <!-- Opcija 3 -->
+      <button class="access-grid-btn" id="btn-high-contrast">
+        <span class="access-grid-icon">🌓</span>
+        <span class="access-grid-label">Visoki kontrast</span>
+      </button>
+      <!-- Opcija 4 -->
+      <button class="access-grid-btn" id="btn-dyslexia-font">
+        <span class="access-grid-icon">📖</span>
+        <span class="access-grid-label">Font za disleksiju</span>
+      </button>
+      <!-- Opcija 5 -->
+      <button class="access-grid-btn" id="btn-spacing">
+        <span class="access-grid-icon">↔</span>
+        <span class="access-grid-label">Razmak slova</span>
+      </button>
+      <!-- Opcija 6 -->
+      <button class="access-grid-btn" id="btn-pause-anim">
+        <span class="access-grid-icon">⏸</span>
+        <span class="access-grid-label">Pauziraj animacije</span>
+      </button>
+    </div>
+  </div>
+  
+  <div class="access-widget-footer">
+    <button id="btn-reset-accessibility" class="access-reset-btn">Poništi podešavanja</button>
+  </div>
+</div>
+<!-- ===================== FLOATING HEADER ===================== -->
+<header class="site-header floating-header">
   <div class="container header-inner">
     <a href="index.html" class="logo" aria-label="NoLimits Početna">
       <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -27,8 +83,8 @@
 
     <nav class="main-nav" aria-label="Glavna navigacija">
       <ul>
-        <li><a href="index.html">Početna</a></li>
-        <li><a href="catalog.html">Katalog igračaka</a></li>
+        <li><a href="index.html" >Početna</a></li>
+        <li><a href="catalog.html">Katalog</a></li>
         <li><a href="configurator.html">Konfigurator</a></li>
         <li><a href="contact.html" class="active">Kontakt</a></li>
       </ul>
@@ -174,20 +230,6 @@
   </div>
   <p class="footer-bottom">&copy; 2026 NoLimits</p>
 </footer>
-
-<button id="accessibility-toggle" class="accessibility-floating-btn" aria-label="Otvori meni za pristupačnost" aria-expanded="false">
-  ♿
-</button>
-
-<aside id="accessibility-menu" class="accessibility-menu" aria-hidden="true">
-  <h2>Pristupačnost</h2>
-  <button id="btn-font-increase" type="button">🔍 Povećaj font</button>
-  <button id="btn-font-decrease" type="button">🔍 Smanji font</button>
-  <button id="btn-high-contrast" type="button">🌓 Visoki kontrast</button>
-  <button id="btn-dyslexia-font" type="button">📖 Font za disleksiju</button>
-  <button id="btn-highlight-links" type="button">🔗 Istakni linkove</button>
-  <button id="btn-reset-accessibility" type="button">🔄 Resetuj</button>
-</aside>
 
 <script src="js/main.js" defer></script>
 </body>
