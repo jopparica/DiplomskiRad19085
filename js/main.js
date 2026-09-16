@@ -408,10 +408,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let trenutnoIzabranaIgracka = null;
 
-  function generisiKarticu(igracka) {
-    const tagovi = igracka.tipovi
-      .map(tip => `<span class="toy-tag">${nazivTipa[tip]}</span>`)
-      .join("");
+function generisiKarticu(igracka) {
+    // Uzimamo samo prvu kategoriju za suptilan tekst
+    const kategorija = nazivTipa[igracka.tipovi[0]]; 
 
     return `
       <article class="toy-card">
@@ -419,11 +418,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <img src="${igracka.slika}" alt="${igracka.naziv}" class="toy-card-img" onerror="this.onerror=null; this.src='slike/tedi.png';">
         </div>
         <div class="toy-card-body">
+          <span class="toy-category">${kategorija}</span>
           <h3>${igracka.naziv}</h3>
-          <p>${igracka.opis}</p>
-          <div class="toy-tags">${tagovi}</div>
+          <span class="toy-price">${igracka.cena}</span>
           <div class="toy-card-actions">
-            <button class="btn btn-primary btn-order" data-id="${igracka.id}">Poruči / Detaljnije</button>
+            <button class="btn btn-order" data-id="${igracka.id}">Poruči</button>
           </div>
         </div>
       </article>

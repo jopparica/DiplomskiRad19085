@@ -1,14 +1,388 @@
+
+// ===================== KATALOG IGRAČAKA I MODAL NARUČIVANJA =====================
+document.addEventListener("DOMContentLoaded", () => {
+
+  const catalogGrid = document.getElementById("catalog-grid");
+  if (!catalogGrid) return;
+
+  const noResultsMsg = document.getElementById("no-results");
+  const filterButtons = document.querySelectorAll(".filter-btn");
+
+  // Elementi Modala
+  const modal = document.getElementById("toy-modal");
+  const modalCloseBtn = document.getElementById("modal-close");
+  const modalTitle = document.getElementById("modal-toy-title");
+  const modalImage = document.getElementById("modal-toy-image");
+  const modalDesc = document.getElementById("modal-toy-desc");
+  const modalPrice = document.getElementById("modal-toy-price");
+  const orderForm = document.getElementById("modal-order-form");
+  const orderSuccess = document.getElementById("order-success");
+
+  const nazivTipa = {
+    table: "Senzorno-motorne table",
+    taktilne: "Taktilne društvene igre",
+    grafomotorika: "Grafomotorika i jezik",
+    kartice: "Emocije i komunikacija",
+    balans: "Balans i krupna motorika"
+  };
+
+  const igracke = [
+    // 1. SENZORNO-MOTORNE TABLE I PANELI
+    {
+      id: "tabla-01",
+      naziv: "Montessori interaktivna tabla 01",
+      opis: "Interaktivna tabla sa raznovrsnim bravicama, zupčanicima i elementima za svakodnevne veštine i finu motoriku.",
+      slika: "slike/tabla01.jpg",
+      cena: "7.400 RSD",
+      tipovi: ["table"]
+    },
+    {
+      id: "tabla-farma",
+      naziv: "Mini interaktivna tabla Farma",
+      opis: "Prilagođena kompaktna tabla sa taktilnim elementima koja podstiče samostalnost i koordinaciju oko-ruka.",
+      slika: "slike/tabla02.jpg",
+      cena: "1.950 RSD",
+      tipovi: ["table"]
+    },
+    {
+      id: "tabla-priroda",
+      naziv: "Prirodni Svet interaktivna tabla",
+      opis: "Velika senzorna tabla namenjena za vežbanje fine motorike, strpljenja i koncentracije.",
+      slika: "slike/tabla03.jpg",
+      cena: "7.100 RSD",
+      tipovi: ["table"]
+    },
+    { 
+      id: "tabla-jezik",
+      naziv: "Interaktivna tabla Jezik",
+      opis: "Interaktivna tabla Jezik sadrži 3 edukativna panela – azbuku, godišnja doba i prostornu orijentaciju. Idealan materijal za učenje kroz igru i pokret.",
+      slika: "slike/tabla04.jpg",
+      cena: "8.850 RSD",
+      tipovi: ["table"]
+    },
+      { 
+      id: "tabla-nizalica",
+      naziv: "Nizalica cipela za interaktivne table",
+      opis: "Didaktička nizalica u obliku cipele za vežbanje vezivanja pertli i mašne. Pomaže deci da razviju finu motoriku, strpljenje i samostalnost.",
+      slika: "slike/tabla05.jpg",
+      cena: "1.820 RSD",
+      tipovi: ["table"]
+    },
+    { 
+      id: "prekidač-utikac",
+      naziv: "Prekidač-Utikač za interaktivne table",
+      opis: "Prekidač-Utikač za interaktivne table, koji pomaze pri ucenju vezano za osnove o struji i vezbanje fine motorike.",
+      slika: "slike/tabla06.jpg",
+      cena: "1.600 RSD",
+      tipovi: ["table"]
+    },
+    // 2. TAKTILNE I VISOKOKONTRASTNE DRUŠTVENE IGRE
+    {
+      id: "taktilni-domino",
+      naziv: "Taktilni Domino - Materijali",
+      opis: "Taktilni Domino je društvena igra sa 28 drvenih pločica različitih taktilnih materijala za razvoj čula dodira, koordinacije i pažnje kod dece od 3,5+ godina.",
+      slika: "slike/takt01.jpg",
+      cena: "2.850 RSD",
+      tipovi: ["taktilne"]
+    },
+    {
+      id: "iks-oks",
+      naziv: "IX-OX Drvena društvena igra (Iks-Oks)",
+      opis: "Taktilno izražena verzija klasične igre sa udubljenjima, taktilno uočljivim figurama i visokim kontrastom.",
+      slika: "slike/takt02.jpg",
+      cena: "1.550 RSD",
+      tipovi: ["taktilne"]
+    },
+    {
+      id: "domino-oblici",
+      naziv: "Domino Geometrijski Oblici",
+      opis: "Velike drvene domine sa reljefnim oblicima koji omogućavaju prepoznavanje dodirom i vidom.",
+      slika: "slike/takt03.jpg",
+      cena: "2.850 RSD",
+      tipovi: ["taktilne"]
+    },
+    {
+      id: "taktilni-kvadrati",
+      naziv: "Taktilni kvadrati 5 pari",
+      opis: "Set od 10 taktilnih kvadrata sa različitim teksturama za razvoj čula dodira kod dece. Namenjeno za igru prstima i stopalima, idealno za senzornu stimulaciju od 3+ godine.",
+      slika: "slike/takt04.jpg",
+      cena: "5.950 RSD",
+      tipovi: ["taktilne"]
+    },
+
+    // 3. LOGOPEDSKI I GRAFOMOTORIČKI ŠABLONI
+    {
+      id: "vodilica-s",
+      naziv: "Grafomotorička vodilica S",
+      opis: "Didaktička tabla za 'prohodavanje ruku' koja priprema šaku za pisanje i stimulaciju mozga i govora.",
+      slika: "slike/vod1.jpg",
+      cena: "3.900 RSD",
+      tipovi: ["grafomotorika"]
+    },
+    {
+      id: "krokodil-vodilica",
+      naziv: "Krokodil grafomotorička vodilica",
+      opis: "Zabavna drvena vodilica sa žlebovima koja pomaže razvoju kontrole pokreta šake i prstiju.",
+      slika: "slike/vod2.jpg",
+      cena: "2.330 RSD",
+      tipovi: ["grafomotorika"]
+    },
+    {
+      id: "prati-linije",
+      naziv: "Prati linije - Pišemo slova",
+      opis: "Drveni šablon sa drvenom olovkom i stazicama za razvoj grafomotoričkih veština i fonološke svesti.",
+      slika: "slike/vod3.jpg",
+      cena: "850 RSD",
+      tipovi: ["grafomotorika"]
+    },
+    {
+      id: "godisnja-doba",
+      naziv: "4 Godišnja doba taktilna motorička tabla",
+      opis: "Multisenzorna tabla sa vodilicama, rolerkosterom i taktilnim plohama. Podstiče razvoj motorike, koordinacije i čulne percepcije. Namenjena deci 3+.",
+      slika: "slike/vod4.jpg",
+      cena: "18.050 RSD",
+      tipovi: ["grafomotorika"]
+    },
+    // 4. EMOCIONALNE I KOMUNIKACIJSKE KARTICE
+    {
+      id: "asocijativne-kartice",
+      naziv: "Slovarica -Latinica sa asocijacijama",
+      opis: "Slova za učenje kroz igru, prirodni materijal, glatka obrada i idealna veličina za male ruke. Pomažu deci da prepoznaju slova kroz asocijacije i razvijaju fine motoričke veštine.",
+      slika: "slike/as1.jpg",
+      cena: "950 RSD",
+      tipovi: ["kartice"]
+    },
+    {
+      id: "sporet-play",
+      naziv: "Šporet Play terapija -Predmeti u kući",
+      opis: "Šporet kao deo seta „Predmeti u kući“ za play terapiju nudi deci priliku da kroz igru istraže sve aspekte domaćinstva, od uloga u porodici do razvijanja odgovornosti prema prostoru i emocijama.",
+      slika: "slike/as2.jpg",
+      cena: "4.000 RSD",
+      tipovi: ["kartice"]
+    },
+    {
+      id: "kartice-brojevi",
+      naziv: "Plastične male karte sa brojevima 1-3000",
+      opis: "Plastične brojevne karte 1–3000 za učenje dekadnog sistema. Male dimenzije, idealne za rad sa brojevima i kombinovanje cifara.",
+      slika: "slike/as3.jpg",
+      cena: "2.600 RSD",
+      tipovi: ["kartice"]
+    },
+    {
+      id: "play03",
+      naziv: "Play terapija set delova 03 – figure za simboličku i terapijsku igru",
+      opis: "Play terapija set delova 03 sadrži raznovrsne figure za simboličku igru, emocionalno izražavanje i terapijski rad sa decom.",
+      slika: "slike/as4.jpg",
+      cena: "8.000 RSD",
+      tipovi: ["kartice"]
+    },
+
+    // 5. BALANSERI I KRUPNO-MOTORNE IGRAČKE
+    {
+      id: "balans-polukugla",
+      naziv: "Balans polukugla",
+      opis: "Zabavna i edukativna igra za dvoje ili više igrača koja razvija ravnotežu, logiku i prepoznavanje boja i oblika kroz slaganje na balans polukuglu.",
+      slika: "slike/b1.jpg",
+      cena: "1.050 RSD",
+      tipovi: ["balans"]
+    },
+    {
+      id: "balans-mesec",
+      naziv: "Balans Mesec poligon",
+      opis: "Drveni mesec za slaganje i balansiranje – igra koja razvija preciznost, strpljenje i motoriku kroz zabavno slaganje obojenih elemenata.",
+      slika: "slike/b2.jpg",
+      cena: "1.320 RSD",
+      tipovi: ["balans"]
+    },
+    {
+      id: "kaktus-balans",
+      naziv: "Kaktus za balansiranje",
+      opis: "Igračka za finu i krupnu motoriku gde deca balansiraju elemente i održavaju stabilnost.",
+      slika: "slike/b3.jpg",
+      cena: "2.440 RSD",
+      tipovi: ["balans"]
+    },
+    {
+      id: "hodalica",
+      naziv: "Hodalica polukugla – set od 4 komada za balans i koordinaciju",
+      opis: "Set drvenih hodalica sa polukuglama i konopcima za razvoj ravnoteže, koordinacije i timske igre kod dece od 3 godine naviše.",
+      slika: "slike/b4.jpg",
+      cena: "2.900 RSD",
+      tipovi: ["balans"]
+    },
+    {
+      id: "penjalica",
+      naziv: "Montesori drvena penjalica za decu",
+      opis: "Montessori Pikler penjalica sa rampom za razvoj ravnoteže, koordinacije i samostalnog kretanja kod dece od 6 meseci do 5 godina.",
+      slika: "slike/b5.jpg",
+      cena: "23.400 RSD",
+      tipovi: ["balans"]
+    }
+  ];
+
+  let trenutnoIzabranaIgracka = null;
+
+  function generisiKarticu(igracka) {
+    const tagovi = igracka.tipovi
+      .map(tip => `<span class="toy-tag">${nazivTipa[tip]}</span>`)
+      .join("");
+
+    return `
+      <article class="toy-card">
+        <div class="toy-card-image">
+          <img src="${igracka.slika}" alt="${igracka.naziv}" class="toy-card-img" onerror="this.onerror=null; this.src='slike/tedi.png';">
+        </div>
+        <div class="toy-card-body">
+          <h3>${igracka.naziv}</h3>
+          <p>${igracka.opis}</p>
+          <div class="toy-tags">${tagovi}</div>
+          <div class="toy-card-actions">
+            <button class="btn btn-primary btn-order" data-id="${igracka.id}">Poruči / Detaljnije</button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function prikaziIgracke(filter) {
+    const filtrirane = filter === "sve"
+      ? igracke
+      : igracke.filter(igracka => igracka.tipovi.includes(filter));
+
+    if (filtrirane.length === 0) {
+      catalogGrid.innerHTML = "";
+      noResultsMsg.hidden = false;
+    } else {
+      noResultsMsg.hidden = true;
+      catalogGrid.innerHTML = filtrirane.map(generisiKarticu).join("");
+      poveziDugmiceZaPorucivanje();
+    }
+  }
+
+  function postaviAktivnoDugme(filter) {
+    filterButtons.forEach(btn => {
+      const jeAktivno = btn.dataset.filter === filter;
+      btn.classList.toggle("active", jeAktivno);
+    });
+  }
+
+  // ===================== LOGIKA MODAL PROZORA =====================
+
+  function otvoriModal(igracka) {
+    trenutnoIzabranaIgracka = igracka;
+
+    modalTitle.textContent = igracka.naziv;
+    modalImage.src = igracka.slika;
+    modalImage.alt = igracka.naziv;
+    modalDesc.textContent = igracka.opis;
+    modalPrice.textContent = igracka.cena;
+
+    if (orderSuccess) orderSuccess.hidden = true;
+    if (orderForm) orderForm.reset();
+
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden", "false");
+  }
+
+  function zatvoriModal() {
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden", "true");
+  }
+
+  function poveziDugmiceZaPorucivanje() {
+    const btnOrderList = document.querySelectorAll(".btn-order");
+    btnOrderList.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.id;
+        const izabranaIgracka = igracke.find(item => item.id === id);
+        if (izabranaIgracka) {
+          otvoriModal(izabranaIgracka);
+        }
+      });
+    });
+  }
+
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener("click", zatvoriModal);
+  }
+
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      zatvoriModal();
+    }
+  });
+
+  // SLANJE NARUDŽBINE NA MEJL
+  if (orderForm) {
+    orderForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const imePrezime = document.getElementById("order-fullname").value.trim();
+      const email = document.getElementById("order-email").value.trim();
+      const telefon = document.getElementById("order-phone").value.trim();
+      const adresa = document.getElementById("order-address").value.trim();
+
+      const primalac = "info@nolimits.rs";
+      const naslov = encodeURIComponent(`[Narudžbina] ${trenutnoIzabranaIgracka ? trenutnoIzabranaIgracka.naziv : "Igračka"}`);
+      
+      const telo = encodeURIComponent(
+        `Naručena igračka: ${trenutnoIzabranaIgracka ? trenutnoIzabranaIgracka.naziv : ""}\n` +
+        `Cena: ${trenutnoIzabranaIgracka ? trenutnoIzabranaIgracka.cena : ""}\n\n` +
+        `PODACI O KUPCU:\n` +
+        `Ime i prezime: ${imePrezime}\n` +
+        `Email: ${email}\n` +
+        `Telefon: ${telefon}\n` +
+        `Adresa dostave: ${adresa}\n`
+      );
+
+      window.location.href = `mailto:${primalac}?subject=${naslov}&body=${telo}`;
+
+      if (orderSuccess) orderSuccess.hidden = false;
+      orderForm.reset();
+    });
+  }
+
+  // Filteri
+  filterButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const filter = btn.dataset.filter;
+      postaviAktivnoDugme(filter);
+      prikaziIgracke(filter);
+
+      const noviUrl = filter === "sve"
+        ? window.location.pathname
+        : `${window.location.pathname}?tip=${filter}`;
+      window.history.replaceState({}, "", noviUrl);
+    });
+  });
+
+  const urlParametri = new URLSearchParams(window.location.search);
+  const pocetniFilter = urlParametri.get("tip");
+  const dozvoljeniFilteri = ["table", "taktilne", "grafomotorika", "kartice", "balans"];
+
+  const aktivniFilter = dozvoljeniFilteri.includes(pocetniFilter) ? pocetniFilter : "sve";
+
+  postaviAktivnoDugme(aktivniFilter);
+  prikaziIgracke(aktivniFilter);
+
+});
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="sr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Konfigurator igračaka — NoLimits</title>
+  <title>Katalog igračaka — NoLimits</title>
+  <meta name="description" content="Katalog igračaka prilagođenih deci sa oštećenjem vida, motoričkim smetnjama i decom iz spektra autizma.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/konva@9/konva.min.js"></script>
+  <!-- Google Font: Outfit za zakrivljen i moderan logo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -84,1962 +458,147 @@
     <nav class="main-nav" aria-label="Glavna navigacija">
       <ul>
         <li><a href="index.html">Početna</a></li>
-        <li><a href="catalog.html">Katalog igračaka</a></li>
-        <li><a href="configurator.html" class="active">Konfigurator</a></li>
+        <li><a href="catalog.html" class="active">Katalog</a></li>
+        <li><a href="configurator.html">Konfigurator</a></li>
         <li><a href="contact.html">Kontakt</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
-<main class="configurator-workspace">
-  <div class="container container-wide">
-    
-    <!-- CENTRIRANI PLAVI NASLOV -->
-    <div class="configurator-page-title">
-      <h1>Interaktivni Konfigurator Igračaka</h1>
-    </div>
-
-    <!-- STEPPER (PROGRES BAR) -->
-    <div class="stepper-wrapper">
-      <div class="progress-tracker">
-        <div class="step active" id="step-1">1. Izbor Baze & Materijala</div>
-        <div class="step-divider">›</div>
-        <div class="step" id="step-2">2. Odabir Modula</div>
-        <div class="step-divider">›</div>
-        <div class="step" id="step-3">3. Prilagođavanje & Pozicioniranje</div>
+  <!-- ===================== NASLOV STRANICE ===================== -->
+  <main>
+    <section class="catalog-hero">
+      <div class="container">
+        <h1>Katalog igračaka</h1>
+        <p class="catalog-subtitle">
+          Istražite našu ponudu inkluzivnih igračaka podeljenih po razvojnim kategorijama. 
+          Svaki model sadrži detaljan opis, istaknute cene i opciju za brzo naručivanje ili slanje upita. 
+          Filtrirajte igračke prema specifičnim potrebama deteta, saznajte kako podstiču senzorno-motorni razvoj, 
+          ili iskoristite naš interaktivni konfigurator da prilagodite igračku po vašoj meri.
+        </p>
       </div>
-    </div>
+    </section>
 
-    <div class="config-split-layout">
+    <!-- ===================== FILTERI ===================== -->
+    <section class="filters" aria-label="Filteri kataloga">
+      <div class="container">
+        <div class="filters-grid">
+          <button class="filter-btn active" data-filter="sve">Sve igračke</button>
+          <button class="filter-btn" data-filter="table">Senzorno-motorne table</button>
+          <button class="filter-btn" data-filter="taktilne">Taktilne društvene igre</button>
+          <button class="filter-btn" data-filter="grafomotorika">Grafomotorika i jezik</button>
+          <button class="filter-btn" data-filter="kartice">Emocije i komunikacija</button>
+          <button class="filter-btn" data-filter="balans">Balans i krupna motorika</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GRID SA IGRAČKAMA ===================== -->
+    <section class="catalog-grid-section">
+      <div class="container">
+        <div id="catalog-grid" class="catalog-grid">
+          <!-- Kartice igračaka se generišu dinamički preko JavaScript-a (main.js) -->
+        </div>
+
+        <p id="no-results" class="no-results" hidden>
+          Nema pronađenih igračaka za izabrani filter.
+        </p>
+      </div>
+
       
-      <!-- LEVA ZONA: CANVAS -->
-      <div class="canvas-zone" id="canvas-zone-wrapper">
-        
-        <!-- TOOLBAR S DUGMIĆIMA -->
-        <div class="canvas-header-toolbar">
-          <div class="toolbar-centered">
-            <button id="btn-undo" class="btn-toolbar" title="Poništi (Undo)">↩ Nazad</button>
-            <button id="btn-redo" class="btn-toolbar" title="Ponovi (Redo)">↪ Napred</button>
-            <span class="toolbar-divider"></span>
-            <button id="btn-reset" class="btn-toolbar btn-reset-ghost" title="Resetuj sve izmene">🗑️ Resetuj sve</button>
-            <button id="btn-preview" class="btn-toolbar btn-preview-accent" title="Režim pregleda">👁️ Pregled igračke</button>
-          </div>
+ <!-- MODAL PROZOR ZA NARUČIVANJE IGRAČKE -->
+<div id="toy-modal" class="modal-overlay" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-toy-title">
+    <button id="modal-close" class="modal-close-btn" aria-label="Zatvori prozor">&times;</button>
+    
+    <div class="modal-grid">
+      <!-- LEVA STRANA: Naziv i Slika -->
+      <div class="modal-left">
+        <h2 id="modal-toy-title">Naziv Igračke</h2>
+        <div class="modal-image-wrapper">
+          <img id="modal-toy-image" src="" alt="" class="modal-toy-img">
         </div>
-
-        <div id="konva-container" aria-label="Radna površina za konfigurisanje igračke"></div>
-        
-        <div class="canvas-footer-actions">
-          <button id="btn-save" class="btn-save-dominant">
-            💾 SAČUVAJ IGRAČKU (PNG)
-          </button>
-        </div>
+        <p id="modal-toy-desc" class="modal-description"></p>
       </div>
 
-      <!-- DESNA ZONA: KONTEKSTUALNI PANEL -->
-      <div class="right-sidebar-group">
-        <aside class="panel-zone" id="context-panel">
+      <!-- DESNA STRANA: Cena i Forma za naručivanje -->
+      <div class="modal-right">
+        <div class="modal-price-box">
+          <span class="price-label">Cena:</span>
+          <span id="modal-toy-price" class="price-amount">0 RSD</span>
+        </div>
+
+        <form id="modal-order-form" class="modal-form">
+          <h3>Slanje upita za narudžbinu</h3>
           
-          <!-- NIVO 1 -->
-          <div id="panel-level-1" class="panel-content active">
-            <h3>1. Izaberite osnovnu bazu</h3>
-            <p class="hint-text">Svaka baza ima različitu medicinsku i motornu namenu.</p>
-            <div class="base-grid">
-              <button class="btn-base active" data-base="meda">
-                <span class="base-icon">🧸</span>
-                <div>
-                  <strong>Ergonomski Meda</strong>
-                  <p>Emotivna regulacija i zagrljaj</p>
-                </div>
-              </button>
-              <button class="btn-base" data-base="valjak">
-                <span class="base-icon">🪵</span>
-                <div>
-                  <strong>Senzorni Valjak / Roler</strong>
-                  <p>Dvoručno valjanje i fokus</p>
-                </div>
-              </button>
-              <button class="btn-base" data-base="volan">
-                <span class="base-icon">⭕</span>
-                <div>
-                  <strong>Interaktivni Prsten</strong>
-                  <p>Dvoručno hvatanje i snaga</p>
-                </div>
-              </button>
-            </div>
-
-            <div class="global-option-group">
-              <label>Boja igračke:</label>
-              <div class="color-picker-row">
-                <button class="color-btn active" data-color="#ed8936" style="background: #ed8936;"></button>
-                <button class="color-btn" data-color="#38b2ac" style="background: #38b2ac;"></button>
-                <button class="color-btn" data-color="#ed64a6" style="background: #ed64a6;"></button>
-                <button class="color-btn" data-color="#ecc94b" style="background: #ecc94b;"></button>
-                <button class="color-btn" data-color="#48bb78" style="background: #48bb78;"></button>
-              </div>
-            </div>
-
-            <div class="global-option-group">
-              <label>Materijal / Tekstura pozadine:</label>
-              <div class="tune-options">
-                <button class="btn-global-texture active" data-texture="plis">Meki pliš</button>
-                <button class="btn-global-texture" data-texture="glatko">Glatko</button>
-                <button class="btn-global-texture" data-texture="silikon">Rebrasti silikon</button>
-              </div>
-              <div id="material-description" class="material-hint">
-                💡 <strong>Meki pliš:</strong> Pruža osećaj sigurnosti, smanjuje anksioznost i podstiče emotivnu regulaciju deteta.
-              </div>
-            </div>
-
-            <div class="next-step-hint">
-              👉 <strong>Kliknite bilo gde na igračku</strong> da postavite željeni modul.
-            </div>
+          <div class="form-group">
+            <label for="order-fullname">Ime i prezime</label>
+            <input type="text" id="order-fullname" class="form-input" placeholder="Petar Petrović" required>
           </div>
 
-          <!-- NIVO 2 -->
-          <div id="panel-level-2" class="panel-content" style="display: none;">
-            <div class="zone-header">
-              <button class="btn-back" id="btn-back-to-1">← Nazad na izbor baze</button>
-              <h3 id="trenutna-zona-naslov">Odaberite modul za poziciju</h3>
-            </div>
-            <p class="hint-text">Izaberite modul koji želite da dodate:</p>
-            <div class="elements-grid" id="elements-container"></div>
+          <div class="form-group">
+            <label for="order-email">Email adresa</label>
+            <input type="email" id="order-email" class="form-input" placeholder="vasa@adresa.com" required>
           </div>
 
-          <!-- NIVO 3 -->
-          <div id="panel-level-3" class="panel-content" style="display: none;">
-            <div class="zone-header">
-              <button class="btn-back" id="btn-back-to-2">← Nazad na odabir modula</button>
-              <h3 id="podesavanje-naslov">Zvučni modul</h3>
-            </div>
-            
-            <div id="fine-tuning-container"></div>
-            <div id="module-description-box" class="module-medical-hint"></div>
-
-            <div class="action-buttons-group">
-              <button class="btn btn-secondary" id="btn-test-element" style="width: 100%; margin-bottom: 8px;">▶ Isprobaj Efekat</button>
-              <button class="btn" id="btn-ukloni-element" style="width: 100%; background: #fff5f5; color: #e53e3e; border: 1px solid #feb2b2; font-weight: 700;">Ukloni modul sa igračke</button>
-            </div>
+          <div class="form-group">
+            <label for="order-phone">Broj telefona</label>
+            <input type="tel" id="order-phone" class="form-input" placeholder="06X/XXX-XXXX" required>
           </div>
 
-        </aside>
+          <div class="form-group">
+            <label for="order-address">Adresa za dostavu</label>
+            <input type="text" id="order-address" class="form-input" placeholder="Ulica i broj, Grad" required>
+          </div>
 
-        <!-- INVENTAR MODULA -->
-        <section class="inventory-section">
-          <h4>Aktivni moduli na igrački</h4>
-          <ul id="inventory-list" class="inventory-list">
-            <li class="empty-inventory">Nema dodatih modula. Kliknite na igračku za dodavanje.</li>
-          </ul>
-        </section>
+          <button type="submit" class="btn btn-primary btn-buy">POŠALJI UPIT za narudžbinu</button>
+          <p id="order-success" class="form-success buy-success-msg" hidden>
+            Hvala vam! Otvoren je vaš email klijent sa popunjenim podacima za narudžbinu.
+          </p>
+        </form>
       </div>
-
     </div>
-  </div>
-</main>
-
-<!-- MODAL PREVIEW OVERLAY -->
-<div id="preview-modal" class="preview-modal-overlay" style="display: none;">
-  <button id="btn-exit-preview" class="btn-exit-preview">✕ Izađi iz pregleda</button>
-  <div class="preview-modal-content">
-    <img id="preview-modal-img" src="" alt="Pregled igračke" />
   </div>
 </div>
+    </section>
+  </main>
 
-<footer class="site-footer">
-  <div class="container footer-bottom">
-    <p>&copy; 2026 NoLimits — Pristupačna oprema i igračke za decu sa invaliditetom</p>
-  </div>
-</footer>
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+  <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+    <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
+            stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+      <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+    </svg>
+    <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+  </a>
+  <p>Portal igračaka za decu sa smetnjama u razvoju.</p>
+</div>
+      <div>
+        <h3>Kontakt</h3>
+        <p>Email: info@nolimits.rs</p>
+        <p>Telefon: 011/123-456</p>
+      </div>
+      <div>
+        <h3>Linkovi</h3>
+        <ul class="footer-links horizontal-links">
+          <li><a href="catalog.html">Katalog</a></li>
+          <li><a href="configurator.html">Konfigurator</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="footer-bottom">&copy; 2026 NoLimits</p>
+  </footer>
 
-<script src="js/configurator.js" defer></script>
-<script src="js/main.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>
-
-
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const containerEl = document.getElementById("konva-container");
-  if (!containerEl) return;
-
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  let audioCtx = null;
-  let muzikaTimer = null;
-  let sviraMuzika = false;
-
-  function pokreniMelodiju() {
-    if (!audioCtx) audioCtx = new AudioContext();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    if (sviraMuzika) {
-      zaustaviMuziku();
-      return;
-    }
-
-    sviraMuzika = true;
-    const tonovi = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25];
-    let idx = 0;
-
-    function odsvirajSledećiTon() {
-      if (!sviraMuzika) return;
-      const t = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(tonovi[idx % tonovi.length], t);
-      gain.gain.setValueAtTime(0.1, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
-
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      osc.start(t);
-      osc.stop(t + 0.3);
-
-      idx++;
-      muzikaTimer = setTimeout(odsvirajSledećiTon, 320);
-    }
-
-    odsvirajSledećiTon();
-  }
-
-  function zaustaviMuziku() {
-    sviraMuzika = false;
-    if (muzikaTimer) clearTimeout(muzikaTimer);
-  }
-
-  function reprodukujZvono() {
-    if (!audioCtx) audioCtx = new AudioContext();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    const t = audioCtx.currentTime;
-    [587.33, 880.00].forEach((freq) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, t);
-      gain.gain.setValueAtTime(0.12, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.35);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(t);
-      osc.stop(t + 0.35);
-    });
-
-    [659.25, 987.77].forEach((freq) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(freq, t + 0.22);
-      gain.gain.setValueAtTime(0.12, t + 0.22);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(t + 0.22);
-      osc.stop(t + 0.6);
-    });
-  }
-
-  function reprodukujMehaniku() {
-    if (!audioCtx) audioCtx = new AudioContext();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    const t = audioCtx.currentTime;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(140, t);
-    gain.gain.setValueAtTime(0.05, t);
-    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start(t);
-    osc.stop(t + 0.07);
-  }
-
-  function pokreniZvukPreskakanja(trajanjeSekundi) {
-    if (!audioCtx) audioCtx = new AudioContext();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    let ukupanBrojKlikova = 16; 
-    let intervalMs = (trajanjeSekundi * 1000) / ukupanBrojKlikova;
-    let brojac = 0;
-
-    let klikInterval = setInterval(() => {
-      reprodukujMehaniku();
-      brojac++;
-      if (brojac >= ukupanBrojKlikova) {
-        clearInterval(klikInterval);
-      }
-    }, intervalMs);
-  }
-
-  function kreirajPattern(tip, osnovnaBoja) {
-    const pCanvas = document.createElement("canvas");
-    const pCtx = pCanvas.getContext("2d");
-
-    if (tip === "plis") {
-      pCanvas.width = 16; pCanvas.height = 16;
-      pCtx.fillStyle = osnovnaBoja;
-      pCtx.fillRect(0, 0, 16, 16);
-      pCtx.fillStyle = "rgba(255, 255, 255, 0.2)";
-      pCtx.fillRect(2, 2, 4, 4);
-      pCtx.fillRect(10, 10, 4, 4);
-    } else if (tip === "silikon") {
-      pCanvas.width = 12; pCanvas.height = 12;
-      pCtx.fillStyle = osnovnaBoja;
-      pCtx.fillRect(0, 0, 12, 12);
-      pCtx.strokeStyle = "rgba(255, 255, 255, 0.35)";
-      pCtx.lineWidth = 3;
-      pCtx.beginPath();
-      pCtx.moveTo(0, 12); pCtx.lineTo(12, 0);
-      pCtx.stroke();
-    } else {
-      pCanvas.width = 8; pCanvas.height = 8;
-      pCtx.fillStyle = osnovnaBoja;
-      pCtx.fillRect(0, 0, 8, 8);
-    }
-    return pCanvas;
-  }
-
-  // STAGE INITIALIZATION
-  const stage = new Konva.Stage({
-    container: "konva-container",
-    width: containerEl.clientWidth,
-    height: containerEl.clientHeight || 540
-  });
-
-  const slojOsnova = new Konva.Layer();
-  const slojOpseg = new Konva.Layer();
-  const slojElementi = new Konva.Layer();
-  const slojUputstvo = new Konva.Layer(); // SLOJ ZA UPUTSTVO UNUTAR CANVAS-A
-
-  stage.add(slojOsnova);
-  stage.add(slojOpseg);
-  stage.add(slojElementi);
-  stage.add(slojUputstvo);
-
-  const transformer = new Konva.Transformer({
-    rotateEnabled: true,
-    keepRatio: false,
-    enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right', 'top-center', 'bottom-center', 'middle-left', 'middle-right'],
-    boundBoxFunc: (oldBox, newBox) => {
-      if (newBox.width < 20 || newBox.height < 20) return oldBox;
-      return newBox;
-    }
-  });
-  slojElementi.add(transformer);
-
-  let trenutnaBaza = "meda";
-  let trenutnaBoja = "#ed8936";
-  let trenutniMaterijal = "plis";
-  let trenutniNivoKoraka = 1;
-  
-  let postavljeniElementi = {
-    meda: [],
-    valjak: [],
-    volan: []
-  };
-
-  let history = [];
-  let historyStep = -1;
-
-  function sacuvajStanjeIstorije() {
-    history = history.slice(0, historyStep + 1);
-    history.push(JSON.stringify(postavljeniElementi));
-    historyStep++;
-  }
-
-  let selektovaniElementId = null;
-
-  const opisMaterijala = {
-    plis: "💡 <strong>Meki pliš:</strong> Pruža osećaj sigurnosti, smanjuje anksioznost i podstiče emotivnu regulaciju deteta.",
-    glatko: "💡 <strong>Glatko:</strong> Pruža čist taktilni nadražaj, olakšava brisanje i održavanje higijene u terapijskim uslovima.",
-    silikon: "💡 <strong>Rebrasti silikon:</strong> Podstiče senzornu stimulaciju dlanova, olakšava stisak i sprečava klizanje igračke."
-  };
-
-  const elementiUI = {
-    zvucnik: {
-      ikona: "🎵", naziv: "Zvučni modul",
-      opis: "🏥 <strong>Svrha:</strong> Zvučna stimulacija i razvoj auditivne pažnje.",
-      podesavanja: [{ id: "zvuk_tip", naslov: "Zvuk", opcije: [{ val: "melodija", lab: "Dečija melodija", hint: "🎯 Kontinualna stimulacija." }, { val: "zvono", lab: "Dvostruki akord", hint: "🎯 Kratak odziv." }] }]
-    },
-    zip: {
-      ikona: "🧷", naziv: "Zip-mehanizam",
-      opis: "🏥 <strong>Svrha:</strong> Razvoj fine motorike šake.",
-      podesavanja: [{ id: "vrsta_zipa", naslov: "Tip mehanizma", opcije: [{ val: "metal", lab: "Klasični metalni", hint: "🎯 Za preciznije prste." }, { val: "plastika", lab: "Široki plastični", hint: "🎯 Ergonomski." }] }]
-    },
-    zupcanik: {
-      ikona: "⚙️", naziv: "Rotirajući zupčanik",
-      opis: "🏥 <strong>Svrha:</strong> Taktilno-proprioceptivni unos kroz rotaciju.",
-      podesavanja: [{ id: "otpor", naslov: "Otpor rotacije", opcije: [{ val: "lako", lab: "Slobodno", hint: "🎯 Lako rotiranje." }, { val: "klik", lab: "Klik otpor", hint: "🎯 Usporeno prezubljivanje." }] }]
-    },
-    trake: {
-      ikona: "🟨", naziv: "Senzorne omče / Trake",
-      opis: "🏥 <strong>Svrha:</strong> Taktilno-vizuelno istraživanje.",
-      podesavanja: [{ id: "boje", naslov: "Paleta boja", opcije: [{ val: "visoki", lab: "Visoki kontrast", hint: "🎯 Za slabovidnost." }, { val: "pastel", lab: "Pastelne boje", hint: "🎯 Umirujuće." }] }]
-    },
-    led: {
-      ikona: "💡", naziv: "LED Svetlo",
-      opis: "🏥 <strong>Svrha:</strong> Vizuelno praćenje i fiksacija pogleda.",
-      podesavanja: [{ id: "led_boja", naslov: "Boja svetla", opcije: [{ val: "#ecc94b", lab: "Žuta", hint: "🎯 Topla boja." }, { val: "#63b3ed", lab: "Plava", hint: "🎯 Umirujuće." }] }, { id: "led_rezim", naslov: "Režim rada", opcije: [{ val: "puls", lab: "Pulsirajuće", hint: "🎯 Dinamičko praćenje." }, { val: "stalno", lab: "Stalno svetlo", hint: "🎯 Blago osvetljenje." }] }]
-    },
-    ponderisano: {
-      ikona: "⚖️", naziv: "Ponderisani modul",
-      opis: "🏥 <strong>Svrha:</strong> Duboki pritisak umiruje dete.",
-      podesavanja: [{ id: "tezina", naslov: "Težina", opcije: [{ val: "200g", lab: "200g (Lako)", hint: "🎯 Blago opterećenje." }, { val: "500g", lab: "500g (Srednje)", hint: "🎯 Snažniji uticaj." }] }]
-    }
-  };
-
-  // CENTRIRANO UPUTSTVO SA POVEĆANIM FONTOVIMA UNUTAR CANVAS-A
- // CENTRIRANO UPUTSTVO SA UPPERCASE TEKSTOM I VERTIKALNO CENTRIRANOM ZNAČKOM
-  function crtajUputstvo(nivo) {
-    if (nivo) trenutniNivoKoraka = nivo;
-    slojUputstvo.destroyChildren();
-
-    let naslovTekst = "KORAK 1";
-    let poruka = "IZABERITE BAZU, BOJU I MATERIJAL IGRAČKE NA DESNOM PANELU. KLIKNITE NA IGRAČKU ZA DODAVANJE MODULA.";
-
-    if (trenutniNivoKoraka === 2) {
-      naslovTekst = "KORAK 2";
-      poruka = "ODABERITE SENZORNI MODUL IZ DESNOG MENIJA KOJI ŽELITE UGRADITI NA OZNAČENU POZICIJU.";
-    } else if (trenutniNivoKoraka === 3) {
-      naslovTekst = "KORAK 3";
-      poruka = "MOŽETE POMERATI, MENJATI VELIČINU ILI ROTIRATI MODUL DIREKTNO NA IGRAČKI, I PODESITI NJEGOVE OPCIJE.";
-    }
-
-    const grupa = new Konva.Group({ y: 14, listening: false });
-
-    const maxSirina = Math.min(stage.width() - 40, 560);
-
-    const txtBadge = new Konva.Text({
-      text: naslovTekst,
-      fontSize: 12,
-      fontStyle: 'bold',
-      fill: '#ffffff',
-      padding: 5
-    });
-
-    const badgeBg = new Konva.Rect({
-      width: txtBadge.width() + 10,
-      height: txtBadge.height() + 4,
-      fill: '#2b6cb0',
-      cornerRadius: 5
-    });
-
-    const mainText = new Konva.Text({
-      x: badgeBg.width() + 24,
-      y: 12,
-      text: poruka,
-      fontSize: 13,
-      fontFamily: 'Outfit, sans-serif',
-      fontStyle: 'bold',
-      fill: '#1a202c',
-      width: maxSirina - badgeBg.width() - 40,
-      lineHeight: 1.35
-    });
-
-    const visinaBoksa = Math.max(badgeBg.height() + 20, mainText.height() + 24);
-    const sirinaBoksa = badgeBg.width() + mainText.width() + 44;
-
-    const pozadinaBox = new Konva.Rect({
-      width: sirinaBoksa,
-      height: visinaBoksa,
-      fill: 'rgba(255, 255, 255, 0.96)',
-      stroke: '#2b6cb0',
-      strokeWidth: 2,
-      cornerRadius: 10,
-      shadowColor: 'black',
-      shadowBlur: 12,
-      shadowOpacity: 0.1,
-      shadowOffset: { x: 0, y: 4 }
-    });
-
-    // Vertikalno centriranje plave značke u odnosu na visinu celog boksa
-    const vertikalniY = (visinaBoksa - badgeBg.height()) / 2;
-    badgeBg.x(12);
-    badgeBg.y(vertikalniY);
-
-    txtBadge.x(12 + (badgeBg.width() - txtBadge.width()) / 2);
-    txtBadge.y(vertikalniY + (badgeBg.height() - txtBadge.height()) / 2);
-
-    // Vertikalno centriranje teksta poruke
-    mainText.y((visinaBoksa - mainText.height()) / 2);
-
-    grupa.add(pozadinaBox);
-    grupa.add(badgeBg);
-    grupa.add(txtBadge);
-    grupa.add(mainText);
-
-    // Centriranje na širinu Canvasa
-    grupa.x((stage.width() - sirinaBoksa) / 2);
-
-    slojUputstvo.add(grupa);
-    slojUputstvo.batchDraw();
-  }
-
-  function crtajBazu() {
-    slojOsnova.destroyChildren();
-    slojElementi.destroyChildren();
-    slojElementi.add(transformer);
-
-    const cX = stage.width() / 2;
-    const cY = stage.height() / 2 + 15; // Pomeramo malo dole radi poravnanja
-    const imgPattern = kreirajPattern(trenutniMaterijal, trenutnaBoja);
-
-    const grupaCelaIgracka = new Konva.Group({ id: 'cela-igracka-grupa' });
-
-    const primeniStil = (oblik) => {
-      oblik.fillPriority("pattern");
-      oblik.fillPatternImage(imgPattern);
-    };
-
-    if (trenutnaBaza === "meda") {
-      const delovi = [
-        new Konva.Circle({ x: cX - 55, y: cY - 105, radius: 25, stroke: "#2d3748", strokeWidth: 3 }),
-        new Konva.Circle({ x: cX + 55, y: cY - 105, radius: 25, stroke: "#2d3748", strokeWidth: 3 }),
-        new Konva.Circle({ x: cX - 65, y: cY + 85, radius: 28, stroke: "#2d3748", strokeWidth: 3 }),
-        new Konva.Circle({ x: cX + 65, y: cY + 85, radius: 28, stroke: "#2d3748", strokeWidth: 3 }),
-        new Konva.Circle({ x: cX, y: cY + 30, radius: 85, stroke: "#2d3748", strokeWidth: 4 }),
-        new Konva.Circle({ x: cX, y: cY - 60, radius: 65, stroke: "#2d3748", strokeWidth: 4 })
-      ];
-      delovi.forEach(d => { primeniStil(d); grupaCelaIgracka.add(d); });
-
-      grupaCelaIgracka.add(new Konva.Ellipse({ x: cX, y: cY - 48, radiusX: 22, radiusY: 16, fill: "#feebc8", stroke: "#744210", strokeWidth: 2 }));
-      grupaCelaIgracka.add(new Konva.Ellipse({ x: cX, y: cY - 55, radiusX: 10, radiusY: 7, fill: "#2d3748" }));
-      grupaCelaIgracka.add(new Konva.Circle({ x: cX - 22, y: cY - 72, radius: 6, fill: "#1a202c" }));
-      grupaCelaIgracka.add(new Konva.Circle({ x: cX + 22, y: cY - 72, radius: 6, fill: "#1a202c" }));
-
-    } else if (trenutnaBaza === "valjak") {
-      const sirina = 200;
-      const visina = 110;
-
-      grupaCelaIgracka.add(new Konva.Ellipse({ x: cX - sirina / 2, y: cY, radiusX: 22, radiusY: visina / 2, fill: "#2d3748", stroke: "#1a202c", strokeWidth: 3 }));
-      const omotac = new Konva.Rect({ x: cX - sirina / 2, y: cY - visina / 2, width: sirina, height: visina, stroke: "#1a202c", strokeWidth: 3 });
-      primeniStil(omotac);
-      grupaCelaIgracka.add(omotac);
-
-      const prednjiProfil = new Konva.Ellipse({ x: cX + sirina / 2, y: cY, radiusX: 22, radiusY: visina / 2, stroke: "#1a202c", strokeWidth: 3 });
-      primeniStil(prednjiProfil);
-      grupaCelaIgracka.add(prednjiProfil);
-
-      grupaCelaIgracka.add(new Konva.Rect({ x: cX - sirina / 2 - 12, y: cY - 18, width: 12, height: 36, fill: "#4a5568", cornerRadius: 4, stroke: "#1a202c", strokeWidth: 2 }));
-      grupaCelaIgracka.add(new Konva.Rect({ x: cX + sirina / 2, y: cY - 18, width: 12, height: 36, fill: "#4a5568", cornerRadius: 4, stroke: "#1a202c", strokeWidth: 2 }));
-
-    } else if (trenutnaBaza === "volan") {
-      const prsten = new Konva.Circle({ x: cX, y: cY, radius: 115, stroke: "#1a202c", strokeWidth: 6 });
-      primeniStil(prsten);
-      grupaCelaIgracka.add(prsten);
-
-      grupaCelaIgracka.add(new Konva.Circle({ x: cX, y: cY, radius: 72, fill: "#f8fafc", stroke: "#1a202c", strokeWidth: 4 }));
-      grupaCelaIgracka.add(new Konva.Rect({ x: cX - 128, y: cY - 30, width: 18, height: 60, fill: "#2d3748", cornerRadius: 6 }));
-      grupaCelaIgracka.add(new Konva.Rect({ x: cX + 110, y: cY - 30, width: 18, height: 60, fill: "#2d3748", cornerRadius: 6 }));
-    }
-
-    grupaCelaIgracka.on("click tap", () => {
-      const pos = stage.getPointerPosition();
-      otvoriMeniZaNovuTacku(pos.x, pos.y);
-    });
-
-    slojOsnova.add(grupaCelaIgracka);
-    slojOsnova.batchDraw();
-
-    const elementiNiz = postavljeniElementi[trenutnaBaza];
-    elementiNiz.forEach(item => {
-      crtajPostavljeniElement(item);
-    });
-
-    slojElementi.batchDraw();
-    crtajUputstvo();
-    osveziInventarListu();
-  }
-
-  stage.on('click tap', (e) => {
-    if (e.target === stage || e.target.hasName('cela-igracka-grupa')) {
-      transformer.nodes([]);
-      slojElementi.batchDraw();
-    }
-  });
-
-  function prikaziVizuelniOpseg(x, y) {
-    slojOpseg.destroyChildren();
-
-    const targetGroup = new Konva.Group({ x: x, y: y });
-    const spoljniKrug = new Konva.Circle({
-      radius: 28, fill: "rgba(43, 108, 176, 0.25)", stroke: "#2b6cb0", strokeWidth: 2, dash: [4, 4]
-    });
-    const unutrasnjaTacka = new Konva.Circle({ radius: 5, fill: "#2b6cb0" });
-
-    targetGroup.add(spoljniKrug);
-    targetGroup.add(unutrasnjaTacka);
-    slojOpseg.add(targetGroup);
-
-    new Konva.Tween({
-      node: spoljniKrug, duration: 0.6, scaleX: 1.25, scaleY: 1.25, opacity: 0.4, yoyo: true, repeat: -1
-    }).play();
-
-    slojOpseg.batchDraw();
-  }
-
-  function ukloniVizuelniOpseg() {
-    slojOpseg.destroyChildren();
-    slojOpseg.batchDraw();
-  }
-
-  function otvoriMeniZaNovuTacku(x, y) {
-    window.tempKlikX = x;
-    window.tempKlikY = y;
-
-    prikaziVizuelniOpseg(x, y);
-
-    const container = document.getElementById("elements-container");
-    container.innerHTML = "";
-
-    Object.keys(elementiUI).forEach(tip => {
-      const el = elementiUI[tip];
-      const btn = document.createElement("button");
-      btn.className = "btn-element";
-      btn.innerHTML = `<span class="el-icon">${el.ikona}</span><span class="el-name">${el.naziv}</span>`;
-      
-      btn.onclick = () => {
-        ukloniVizuelniOpseg();
-
-        const podrazumevano = {};
-        if (el.podesavanja) {
-          el.podesavanja.forEach(p => { podrazumevano[p.id] = p.opcije[0].val; });
-        }
-
-        const noviObj = {
-          id: Date.now(),
-          x: window.tempKlikX,
-          y: window.tempKlikY,
-          tip: tip,
-          opcije: podrazumevano
-        };
-
-        postavljeniElementi[trenutnaBaza].push(noviObj);
-        selektovaniElementId = noviObj.id;
-
-        sacuvajStanjeIstorije();
-        crtajBazu();
-        otvoriPodesavanja(noviObj.id);
-      };
-      container.appendChild(btn);
-    });
-
-    prikaziPanel(2);
-  }
-
-  function crtajPostavljeniElement(modulObj) {
-    const grupa = new Konva.Group({
-      x: modulObj.x,
-      y: modulObj.y,
-      draggable: true,
-      id: `modul-${modulObj.id}`
-    });
-
-    const tip = modulObj.tip;
-    const opcije = modulObj.opcije || {};
-
-    if (tip === "zvucnik") {
-      grupa.add(new Konva.Circle({ radius: 26, fill: '#6b46c1', stroke: '#322659', strokeWidth: 3 }));
-      grupa.add(new Konva.Circle({ radius: 16, fill: '#9f7aea', stroke: '#553c9a', strokeWidth: 2 }));
-      grupa.add(new Konva.Text({ text: '🎵', fontSize: 16, x: -8, y: -8 }));
-
-    } else if (tip === "zip") {
-      grupa.add(new Konva.Rect({ x: -35, y: -10, width: 70, height: 20, fill: opcije.vrsta_zipa === "plastika" ? '#3182ce' : '#4a5568', cornerRadius: 4, stroke: '#1a202c', strokeWidth: 2 }));
-      for (let i = -28; i <= 28; i += 7) {
-        grupa.add(new Konva.Rect({ x: i, y: -8, width: 3, height: 16, fill: '#cbd5e0' }));
-      }
-      const klizac = new Konva.Rect({ x: -25, y: -12, width: 14, height: 24, fill: '#e2e8f0', cornerRadius: 3, stroke: '#1a202c', strokeWidth: 1.5, id: 'zip-klizac' });
-      grupa.add(klizac);
-
-    } else if (tip === "led") {
-      const boja = opcije.led_boja || '#ecc94b';
-      const sjaj = new Konva.Circle({ radius: 24, fill: boja, opacity: opcije.led_rezim === "stalno" ? 0.85 : 0.35, id: 'led-sjaj' });
-      const lampica = new Konva.Circle({ radius: 16, fill: boja, stroke: '#d69e2e', strokeWidth: 3 });
-      grupa.add(sjaj);
-      grupa.add(lampica);
-
-    } else if (tip === "zupcanik") {
-      const zup = new Konva.Group({ id: 'fidget-zupcanik' });
-      zup.add(new Konva.Circle({ radius: 22, fill: '#c53030', stroke: '#742a2a', strokeWidth: 3 }));
-      for (let a = 0; a < 360; a += 45) {
-        const rad = (a * Math.PI) / 180;
-        zup.add(new Konva.Rect({
-          x: Math.cos(rad) * 20 - 4, y: Math.sin(rad) * 20 - 4,
-          width: 8, height: 8, fill: '#742a2a', cornerRadius: 2
-        }));
-      }
-      zup.add(new Konva.Circle({ radius: 10, fill: '#ffffff', stroke: '#2d3748', strokeWidth: 2 }));
-      grupa.add(zup);
-
-    } else if (tip === "trake") {
-      const trakeGrupa = new Konva.Group({ id: 'trake-telo' });
-      const boje = opcije.boje === "pastel" ? ['#fbb6ce', '#faf089', '#90cdf4', '#9ae6b4'] : ['#e53e3e', '#ecc94b', '#3182ce', '#38a169'];
-      boje.forEach((b, i) => {
-        const ox = -20 + i * 10;
-        trakeGrupa.add(new Konva.Rect({ x: ox, y: -18, width: 8, height: 36, fill: b, cornerRadius: 4, stroke: 'rgba(0,0,0,0.2)', strokeWidth: 1 }));
-      });
-      grupa.add(trakeGrupa);
-
-    } else if (tip === "ponderisano") {
-      const jeVeliko = opcije.tezina === "500g";
-      const sirina = jeVeliko ? 74 : 56;
-      const visina = jeVeliko ? 32 : 24;
-
-      const podTelo = new Konva.Group({ id: 'ponder-telo' });
-      podTelo.add(new Konva.Rect({ x: -sirina / 2, y: -visina / 2, width: sirina, height: visina, fill: '#2d3748', cornerRadius: 6, stroke: '#1a202c', strokeWidth: 3 }));
-      podTelo.add(new Konva.Text({ text: opcije.tezina || "200g", fontSize: jeVeliko ? 12 : 10, fontStyle: 'bold', fill: '#ffffff', x: jeVeliko ? -16 : -12, y: -5 }));
-      grupa.add(podTelo);
-    }
-
-    grupa.on("click tap", (e) => {
-      e.cancelBubble = true;
-      ukloniVizuelniOpseg();
-      selektovaniElementId = modulObj.id;
-      
-      transformer.nodes([grupa]);
-      slojElementi.batchDraw();
-
-      pokreniAnimacijuElementa(grupa, tip, opcije);
-      otvoriPodesavanja(modulObj.id);
-    });
-
-    grupa.on("dragend transformend", () => {
-      modulObj.x = grupa.x();
-      modulObj.y = grupa.y();
-      sacuvajStanjeIstorije();
-    });
-
-    slojElementi.add(grupa);
-
-    if (selektovaniElementId === modulObj.id) {
-      transformer.nodes([grupa]);
-    }
-  }
-
-  function prikaziPanel(nivo) {
-    document.getElementById("panel-level-1").style.display = nivo === 1 ? "block" : "none";
-    document.getElementById("panel-level-2").style.display = nivo === 2 ? "block" : "none";
-    document.getElementById("panel-level-3").style.display = nivo === 3 ? "block" : "none";
-
-    document.getElementById("step-1").classList.toggle("active", nivo === 1);
-    document.getElementById("step-2").classList.toggle("active", nivo === 2);
-    document.getElementById("step-3").classList.toggle("active", nivo === 3);
-
-    crtajUputstvo(nivo);
-  }
-
-  function osveziInventarListu() {
-    const listEl = document.getElementById("inventory-list");
-    if (!listEl) return;
-
-    const trNiz = postavljeniElementi[trenutnaBaza];
-    listEl.innerHTML = "";
-
-    if (trNiz.length === 0) {
-      listEl.innerHTML = '<li class="empty-inventory">Nema dodatih modula. Kliknite na igračku za dodavanje.</li>';
-      return;
-    }
-
-    trNiz.forEach(item => {
-      const data = elementiUI[item.tip];
-      const li = document.createElement("li");
-      li.className = "inventory-item";
-      li.innerHTML = `
-        <span>${data.ikona} ${data.naziv}</span>
-        <button class="inventory-item-remove" title="Ukloni modul">✕</button>
-      `;
-
-      li.querySelector(".inventory-item-remove").onclick = (e) => {
-        e.stopPropagation();
-        ukloniElementById(item.id);
-      };
-
-      li.onclick = () => {
-        selektovaniElementId = item.id;
-        const g = slojElementi.findOne(`#modul-${item.id}`);
-        if (g) {
-          transformer.nodes([g]);
-          slojElementi.batchDraw();
-        }
-        otvoriPodesavanja(item.id);
-      };
-
-      listEl.appendChild(li);
-    });
-  }
-
-  function ukloniElementById(id) {
-    zaustaviMuziku();
-    ukloniVizuelniOpseg();
-    transformer.nodes([]);
-    postavljeniElementi[trenutnaBaza] = postavljeniElementi[trenutnaBaza].filter(i => i.id !== id);
-    if (selektovaniElementId === id) selektovaniElementId = null;
-    sacuvajStanjeIstorije();
-    crtajBazu();
-    prikaziPanel(1);
-  }
-
-  function otvoriPodesavanja(elementId) {
-    const elObj = postavljeniElementi[trenutnaBaza].find(item => item.id === elementId);
-    if (!elObj) return;
-
-    const modulData = elementiUI[elObj.tip];
-    document.getElementById("podesavanje-naslov").innerText = modulData.naziv;
-
-    const container = document.getElementById("fine-tuning-container");
-    container.innerHTML = "";
-
-    const descBox = document.getElementById("module-description-box");
-    if (descBox) descBox.innerHTML = modulData.opis || "";
-
-    if (modulData.podesavanja) {
-      modulData.podesavanja.forEach(p => {
-        const grupa = document.createElement("div");
-        grupa.className = "fine-tuning-group";
-
-        const label = document.createElement("label");
-        label.innerText = p.naslov + ":";
-        grupa.appendChild(label);
-
-        const tuneOpts = document.createElement("div");
-        tuneOpts.className = "tune-options";
-
-        const hintBox = document.createElement("div");
-        hintBox.className = "sub-option-hint";
-
-        const osveziHint = (val) => {
-          const optObj = p.opcije.find(o => o.val === val);
-          if (optObj && optObj.hint) {
-            hintBox.innerHTML = optObj.hint;
-            hintBox.style.display = "block";
-          } else {
-            hintBox.style.display = "none";
-          }
-        };
-
-        const trenVal = elObj.opcije[p.id] || p.opcije[0].val;
-
-        p.opcije.forEach(o => {
-          const btn = document.createElement("button");
-          btn.className = "tune-btn";
-          if (trenVal === o.val) btn.classList.add("active");
-          btn.innerText = o.lab;
-
-          btn.onclick = () => {
-            tuneOpts.querySelectorAll(".tune-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            elObj.opcije[p.id] = o.val;
-            osveziHint(o.val);
-            sacuvajStanjeIstorije();
-            crtajBazu();
-          };
-
-          tuneOpts.appendChild(btn);
-        });
-
-        grupa.appendChild(tuneOpts);
-        grupa.appendChild(hintBox);
-        container.appendChild(grupa);
-
-        osveziHint(trenVal);
-      });
-    }
-
-    prikaziPanel(3);
-  }
-
-  function pokreniAnimacijuElementa(grupa, tip, opcije) {
-    if (tip === "zvucnik") {
-      if (opcije.zvuk_tip === "zvono") reprodukujZvono(); else pokreniMelodiju();
-      new Konva.Tween({ node: grupa, duration: 0.35, scaleX: 1.15, scaleY: 1.15, yoyo: true, repeat: 1 }).play();
-
-    } else if (tip === "zip") {
-      reprodukujMehaniku();
-      const klizac = grupa.findOne('#zip-klizac');
-      if (klizac) new Konva.Tween({ node: klizac, duration: 0.7, x: 18, yoyo: true }).play();
-
-    } else if (tip === "led") {
-      const sjaj = grupa.findOne('#led-sjaj');
-      if (sjaj) {
-        if (opcije.led_rezim === "stalno") new Konva.Tween({ node: sjaj, duration: 0.5, opacity: 1, yoyo: true }).play();
-        else new Konva.Tween({ node: sjaj, duration: 0.6, radius: 36, opacity: 0.9, yoyo: true, repeat: 1 }).play();
-      }
-
-    } else if (tip === "zupcanik") {
-      const zupcanik = grupa.findOne('#fidget-zupcanik');
-      if (zupcanik) {
-        const trenRot = zupcanik.rotation();
-        if (opcije.otpor === "klik") {
-          pokreniZvukPreskakanja(3.5);
-          new Konva.Tween({ node: zupcanik, duration: 3.5, rotation: trenRot + 360, easing: Konva.Easings.Linear }).play();
-        } else {
-          new Konva.Tween({ node: zupcanik, duration: 2.8, rotation: trenRot + 1440, easing: Konva.Easings.EaseOut }).play();
-        }
-      }
-
-    } else if (tip === "ponderisano") {
-      const celaIgracka = slojOsnova.findOne('#cela-igracka-grupa');
-      if (celaIgracka) {
-        const pomeraj = opcije.tezina === "500g" ? 12 : 6;
-        new Konva.Tween({ node: celaIgracka, duration: 0.8, y: pomeraj, yoyo: true }).play();
-      }
-    }
-  }
-
-  // EVENT HANDLERS
-  document.getElementById("btn-back-to-1").onclick = () => { ukloniVizuelniOpseg(); prikaziPanel(1); };
-  document.getElementById("btn-back-to-2").onclick = () => { ukloniVizuelniOpseg(); prikaziPanel(1); };
-
-  document.getElementById("btn-ukloni-element").onclick = () => {
-    if (selektovaniElementId) ukloniElementById(selektovaniElementId);
-  };
-
-  document.getElementById("btn-test-element").onclick = () => {
-    if (selektovaniElementId) {
-      const elObj = postavljeniElementi[trenutnaBaza].find(i => i.id === selektovaniElementId);
-      if (elObj) {
-        const grupa = slojElementi.findOne(`#modul-${elObj.id}`);
-        if (grupa) pokreniAnimacijuElementa(grupa, elObj.tip, elObj.opcije);
-      }
-    }
-  };
-
-  document.querySelectorAll(".btn-base").forEach(btn => {
-    btn.onclick = () => {
-      zaustaviMuziku();
-      ukloniVizuelniOpseg();
-      transformer.nodes([]);
-      document.querySelectorAll(".btn-base").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      trenutnaBaza = btn.dataset.base;
-      crtajBazu();
-      prikaziPanel(1);
-    };
-  });
-
-  document.querySelectorAll(".color-btn").forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      trenutnaBoja = btn.dataset.color;
-      crtajBazu();
-    };
-  });
-
-  document.querySelectorAll(".btn-global-texture").forEach(btn => {
-    btn.onclick = () => {
-      document.querySelectorAll(".btn-global-texture").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      trenutniMaterijal = btn.dataset.texture;
-      const descBox = document.getElementById("material-description");
-      if (descBox) descBox.innerHTML = opisMaterijala[trenutniMaterijal];
-      crtajBazu();
-    };
-  });
-
-  document.getElementById("btn-undo").onclick = () => {
-    if (historyStep > 0) {
-      historyStep--;
-      postavljeniElementi = JSON.parse(history[historyStep]);
-      crtajBazu();
-    }
-  };
-
-  document.getElementById("btn-redo").onclick = () => {
-    if (historyStep < history.length - 1) {
-      historyStep++;
-      postavljeniElementi = JSON.parse(history[historyStep]);
-      crtajBazu();
-    }
-  };
-
-  document.getElementById("btn-reset").onclick = () => {
-    if (confirm("Da li ste sigurni da želite da resetujete sve izmene na igrački?")) {
-      zaustaviMuziku();
-      ukloniVizuelniOpseg();
-      transformer.nodes([]);
-      postavljeniElementi = { meda: [], valjak: [], volan: [] };
-      selektovaniElementId = null;
-      sacuvajStanjeIstorije();
-      crtajBazu();
-      prikaziPanel(1);
-    }
-  };
-
-  // SAKRIVANJE UPUTSTVA U PREVIEW MODALU I PRI SAČUVAJ PNG
-  const btnPreview = document.getElementById("btn-preview");
-  const btnExitPreview = document.getElementById("btn-exit-preview");
-  const previewModal = document.getElementById("preview-modal");
-  const previewModalImg = document.getElementById("preview-modal-img");
-
-  btnPreview.onclick = () => {
-    transformer.nodes([]);
-    slojUputstvo.hide(); // Sakriva textbox
-    stage.batchDraw();
-
-    const dataURL = stage.toDataURL({ pixelRatio: 2 });
-    previewModalImg.src = dataURL;
-    previewModal.style.display = "flex";
-
-    slojUputstvo.show(); // Vraća textbox za nastavak rada
-    stage.batchDraw();
-  };
-
-  btnExitPreview.onclick = () => {
-    previewModal.style.display = "none";
-  };
-
-  document.getElementById("btn-save").onclick = () => {
-    transformer.nodes([]);
-    slojUputstvo.hide(); // Sakriva textbox na sačuvanoj slici
-    stage.batchDraw();
-
-    const dataURL = stage.toDataURL({ pixelRatio: 2 });
-    const link = document.createElement("a");
-    link.download = `medicinska-igracka-${trenutnaBaza}.png`;
-    link.href = dataURL;
-    link.click();
-
-    slojUputstvo.show(); // Vraća textbox
-    stage.batchDraw();
-  };
-
-  sacuvajStanjeIstorije();
-  crtajBazu();
-  prikaziPanel(1);
-
-  window.addEventListener("resize", () => {
-    stage.width(containerEl.clientWidth);
-    stage.height(containerEl.clientHeight || 540);
-    crtajBazu();
-  });
-});
-
-
-
-
-
-
-
-
-
-
-/* ===================== RESET & OSNOVNI STILOVI ===================== */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --color-primary: #2b6cb0;
-  --color-primary-dark: #1a4971;
-  --color-secondary: #ff8800;
-  --color-accent: #F28C28; 
-  --color-accent-hover: #D67A20;
-  --color-bg: #ffffff;
-  --color-bg-alt: #f5f7fa;
-  --color-bg-body: #f8fafc;
-  --color-text: #1a202c;
-  --color-text-light: #4a5568;
-  --color-border: #e2e8f0;
-  --radius: 12px;
-  --shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-  --font-main: "Segoe UI", Roboto, Arial, sans-serif;
-  --font-size-base: 16px;
-  --max-width: 1200px;
-}
-
-html {
-  scroll-behavior: smooth;
-  font-size: var(--font-size-base);
-  overflow-y: scroll; 
-}
-
-body {
-  font-family: var(--font-main);
-  color: var(--color-text);
-  background-color: var(--color-bg-body);
-  line-height: 1.6;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-ul {
-  list-style: none;
-}
-
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-a:focus-visible,
-button:focus-visible {
-  outline: 3px solid var(--color-secondary);
-  outline-offset: 2px;
-}
-
-/* ===================== DUGMICI ===================== */
-.btn,
-button,
-input[type="submit"] {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 12px 24px;
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: all 0.4s ease;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: 2px solid var(--color-primary);
-}
-
-.btn-primary:hover {
-  background-color: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(43, 108, 176, 0.25);
-}
-
-.btn-secondary {
-  background-color: transparent;
-  color: var(--color-primary);
-  border: 2px solid var(--color-primary);
-}
-
-.btn-secondary:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(43, 108, 176, 0.25);
-}
-
-.btn-accent {
-  background-color: var(--color-accent);
-  color: #ffffff;
-  border: 2px solid var(--color-accent);
-}
-
-.btn-accent:hover {
-  background-color: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(242, 140, 40, 0.3);
-}
-
-.category-card .btn-primary {
-  width: auto;             
-  padding: 8px 16px;       
-  font-size: 16px;      
-  margin-top: 8px;
-}
-/* ===================== ACCESSIBILITY TRIGGER DUGME ===================== */
-.access-trigger-btn {
-  position: fixed;
-  bottom: 25px;
-  left: 25px;
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: none;
-  border-radius: 50px;
-  height: 56px;
-  padding: 0 16px;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  box-shadow: 0 4px 15px rgba(43, 108, 176, 0.3);
-  cursor: pointer;
-  z-index: 10000;
-  overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.access-icon {
-  width: 26px;
-  height: 26px;
-  flex-shrink: 0;
-}
-
-.access-text {
-  max-width: 0;
-  opacity: 0;
-  white-space: nowrap;
-  font-size: 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  text-transform: none; /* Normalan tekst, bez uppercase */
-}
-
-/* Magija širenja dugmeta na hover */
-.access-trigger-btn:hover {
-  background-color: var(--color-primary-dark);
-  padding: 0 20px 0 16px;
-  gap: 12px;
-}
-
-.access-trigger-btn:hover .access-text {
-  max-width: 200px;
-  opacity: 1;
-}
-
-/* ===================== ACCESSIBILITY WIDGET (PANEL) ===================== */
-.access-widget {
-  position: fixed;
-  bottom: 95px; /* Pojavljuje se tačno iznad dugmeta */
-  left: 25px;
-  width: 320px; /* Uzan i elegantan */
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  
-  /* Animacija skrivanja/prikazivanja */
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(20px) scale(0.95);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.access-widget.open {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-}
-
-/* Header vidžeta */
-.access-widget-header {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.access-widget-header h3 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: none;
-}
-
-#close-accessibility {
-  background: transparent;
-  border: none;
-  color: #ffffff;
-  font-size: 20px;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-}
-
-#close-accessibility:hover {
-  color: var(--color-secondary);
-}
-
-/* Grid kartica unutar vidžeta */
-.access-widget-body {
-  padding: 20px;
-  background-color: var(--color-bg-body);
-}
-
-.access-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Dve kolone (kao na tvojoj slici) */
-  gap: 12px;
-}
-
-.access-grid-btn {
-  background-color: #ffffff;
-  border: 2px solid var(--color-border);
-  border-radius: 12px;
-  padding: 16px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: none; /* Nema vikanja (uppercase) */
-}
-
-.access-grid-btn:hover {
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 10px rgba(43, 108, 176, 0.1);
-  transform: translateY(-2px);
-}
-
-.access-grid-icon {
-  font-size: 26px;
-  color: var(--color-primary);
-}
-
-.access-grid-label {
-  font-size: 13px;
-  color: var(--color-text);
-  font-weight: 600;
-  text-align: center;
-  line-height: 1.2;
-}
-
-/* Footer (Dugme za reset) */
-.access-widget-footer {
-  padding: 16px 20px;
-  background-color: #ffffff;
-  border-top: 1px solid var(--color-border);
-}
-
-.access-reset-btn {
-  width: 100%;
-  background-color: var(--color-primary-dark);
-  color: #ffffff;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  text-transform: none;
-  transition: background-color 0.2s ease;
-}
-
-.access-reset-btn:hover {
-  background-color: var(--color-accent); /* Postaje narandžasto na hover */
-}
-
-/* ===================== HEADER (ZAKUCAN NA VRHU) ===================== */
-.site-header {
-  background-color: transparent;
-  border-bottom: none;
-  position: relative; /* Ovo gasi praćenje pri skrolu */
-  top: 0; /* Vraćeno na nulu */
-  z-index: 1000;
-  padding: 15px 20px 0; 
-}
-
-.floating-header .header-inner {
-  /* Nežni plavi gradient koji već postoji na sajtu */
-  background: linear-gradient(135deg, var(--color-bg-alt), #bfdbfc); 
-  border-radius: 50px; 
-  box-shadow: 0 10px 25px rgba(43, 108, 176, 0.15); 
-  height: auto;
-  min-height: 70px;
-  padding: 10px 35px;
-  max-width: 850px; /* Suženo da odgovara gornjoj traci */
-  margin: 0 auto;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  flex-wrap: wrap; /* Sigurnost za manje ekrane */
-  width: 100%;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-}
-
-.logo svg {
-  flex-shrink: 0;
-  transition: transform 0.2s ease;
-}
-
-.logo:hover svg {
-  transform: scale(1.08);
-}
-
-.logo-text {
-  font-family: 'Outfit', 'Segoe UI', sans-serif; 
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--color-primary-dark); 
-  letter-spacing: -0.3px;
-  display: inline-block; 
-  transition: transform 0.2s ease;
-}
-.logo:hover .logo-text {
-  transform: scale(1.05); 
-}
-.logo-accent {
-  color: var(--color-secondary) !important; 
-}
-
-body.high-contrast .logo-text {
-  color: #ffffff !important; 
-}
-body.high-contrast .logo-accent {
-  color: #ffff00 !important; 
-}
-body.high-contrast .logo svg path {
-  stroke: #ffff00 !important; 
-}
-body.high-contrast .logo svg circle {
-  fill: #ffffff !important; 
-}
-
-.hero-logo-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 15px;
-  cursor: default; 
-}
-.hero-logo-text {
-  font-size: 40px !important; 
-}
-
-.main-nav ul {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.main-nav a {
-  font-weight: 700;
-  font-size: 16px;
-  color: var(--color-text); /* Tamno sivi tekst */
-  text-decoration: none;
-  text-transform: uppercase; 
-  letter-spacing: 0.8px;      
-  padding: 8px 0;
-  position: relative;
-  display: inline-block;
-  transition: color 0.25s ease, transform 0.25s ease;
-}
-
-.main-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0%;
-  height: 3px;
-  background-color: var(--color-accent); /* Koralno-narandžasta linija */
-  border-radius: 2px;
-  transition: width 0.25s ease;
-}
-
-.main-nav a:hover,
-.main-nav a.active {
-  color: var(--color-primary-dark);
-  transform: translateY(-2px) scale(1.05); 
-}
-
-.main-nav a:hover::after,
-.main-nav a.active::after {
-  width: 100%;
-}
-
-/* ===================== HERO SEKCIJA ===================== */
-.hero-split {
-  padding: 60px 0;
-}
-
-.hero-watermark {
-  position: relative;
-  background: var(--color-bg-body);
-  overflow: hidden;
-  padding: 100px 0 60px 0; 
-}
-
-.hero-watermark::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-image: radial-gradient(var(--color-primary) 1.5px, transparent 1.5px);
-  background-size: 30px 30px;
-  opacity: 0.05; 
-  z-index: 0;
-}
-
-.hero-split-inner {
-  display: grid;
-  grid-template-columns: 1fr 1fr; 
-  gap: 32px;
-  align-items: center;
-  position: relative;
-  z-index: 1;
-}
-
-.hero-text-content {
-  text-align: center;         
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.hero-text-content h1 {
-  font-size: 25px;
-  color: var(--color-primary-dark);
-  margin-bottom: 18px;
-  line-height: 1.25;
-  font-weight: 700;
-  text-transform: uppercase; 
-  letter-spacing: 1px;        
-  text-wrap: balance;
-}
-
-.hero-subtitle {
-  font-size: 18px;
-  color: var(--color-text-light);
-  margin-bottom: 32px;
-  font-weight: 500;
-  line-height: 1.6;
-}
-
-.hero-actions {
-  display: flex;
-  justify-content: center;    
-  gap: 16px;
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-.hero-image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-split-img {
-  width: 100%;
-  height: auto;
-  max-height: 420px;
-  object-fit: contain; 
-  border-radius: var(--radius);
-}
-
-body.high-contrast .hero-watermark {
-  background: #000000 !important;
-}
-
-@media (max-width: 850px) {
-  .hero-split-inner {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .hero-text-content {
-    text-align: center;
-  }
-  .hero-actions {
-    justify-content: center; 
-  }
-  .hero-split-img {
-    max-height: 300px; 
-  }
-}
-
-/* ===================== KLASE ZA JS PRISTUPAČNOST ===================== */
-body.increased-spacing {
-  letter-spacing: 1.5px !important;
-  line-height: 1.8 !important;
-}
-
-body.large-cursor, 
-body.large-cursor * {
-  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="black" stroke="white" stroke-width="2" d="M7 2l12 11.2h-5.8l3.3 7.3-2.2.9-3.2-7.4-4.4 4.8z"/></svg>'), auto !important;
-}
-
-body.pause-animations * {
-  animation: none !important;
-  transition: none !important;
-}
-
-/* ===================== CENTRIRAN REDIZAJN KARTICE ===================== */
-
-.categories-slider-section {
-  padding: 60px 0 0px 0;
-  background-color: #ffffff;
-}
-
-.categories-slider-section .section-title {
-  text-align: center;
-  font-size: 25px;
-  color: var(--color-primary-dark);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 20px !important;
-  font-weight: 700;
-}
-
-.single-slide-wrapper {
-  max-width: 800px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.categories-track {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  gap: 0;
-  scrollbar-width: none;
-  padding: 10px 0;
-}
-
-.categories-track::-webkit-scrollbar {
-  display: none;
-}
-
-.slide-card {
-  flex: 0 0 100%;
-  max-width: 100%;
-  scroll-snap-align: start;
-  box-sizing: border-box;
-  background: linear-gradient(180deg, #ffffff 0%, #eaf2fb 100%);
-  border: 2px solid var(--color-primary);
-  border-radius: var(--radius);
-  padding: 36px 40px;
-  box-shadow: 0 10px 25px rgba(43, 108, 176, 0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.slide-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.slide-icon {
-  font-size: 25px;
-  text-transform: uppercase;
-  width: 70px;
-  height: 70px;
-  background: #ffffff;
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(43, 108, 176, 0.12);
-}
-
-.slide-header h3 {
-  font-size: 20px;
-  color: var(--color-primary-dark);
-  margin: 0;
-  text-align: left;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.slide-card p {
-  color: #2d3748;
-  font-size: 16px;
-  line-height: 1.6;
-  margin: 0 0 24px 0;
-  max-width: 680px;
-}
-
-.slide-btn {
-  display: inline-block;
-  margin-top: auto;
-}
-
-.slider-controls-bottom {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 25px;
-}
-
-.slider-btn {
-  background: #ffffff;
-  border: 2px solid var(--color-primary);
-  color: var(--color-primary);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px rgba(43, 108, 176, 0.12);
-}
-
-.slider-btn:hover {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  transform: scale(1.05);
-}
-
-body.high-contrast .slide-card {
-  background: #000000 !important;
-  border: 2px solid #ffffff !important;
-}
-
-body.high-contrast .slide-header h3,
-body.high-contrast .slide-card p,
-body.high-contrast .slider-btn {
-  color: #ffffff !important;
-  background: #000000 !important;
-  border-color: #ffffff !important;
-}
-
-@media (max-width: 680px) {
-  .slide-header {
-    flex-direction: column;
-    text-align: center;
-  }
-  .slide-header h3 {
-    text-align: center;
-  }
-}
-
-/* ===================== SEKCIJA O NAMA ===================== */
-
-.about-section {
-  background-color: #ffffff;
-  padding: 70px 0;
-  margin-bottom: 15px;
-}
-
-.about-section .section-title {
-  text-align: center;
-  font-size: 25px;
-  color: var(--color-primary-dark);
-  margin-bottom: 40px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.values-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  align-items: stretch; 
-}
-
-.value-card {
-  background: linear-gradient(135deg, #f8f8fc 0%, #d5e9ff 100%);
-  border: 2px solid var(--color-primary);
-  border-radius: var(--radius);
-  padding: 32px 24px;
-  box-shadow: 0 8px 20px rgba(43, 108, 176, 0.1);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  text-align: center;  
-}
-
-.value-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 25px rgba(43, 108, 176, 0.18);
-}
-
-.value-icon {
-  font-size: 24px;
-  width: 58px;
-  height: 58px;
-  background-color: #ffffff;
-  border: 2px solid var(--color-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-  box-shadow: 0 4px 10px rgba(43, 108, 176, 0.12);
-}
-
-.value-card h3 {
-  font-size: 20px;
-  color: var(--color-primary-dark);
-  margin-bottom: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-.value-card p {
-  color: #2d3748;
-  line-height: 1.6;
-  font-size: 16px;
-  margin: 0;
-}
-
-.goals-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  text-align: left; 
-  width: 100%;
-}
-
-.goals-list li {
-  position: relative;
-  padding-left: 22px;
-  margin-bottom: 8px;
-  color: #2d3748;
-  font-size: 16px;
-  line-height: 1.45;
-}
-
-.goals-list li:last-child {
-  margin-bottom: 0;
-}
-
-.goals-list li::before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--color-primary);
-  font-weight: 800;
-  font-size: 16px;
-}
-
-@media (max-width: 900px) {
-  .values-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-body.high-contrast .value-card {
-  background: #000000 !important;
-  border: 2px solid #ffffff !important;
-}
-
-body.high-contrast .value-card p,
-body.high-contrast .goals-list li {
-  color: #ffffff !important;
-}
-
-/* ===================== FOOTER ===================== */
-.site-footer {
-  background: linear-gradient(0deg, var(--color-bg-alt), #9ab9dd);
-  color: #242a30;
-  padding: 36px 0 16px;
-}
-
-.footer-inner {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin-bottom: 20px;
-  text-align: center;
-  justify-items: center;
-}
-
-.site-footer h3 {
-  margin-top: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-size: 20px;
-  color: var(--color-primary-dark);
-  margin-bottom: 14px;
-}
-
-.site-footer p {
-  color: #242a30;
-  font-size: 16px;
-}
-
-.footer-links.horizontal-links {
-  display: flex;
-  align-items: center;
-  gap: 16px;          
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.footer-links.horizontal-links a {
-  color: var(--color-text);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s ease;
-  white-space: nowrap; 
-}
-
-.footer-links.horizontal-links a:hover {
-  color: var(--color-primary);
-  text-decoration:none;
-}
-
-.footer-links li {
-  margin-bottom: 6px;
-}
-
-.footer-bottom {
-  text-align: center;
-  padding-top: 12px;
-  font-size: 15px;
-  color: #060707;
-}
-.footer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 32px;
-  align-items: start; 
-}
-.footer-brand {
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
-  text-align: center;
-  margin: 0;           
-}
-.footer-brand .logo {
-  display: inline-flex;
-  align-items: center;
-  margin-top: 0;       
-  margin-bottom: 12px;
-}
-.footer-brand p {
-  color: var(--color-text-light);
-  font-size: 16px;
-}
-
-
 
 
 
@@ -2412,1226 +971,4 @@ body.high-contrast .modal-description,
 body.high-contrast .price-amount,
 body.high-contrast .modal-form label {
   color: #ffffff !important;
-}
-/* ===================== PROMO SEKCIJA NA INDEX-U (ČISTI UX) ===================== */
-
-.configurator-promo {
-  padding: 20px 0;
-  background-color: #ffffff;
-}
-
-.promo-card {
-  background: linear-gradient(135deg, #eaf2fb 0%, #cce2fc 100%);
-  border: 2px solid var(--color-primary);
-  border-radius: var(--radius);
-  padding: 44px 48px;
-  box-shadow: 0 10px 25px rgba(43, 108, 176, 0.12);
-  display: grid;
-  grid-template-columns: 280px 1fr; /* Leva kolona fiksirana za medu, desna za tekst */
-  gap: 40px;
-  align-items: center; /* Vertikalno centrira sliku i desni tekst */
-  max-width: 960px;
-  margin: 0 auto;
-}
-
-/* Leva kolona - Providan PNG bez ikakvih belih pozadina ili okvira */
-.promo-image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.promo-image {
-  width: 100%;
-  max-width: 260px;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  filter: brightness(82%) drop-shadow(0 14px 18px rgba(0, 0, 0, 0.36));
-}
-
-/* Desna kolona - Tekstualni sadržaj */
-.promo-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.promo-card h2 {
-  font-size: 22px; /* ~23px uppercase naslov kako si tražio */
-  color: var(--color-primary-dark);
-  margin-bottom: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  line-height: 1.3;
-}
-
-.promo-card p {
-  color: #2d3748;
-  font-size: 16px;
-  line-height: 1.55;
-  margin-bottom: 20px;
-}
-
-/* Lista prednosti sa ujednačenim razmakom */
-.promo-features {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 24px 0;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.promo-features li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-primary-dark);
-}
-
-.feature-icon {
-  font-size: 16px;
-}
-
-.promo-actions {
-  display: flex;
-  justify-content: center;
-}
-
-.promo-actions .btn {
-  padding: 13px 26px;
-  font-size: 16px;
-}
-
-/* Responzivnost za mobilne uređaje */
-@media (max-width: 820px) {
-  .promo-card {
-    grid-template-columns: 1fr;
-    padding: 32px 24px;
-    gap: 24px;
-    text-align: center;
-  }
-
-  .promo-content {
-    text-align: center;
-  }
-
-  .promo-features {
-    align-items: center;
-  }
-
-  .promo-actions {
-    justify-content: center;
-  }
-
-  .promo-image {
-    max-width: 200px;
-    margin: 0 auto;
-  }
-}
-/* ===================== MODELI I DUGMIĆI U KONFIGURATORU ===================== */
-.model-select-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
-}
-
-.btn-model {
-  background-color: var(--color-bg-alt);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text);
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.25s ease;
-}
-
-.btn-model:hover {
-  border-color: var(--color-primary);
-  background-color: #eaf2fb;
-}
-
-.btn-model.active {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: #ffffff;
-}
-
-.palette-divider {
-  border: none;
-  border-top: 1px solid var(--color-border);
-  margin: 18px 0;
-}
-/* ===================== ZAŠTO PRILAGOĐENE IGRAČKE ===================== */
-.why-toys {
-  background-color: #ffffff; /* Čista bela pozadina sekcije */
-  padding: 70px 0;
-}
-
-.why-toys h2 {
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  font-size: 22px;
-  color: var(--color-primary-dark);
-  margin-bottom: 40px;
-}
-
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  text-align: center;
-}
-
-.why-card {
-  background: linear-gradient(135deg, var(--color-bg-alt), #bfdbfc); /* Plavi gradijent NA KARTICAMA */
-  border: 1px solid rgba(43, 108, 176, 0.2);
-  border-radius: var(--radius);
-  padding: 26px 22px;
-  box-shadow: var(--shadow);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.why-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 20px rgba(43, 108, 176, 0.18);
-}
-
-.why-icon {
-  font-size: 30px;
-  margin-bottom: 12px;
-}
-
-.why-card h3 {
-  font-size: 20px;
-  color: var(--color-primary-dark);
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.why-card p {
-  color: #2d3748;
-  font-size: 16px;
-}
-
-/* Podrška za Visoki Kontrast (High Contrast Mode) */
-body.high-contrast .category-card,
-body.high-contrast .why-card {
-  background: #000000 !important;
-  border: 2px solid #ffffff !important;
-}
-
-body.high-contrast .category-card p,
-body.high-contrast .why-card p {
-  color: #ffffff !important;
-}
-
-/* Responzivnost za mobilne uređaje */
-@media (max-width: 850px) {
-  .why-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ===================== KONTAKT STRANICA STILOVI ===================== */
-
-.contact-hero {
-  background: linear-gradient(135deg, var(--color-bg-alt), #bfddff);
-  padding: 50px 0 35px;
-  text-align: center;
-}
-
-.contact-hero h1 {
-  font-size: 25px;
-  text-transform: uppercase;
-  color: var(--color-primary-dark);
-  margin-bottom: 12px;
-}
-
-.contact-subtitle {
-  max-width: 680px;
-  margin: 0 auto;
-  color: var(--color-text-light);
-  font-size: 16px;
-  line-height: 1.5;
-}
-
-.contact-section {
-  padding: 50px 0 80px;
-}
-
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 32px;
-  align-items: stretch; /* Poravnava visinu leve forme i desne kartice */
-}
-
-.contact-form-wrapper,
-.contact-info {
-  background: #ffffff;
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 36px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-}
-
-.contact-form-wrapper h2,
-.contact-info h2 {
-  font-size: 22px;
-  color: var(--color-primary-dark);
-  margin-bottom: 22px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border-bottom: 2px solid var(--color-bg-alt);
-  padding-bottom: 10px;
-}
-
-/* Forma */
-.form-group {
-  margin-bottom: 16px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-text);
-  margin-bottom: 6px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 12px 14px;
-  border: 2px solid var(--color-border);
-  border-radius: 8px;
-  font-size: 16px;
-  background-color: var(--color-bg-alt);
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  background-color: #ffffff;
-}
-
-.form-textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.form-actions {
-  margin-top: 10px;
-}
-
-.form-actions .btn {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-}
-
-.form-error {
-  color: #e53e3e;
-  font-size: 15px;
-  margin-top: 4px;
-  display: block;
-}
-
-/* Desna strana - Podaci o portalu */
-.contact-info {
-  background: linear-gradient(135deg, var(--color-bg-alt), #bfddff);
-}
-
-.contact-info-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-.contact-info-icon {
-  font-size: 17px;
-  width: 44px;
-  height: 44px;
-  background-color: #ffffff;
-  border: 1px solid var(--color-border);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  flex-shrink: 0;
-}
-
-.contact-info-item h3 {
-  font-size: 20px;
-  color: var(--color-text-light);
-  text-transform: uppercase;
-  margin-bottom: 2px;
-  letter-spacing: 0.5px;
-}
-
-.contact-info-item p,
-.contact-info-item a {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--color-primary-dark);
-  text-decoration: none;
-  margin: 0;
-}
-
-.contact-info-item a:hover {
-  color: var(--color-primary);
-  text-decoration: underline;
-}
-
-.contact-info-note {
-  background-color: #ffffff;
-  border: 1px dashed var(--color-primary);
-  border-radius: var(--radius);
-  padding: 18px;
-  margin-top: auto; /* Automatski gura ovaj boks na samo dno kartice */
-}
-
-.contact-info-note h3 {
-  font-size: 20px;
-  color: var(--color-primary);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-}
-
-.contact-info-note p {
-  font-size: 16px;
-  color: var(--color-text-light);
-  line-height: 1.45;
-  margin: 0;
-}
-
-/* Responzivnost za mobilne uređaje */
-@media (max-width: 850px) {
-  .contact-grid {
-    grid-template-columns: 1fr;
-  }
-}
-/* Podrška za Visoki Kontrast (High Contrast Mode) */
-body.high-contrast .contact-form-wrapper,
-body.high-contrast .contact-info {
-  background: #000000 !important;
-  border: 2px solid #ffffff !important;
-}
-
-body.high-contrast .contact-info-item p,
-body.high-contrast .contact-info-note {
-  color: #ffffff !important;
-}
-/* ===================== KLASE ZA PRISTUPAČNOST ===================== */
-body.dyslexia-font,
-body.dyslexia-font * {
-  font-family: "Comic Sans MS", "Comic Sans", cursive, sans-serif !important;
-}
-
-body.highlight-links a {
-  background-color: #ffff00 !important;
-  color: #000000 !important;
-  text-decoration: underline !important;
-}
-body.highlight-links a logo{
-  background-color: transparent !important;
-  color: inherit !important;
-  outline: 3px solid #ffff00 !important; /* Daje čist žuti okvir oko celog logoa */
-  outline-offset: 4px;
-  padding: 0 !important; /* Sprečava da žuti razmak uđe između SVG ikone i teksta */
-}
-body.high-contrast a.logo {
-  background: transparent !important;
-}
-
-body.high-contrast a.logo .logo-text,
-body.high-contrast a.logo .logo-accent {
-  color: #ffffff !important;
-}
-
-body.high-contrast a.logo svg path {
-  stroke: #ffffff !important;
-}
-/* High Contrast Mode */
-body.high-contrast,
-body.high-contrast * {
-  background-color: #000000 !important;
-  background-image: none !important;
-  color: #ffffff !important;
-  border-color: #ffffff !important;
-}
-
-body.high-contrast #konva-container {
-  background-color: #1a1a1a !important;
-}
-
-body.high-contrast button,
-body.high-contrast .btn-secondary,
-body.high-contrast .filter-btn,
-body.high-contrast .accessibility-menu button,
-body.high-contrast .accessibility-floating-btn,
-body.high-contrast .palette-item {
-  background-color: #000000 !important;
-  color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-}
-
-body.high-contrast .btn-primary,
-body.high-contrast .filter-btn.active,
-body.high-contrast .filter-btn:hover,
-body.high-contrast button:hover,
-body.high-contrast .accessibility-floating-btn:hover,
-body.high-contrast .palette-item:hover,
-body.high-contrast .step-number {
-  background-color: #ffff00 !important;
-  color: #000000 !important;
-  border-color: #ffff00 !important;
-}
-
-body.high-contrast .site-footer {
-  border-top: 3px solid #ffffff !important;
-}
-
-body.high-contrast .form-success {
-  border-color: #38a169 !important;
-  color: #9ae6b4 !important;
-}
-/* Potpuno uklanja sve spojne crtice između koraka */
-body.high-contrast .timeline-step::before,
-body.high-contrast .timeline-step::after,
-body.high-contrast .timeline-steps::before,
-body.high-contrast .timeline-steps::after {
-  display: none !important;
-}
-/* ===================== RESPONZIVNOST ===================== */
-@media (max-width: 900px) {
-  .why-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .contact-grid {
-    grid-template-columns: 1fr;
-  }
-  .catalog-grid {
-    grid-template-columns: repeat(2, 1fr) !important; /* 2 u redu na tabletima */
-  }
-}
-
-@media (max-width: 768px) {
-  .header-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    height: auto; /* Omogućava prirodno širenje zaglavlja */
-    padding: 16px 0;
-  }
-
-  .main-nav ul {
-    gap: 14px;
-  }
-
-  .hero h1 {
-    font-size: 25px;
-  }
-
-  .filters {
-    top: 0;
-    position: static;
-  }
-
-  .filters-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-  .filter-btn {
-    flex-shrink: 0;
-  }
-}
-
-@media (max-width: 600px) {
-  .footer-inner {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-}
-@media (max-width: 580px) {
-  .catalog-grid {
-    grid-template-columns: 1fr !important; /* 1 u redu na mobilnim telefonima */
-  }
-}
-@media (max-width: 560px) {
-  .why-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero {
-    padding: 50px 0;
-  }
-
-  .hero-actions {
-    flex-direction: column;
-  }
-
-  .btn {
-    width: 100%;
-    text-align: center;
-  }
-
-  #konva-container {
-    height: 380px;
-  }
-
-  .contact-form-wrapper,
-  .contact-info {
-    padding: 22px;
-  }
-
-  .accessibility-menu.open {
-    right: 10px;
-    width: 240px;
-  }
-
-  .filters-grid {
-    grid-template-columns: 1fr; /* 1 dugme u redu na telefonima */
-  }
-}
-
-/* ==========================================================================
-   KONFIGURATOR - PROŠIRENI LAYOUT I STILOVI ZA RADNI PROSTOR
-   ========================================================================== */
-
-/* Prošireni kontejner za korišćenje punog prostora ekrana */
-.container-wide {
-  max-width: 1440px !important;
-  width: 95% !important;
-  margin: 0 auto;
-}
-
-.configurator-workspace {
-  padding: 16px 0 50px;
-}
-
-.configurator-page-title {
-  text-align: center;
-  margin-bottom: 12px;
-}
-
-.configurator-page-title h1 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a4971;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin: 0;
-}
-
-/* Traka napretka (Tracker) */
-.stepper-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
-.progress-tracker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background: #ffffff;
-  padding: 10px 28px;
-  border-radius: 30px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-.step {
-  font-size: 13px;
-  font-weight: 700;
-  color: #718096;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.step.active {
-  color: #2b6cb0;
-  font-weight: 800;
-}
-
-.step-divider {
-  color: #cbd5e0;
-  font-weight: bold;
-}
-
-/* Layout: 70% Canvas / 30% Panel na širim ekranima */
-.config-split-layout {
-  display: grid;
-  grid-template-columns: 2.2fr 1fr;
-  gap: 20px;
-  min-height: 600px;
-}
-
-.right-sidebar-group {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Leva zona - Konva Canvas */
-.canvas-zone {
-  background: #ffffff;
-  border: 2px solid #cbd5e0;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-}
-
-.canvas-header-toolbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.toolbar-centered {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.btn-toolbar {
-  background: #ffffff;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  padding: 7px 16px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a202c;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-toolbar:hover {
-  background: #edf2f7;
-  border-color: #a0aec0;
-}
-
-.btn-reset-ghost {
-  color: #e53e3e;
-  border-color: #fed7d7;
-  background: #fff5f5;
-}
-
-.btn-reset-ghost:hover {
-  background: #fed7d7;
-}
-
-.btn-preview-accent {
-  background: #ebf8ff;
-  color: #2b6cb0;
-  border-color: #90cdf4;
-}
-
-.btn-preview-accent:hover {
-  background: #2b6cb0;
-  color: #ffffff;
-}
-
-.toolbar-divider {
-  width: 1px;
-  height: 20px;
-  background: #cbd5e0;
-}
-
-#konva-container {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 540px;
-  background-color: #f8fafc;
-}
-
-.canvas-footer-actions {
-  background: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  padding: 14px 20px;
-  display: flex;
-  justify-content: center;
-}
-
-.btn-save-dominant {
-  width: 100%;
-  background: linear-gradient(135deg, #2b6cb0, #2c5282);
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  padding: 14px 24px;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(43, 108, 176, 0.3);
-  transition: transform 0.2s ease;
-}
-
-.btn-save-dominant:hover {
-  transform: translateY(-2px);
-}
-
-/* Desna zona - Kontekstualni Panel */
-.panel-zone {
-  background: #ffffff;
-  border: 2px solid #cbd5e0;
-  border-radius: 12px;
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-}
-
-.panel-content h3 {
-  font-size: 18px;
-  color: #1a4971;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-}
-
-.hint-text {
-  font-size: 14px;
-  color: #4a5568;
-  margin-bottom: 16px;
-}
-
-.zone-header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 16px;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 12px;
-}
-
-.btn-back {
-  background: transparent;
-  border: none;
-  color: #2b6cb0;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-  font-size: 13px;
-}
-
-.btn-back:hover {
-  text-decoration: underline;
-}
-
-/* Izbor baze */
-.base-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-
-.btn-base {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  background: #f5f7fa;
-  border: 2px solid #e2e8f0;
-  border-radius: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: all 0.2s ease;
-}
-
-.btn-base strong {
-  font-size: 15px;
-  color: #1a4971;
-  display: block;
-}
-
-.btn-base p {
-  font-size: 12px;
-  color: #718096;
-  margin: 0;
-}
-
-.btn-base:hover,
-.btn-base.active {
-  background: #eaf2fb;
-  border-color: #2b6cb0;
-}
-
-.base-icon {
-  font-size: 24px;
-}
-
-/* Selektor boja i tekstura */
-.global-texture-group,
-.global-option-group {
-  margin-top: 14px;
-  padding-top: 12px;
-  border-top: 1px solid #e2e8f0;
-}
-
-.global-texture-group label,
-.global-option-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  color: #2d3748;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.color-picker-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.color-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid #cbd5e0;
-  cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-.color-btn:hover,
-.color-btn.active {
-  transform: scale(1.18);
-  border-color: #1a4971;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-.btn-global-texture {
-  padding: 10px 6px;
-  background: #ffffff;
-  border: 1px solid #cbd5e0;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-global-texture.active {
-  background: #2b6cb0;
-  color: #ffffff;
-  border-color: #2b6cb0;
-}
-
-.next-step-hint {
-  margin-top: 20px;
-  padding: 12px;
-  background: #fefcbf;
-  border: 1px solid #f6e05e;
-  border-radius: 8px;
-  color: #1a202c;
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-/* Grid elemenata */
-.elements-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.btn-element {
-  background: #f5f7fa;
-  border: 1px solid #cbd5e0;
-  border-radius: 8px;
-  padding: 14px 8px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-element:hover {
-  border-color: #2b6cb0;
-  background: #eaf2fb;
-  transform: translateY(-2px);
-}
-
-.el-icon {
-  font-size: 24px;
-}
-
-.el-name {
-  font-size: 12px;
-  font-weight: 700;
-  color: #1a4971;
-  text-align: center;
-}
-
-/* Nivo 3: Fine Tuning */
-.fine-tuning-group {
-  margin-bottom: 18px;
-}
-
-.fine-tuning-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  color: #4a5568;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-.tune-options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-}
-
-.tune-btn {
-  padding: 9px;
-  background: #ffffff;
-  border: 1px solid #cbd5e0;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tune-btn.active {
-  background: #2b6cb0;
-  color: #ffffff;
-  border-color: #2b6cb0;
-}
-
-.action-buttons-group {
-  margin-top: auto;
-  padding-top: 20px;
-}
-
-.material-hint,
-.module-medical-hint {
-  margin-top: 12px;
-  padding: 10px 12px;
-  background-color: #eaf2fb;
-  border-left: 4px solid #2b6cb0;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #1a202c;
-  line-height: 1.45;
-}
-
-.module-medical-hint {
-  background-color: #f0fff4;
-  border-left-color: #38a169;
-  color: #1a202c;
-  margin-bottom: 5px;
-}
-
-.sub-option-hint {
-  margin-top: 15px;
-  padding: 8px 10px;
-  background-color: #fffaf0;
-  border-left: 3px solid #dd6b20;
-  border-radius: 4px;
-  font-size: 13px;
-  color: #1a202c;
-  line-height: 1.35;
-  font-weight: 700;
-}
-
-/* Inventar */
-.inventory-section {
-  background: #ffffff;
-  border: 2px solid #cbd5e0;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-}
-
-.inventory-section h4 {
-  font-size: 14px;
-  text-transform: uppercase;
-  color: #1a4971;
-  margin-bottom: 10px;
-  font-weight: 800;
-}
-
-.inventory-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.empty-inventory {
-  font-size: 12px;
-  color: #a0aec0;
-  font-style: italic;
-}
-
-.inventory-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 10px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 6px;
-  margin-bottom: 6px;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.inventory-item-remove {
-  background: #fff5f5;
-  color: #e53e3e;
-  border: 1px solid #fed7d7;
-  border-radius: 4px;
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.inventory-item-remove:hover {
-  background: #e53e3e;
-  color: #ffffff;
-}
-
-/* Preview Modal */
-.preview-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(26, 32, 44, 0.92);
-  backdrop-filter: blur(8px);
-  z-index: 99999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.preview-modal-content {
-  max-width: 90vw;
-  max-height: 85vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.preview-modal-content img {
-  max-width: 100%;
-  max-height: 85vh;
-  object-fit: contain;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border-radius: 12px;
-  background: #ffffff;
-}
-
-.btn-exit-preview {
-  position: absolute;
-  top: 24px;
-  right: 24px;
-  background: #ffffff;
-  color: #1a202c;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 30px;
-  font-weight: 800;
-  font-size: 14px;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-
-.btn-exit-preview:hover {
-  background: #e2e8f0;
-}
-
-/* Responzivnost */
-@media (max-width: 992px) {
-  .config-split-layout {
-    grid-template-columns: 1fr;
-  }
-  #konva-container {
-    min-height: 440px;
-  }
-}
-
-
-
-
-
-/* ==========================================================================
-   GLOBALNA OPTIMIZACIJA ZA VELIKE EKRANE (1920x1080+) ZA CEO SAJT
-   ========================================================================== */
-@media (min-width: 1400px) {
-  /* Proširuje sve kontejnere na sajtu */
-  .container,
-  .container-wide {
-    max-width: 1720px !important;
-    width: 93% !important;
-  }
-
-  /* Prilagođavanje Hero sekcije na Početnoj */
-  .hero-split-inner {
-    gap: 60px !important;
-  }
-
-  /* Prilagođavanje Kataloga - širi raster kartica */
-  .catalog-grid {
-    max-width: 100% !important;
-    gap: 32px !important;
-  }
-
-  /* Prilagođavanje Konfiguratora */
-  .config-split-layout {
-    grid-template-columns: 2.5fr 1fr !important;
-    gap: 28px !important;
-    min-height: 640px !important;
-  }
-
-  #konva-container {
-    min-height: 580px !important;
-  }
-
-  /* Prilagođavanje Kontakt stranice */
-  .contact-grid {
-    gap: 48px !important;
-  }
 }
