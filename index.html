@@ -1,349 +1,430 @@
 <!DOCTYPE html>
 <html lang="sr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal igračaka za decu sa smetnjama u razvoju — NoLimits</title>
-  <meta name="description" content="Web portal za igračke prilagođene deci sa smetnjama u razvoju - katalog, konfigurator i saveti za roditelje.">
+  <meta name="description"
+    content="Web portal za igračke prilagođene deci sa smetnjama u razvoju - katalog, konfigurator i saveti za roditelje.">
   <link rel="stylesheet" href="css/style.css">
 
   <!-- Google Font: Outfit za zakrivljen i moderan logo -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@700;800&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
-<!-- ===================== ACCESSIBILITY DUGME I WIDGET ===================== -->
-<!-- 1. Lebdeće dugme u uglu -->
-<button id="accessibility-trigger" class="access-trigger-btn" aria-label="Otvori opcije pristupačnosti">
-  <svg class="access-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentColor" d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z"/>
-  </svg>
-  <span class="access-text">Opcije pristupačnosti</span>
-</button>
+  <!-- ===================== ACCESSIBILITY DUGME I WIDGET ===================== -->
+  <button id="accessibility-trigger" class="access-trigger-btn" aria-label="Otvori opcije pristupačnosti">
+    <svg class="access-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path fill="currentColor"
+        d="M12 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm9 7h-6v13h-2v-6h-2v6H9V9H3V7h18v2z" />
+    </svg>
+    <span class="access-text">Opcije pristupačnosti</span>
+  </button>
 
-<!-- 2. Iskačući panel (Widget) -->
-<div id="accessibility-widget" class="access-widget" aria-hidden="true">
-  <div class="access-widget-header">
-    <h3>Pristupačnost</h3>
-    <button id="close-accessibility" aria-label="Zatvori">✖</button>
-  </div>
-  
-  <div class="access-widget-body">
-    <div class="access-grid">
-      <!-- Opcija 1 -->
-      <button class="access-grid-btn" id="btn-font-increase">
-        <span class="access-grid-icon">A+</span>
-        <span class="access-grid-label">Povećaj font</span>
-      </button>
-      <!-- Opcija 2 -->
-      <button class="access-grid-btn" id="btn-font-decrease">
-        <span class="access-grid-icon">A-</span>
-        <span class="access-grid-label">Smanji font</span>
-      </button>
-      <!-- Opcija 3 -->
-      <button class="access-grid-btn" id="btn-high-contrast">
-        <span class="access-grid-icon">🌓</span>
-        <span class="access-grid-label">Visoki kontrast</span>
-      </button>
-      <!-- Opcija 4 -->
-      <button class="access-grid-btn" id="btn-dyslexia-font">
-        <span class="access-grid-icon">📖</span>
-        <span class="access-grid-label">Font za disleksiju</span>
-      </button>
-      <!-- Opcija 5 -->
-      <button class="access-grid-btn" id="btn-spacing">
-        <span class="access-grid-icon">↔</span>
-        <span class="access-grid-label">Razmak slova</span>
-      </button>
-      <!-- Opcija 6 -->
-      <button class="access-grid-btn" id="btn-pause-anim">
-        <span class="access-grid-icon">⏸</span>
-        <span class="access-grid-label">Pauziraj animacije</span>
-      </button>
+  <div id="accessibility-widget" class="access-widget" aria-hidden="true">
+    <div class="access-widget-header">
+      <h3>Pristupačnost</h3>
+      <button id="close-accessibility" aria-label="Zatvori">✖</button>
+    </div>
+
+    <div class="access-widget-body">
+
+      <div class="access-section-title">Boje i kontrast</div>
+      <div class="access-grid">
+        <button class="access-grid-btn" id="btn-monochrome">
+          <span class="access-grid-icon">⬛</span>
+          <span class="access-grid-label">Monohrom</span>
+        </button>
+        <button class="access-grid-btn" id="btn-dark-contrast">
+          <span class="access-grid-icon">🖤</span>
+          <span class="access-grid-label">Tamni kontrast</span>
+        </button>
+        <button class="access-grid-btn" id="btn-bright-contrast">
+          <span class="access-grid-icon">☀️</span>
+          <span class="access-grid-label">Svetli kontrast</span>
+        </button>
+        <button class="access-grid-btn" id="btn-low-sat">
+          <span class="access-grid-icon">🧊</span>
+          <span class="access-grid-label">Niska saturacija</span>
+        </button>
+        <button class="access-grid-btn" id="btn-high-sat">
+          <span class="access-grid-icon">🎨</span>
+          <span class="access-grid-label">Visoka saturacija</span>
+        </button>
+      </div>
+
+      <div class="access-section-title">Tekst i razmaci</div>
+      <div class="access-scaler-group">
+        <div class="scaler-label">Veličina slova:</div>
+        <div class="scaler-controls">
+          <button id="btn-font-decrease" class="scaler-btn">-</button>
+          <span id="font-size-display" class="scaler-val">100%</span>
+          <button id="btn-font-increase" class="scaler-btn">+</button>
+        </div>
+      </div>
+
+      <div class="access-scaler-group">
+        <div class="scaler-label">Prored:</div>
+        <div class="scaler-controls">
+          <button id="btn-line-decrease" class="scaler-btn">-</button>
+          <span id="line-space-display" class="scaler-val">Normal</span>
+          <button id="btn-line-increase" class="scaler-btn">+</button>
+        </div>
+      </div>
+
+      <div class="access-scaler-group">
+        <div class="scaler-label">Razmak reči:</div>
+        <div class="scaler-controls">
+          <button id="btn-word-decrease" class="scaler-btn">-</button>
+          <span id="word-space-display" class="scaler-val">Normal</span>
+          <button id="btn-word-increase" class="scaler-btn">+</button>
+        </div>
+      </div>
+
+      <div class="access-grid" style="margin-top: 12px;">
+        <button class="access-grid-btn" id="btn-dyslexia-font">
+          <span class="access-grid-icon">📖</span>
+          <span class="access-grid-label">OpenDyslexic</span>
+        </button>
+        <button class="access-grid-btn" id="btn-highlight-links">
+          <span class="access-grid-icon">🔗</span>
+          <span class="access-grid-label">Istakni linkove</span>
+        </button>
+      </div>
+
+      <div class="access-section-title">Alati</div>
+      <div class="access-grid">
+        <button class="access-grid-btn" id="btn-virtual-keyboard" style="grid-column: span 2;">
+          <span class="access-grid-icon">⌨️</span>
+          <span class="access-grid-label">Virtuelna tastatura</span>
+        </button>
+      </div>
+
+    </div>
+
+    <div class="access-widget-footer">
+      <button id="btn-reset-accessibility" class="access-reset-btn">Poništi sva podešavanja</button>
     </div>
   </div>
-  
-  <div class="access-widget-footer">
-    <button id="btn-reset-accessibility" class="access-reset-btn">Poništi podešavanja</button>
+
+  <div id="virtual-keyboard-modal" class="vk-modal" hidden>
+    <div class="vk-header">
+      <h4>Virtuelna tastatura</h4>
+      <button id="vk-close">✕</button>
+    </div>
+    <div class="vk-body">
+      <input type="text" id="vk-input" placeholder="Kliknite tastere ispod..." readonly>
+      <div class="vk-keys">
+        <button class="vk-key">1</button><button class="vk-key">2</button><button class="vk-key">3</button><button
+          class="vk-key">4</button><button class="vk-key">5</button><button class="vk-key">6</button><button
+          class="vk-key">7</button><button class="vk-key">8</button><button class="vk-key">9</button><button
+          class="vk-key">0</button>
+        <button class="vk-key">Q</button><button class="vk-key">W</button><button class="vk-key">E</button><button
+          class="vk-key">R</button><button class="vk-key">T</button><button class="vk-key">Y</button><button
+          class="vk-key">U</button><button class="vk-key">I</button><button class="vk-key">O</button><button
+          class="vk-key">P</button>
+        <button class="vk-key">A</button><button class="vk-key">S</button><button class="vk-key">D</button><button
+          class="vk-key">F</button><button class="vk-key">G</button><button class="vk-key">H</button><button
+          class="vk-key">J</button><button class="vk-key">K</button><button class="vk-key">L</button>
+        <button class="vk-key">Z</button><button class="vk-key">X</button><button class="vk-key">C</button><button
+          class="vk-key">V</button><button class="vk-key">B</button><button class="vk-key">N</button><button
+          class="vk-key">M</button>
+        <button class="vk-key vk-space">SPACE</button><button class="vk-key vk-clear">CLR</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<!-- ===================== FLOATING HEADER ===================== -->
-<header class="site-header floating-header">
-  <div class="container header-inner">
-    <a href="index.html" class="logo" aria-label="NoLimits Početna">
-      <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
-              stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
-        <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
-      </svg>
-      <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
-    </a>
-
-    <nav class="main-nav" aria-label="Glavna navigacija">
-      <ul>
-        <li><a href="index.html" class="active">Početna</a></li>
-        <li><a href="catalog.html">Katalog</a></li>
-        <li><a href="configurator.html">Konfigurator</a></li>
-        <li><a href="contact.html">Kontakt</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
-
-<main>
-<!-- ===================== HERO SEKCIJA ===================== -->
-<section class="hero hero-split hero-watermark">
-  <div class="container hero-split-inner">
-    
-    <div class="hero-text-content">
-      <div class="hero-logo-brand" aria-hidden="true">
-        <svg width="52" height="52" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
-                stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- ===================== FLOATING HEADER ===================== -->
+  <header class="site-header floating-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo" aria-label="NoLimits Početna">
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true">
+          <path
+            d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z"
+            stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
           <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
           <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
         </svg>
-        <span class="logo-text hero-logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
-      </div>
+        <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+      </a>
 
-      <h1>Igračke koje razumeju svako dete</h1>
-      <p class="hero-subtitle">
-        Za lepa sećanja na detinjstvo uprkos svim izazovima.
-      </p>
-      <div class="hero-actions">
-        <!-- Promenjeno u btn-accent za novu koralnu boju -->
-        <a href="catalog.html" class="btn btn-primary">KATALOG</a>
-        <a href="configurator.html" class="btn btn-accent">KONFIGURATOR</a>
-      </div>
-    </div>
-
-    <div class="hero-image-container">
-      <img src="slike/draw2.png" alt="Ilustracija prilagođenih igračaka" class="hero-split-img">
-    </div>
-
-  </div>
-</section>
-<!-- ===================== INTERAKTIVNE KATEGORIJE I RAZLOZI ===================== -->
-<section class="interactive-explore-section" aria-labelledby="explore-naslov">
-  <div class="container">
-    
-    <div class="explore-header">
-      <h2 id="explore-naslov" class="section-title">Zašto prilagođene igračke?</h2>
-      <!-- <p class="section-subtitle">Kliknite na razloge sa leve strane da otkrijete kako naše igračke rešavaju konkretne razvojne izazove.</p>-->
-    </div>
-
-    <div class="explore-grid">
-      
-      <!-- LEVA STRANA: TABOVI (RAZLOZI) -->
-      <div class="explore-tabs" role="tablist">
-        
-        <button class="explore-tab active" data-target="panel-senzorna" role="tab" aria-selected="true">
-          <span class="tab-icon">🧠</span>
-          <div class="tab-text">
-            <strong>Senzorna stimulacija</strong>
-            <span>Podstiče čula i pažnju deteta</span>
-          </div>
-        </button>
-
-        <button class="explore-tab" data-target="panel-inkluzija" role="tab" aria-selected="false">
-          <span class="tab-icon">🤝</span>
-          <div class="tab-text">
-            <strong>Inkluzivna igra</strong>
-            <span>Ravnopravna igra sa vršnjacima</span>
-          </div>
-        </button>
-
-        <button class="explore-tab" data-target="panel-razvoj" role="tab" aria-selected="false">
-          <span class="tab-icon">🎯</span>
-          <div class="tab-text">
-            <strong>Ciljani razvoj</strong>
-            <span>Fina motorika i govor</span>
-          </div>
-        </button>
-
-        <button class="explore-tab" data-target="panel-emocije" role="tab" aria-selected="false">
-          <span class="tab-icon">💬</span>
-          <div class="tab-text">
-            <strong>Emocionalna podrška</strong>
-            <span>Izražavanje emocija i potreba</span>
-          </div>
-        </button>
-
-        <button class="explore-tab" data-target="panel-motorika" role="tab" aria-selected="false">
-          <span class="tab-icon">⚖️</span>
-          <div class="tab-text">
-            <strong>Fizička aktivnost</strong>
-            <span>Balans i koordinacija tela</span>
-          </div>
-        </button>
-
-      </div>
-
-      <!-- DESNA STRANA: PANELI (KATEGORIJE IGRAČAKA) -->
-      <div class="explore-content-area">
-        
-        <!-- Panel 1: Senzorna -->
-        <div class="explore-panel active" id="panel-senzorna" role="tabpanel">
-          <div class="panel-icon-large">🛠️</div>
-          <h3>Senzorno-motorne table i paneli</h3>
-          <p>Služe za vežbanje fine motorike i svakodnevnih veština. Posebno su značajni kod dece sa autizmom i dece sa motoričkim poremećajima jer podstiču samostalnost i koordinaciju pokreta.</p>
-          <a href="catalog.html?tip=table" class="btn btn-accent">Pogledaj table u katalogu</a>
-        </div>
-
-        <!-- Panel 2: Inkluzija -->
-        <div class="explore-panel" id="panel-inkluzija" role="tabpanel" hidden>
-          <div class="panel-icon-large">🎲</div>
-          <h3>Taktilne i visokokontrastne društvene igre</h3>
-          <p>Inkluzivne društvene igre poput "Ne ljuti se čoveče" ili "IX-OX" koje deca sa invaliditetom ravnopravno igraju sa vršnjacima. Posebno su značajne za slepu, slabovidu i decu sa ADHD-om.</p>
-          <a href="catalog.html?tip=taktilne" class="btn btn-accent">Pogledaj igre u katalogu</a>
-        </div>
-
-        <!-- Panel 3: Razvoj -->
-        <div class="explore-panel" id="panel-razvoj" role="tabpanel" hidden>
-          <div class="panel-icon-large">✏️</div>
-          <h3>Logopedski i grafomotorički šabloni</h3>
-          <p>Didaktičke table za "prohodavanje ruku". Značajne su za pripremu šake za pisanje, jačanje mišića prstiju i direktnu stimulaciju mozga i govora kod dece u razvoju.</p>
-          <a href="catalog.html?tip=grafomotorika" class="btn btn-accent">Pogledaj šablone u katalogu</a>
-        </div>
-
-        <!-- Panel 4: Emocije -->
-        <div class="explore-panel" id="panel-emocije" role="tabpanel" hidden>
-          <div class="panel-icon-large">💬</div>
-          <h3>Emocionalne i komunikacijske kartice</h3>
-          <p>Pomagala izuzetno značajna u radu sa decom sa autizmom i govorno-jezičkim problemima. Pomažu u vizuelnom izražavanju emocija, potreba i praćenju dnevnih rutina.</p>
-          <a href="catalog.html?tip=kartice" class="btn btn-accent">Pogledaj kartice u katalogu</a>
-        </div>
-
-        <!-- Panel 5: Motorika -->
-        <div class="explore-panel" id="panel-motorika" role="tabpanel" hidden>
-          <div class="panel-icon-large">⚖️</div>
-          <h3>Balanseri i krupno-motorne igračke</h3>
-          <p>Predstavljaju poligone za senzornu integraciju. Veoma su značajne kod dece sa problemom senzorne integracije, održavanja balansa i opšte koordinacije celog tela.</p>
-          <a href="catalog.html?tip=balans" class="btn btn-accent">Pogledaj balansere u katalogu</a>
-        </div>
-
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
- <!-- KONFIGURATOR -->
-<section class="configurator-promo">
-  <div class="container">
-    <h2>INTERAKTIVNI KONFIGURATOR IGRAČAKA</h2>
-    <div class="promo-card">
-      
-      <!-- LEVA STRANA: PROVIDAN PNG MEDA DIREKTNO NA GRADIENTU -->
-      <div class="promo-image-container">
-        <img src="slike/tedi.png" alt="Plišani meda Tedi - NoLimits Konfigurator" class="promo-image">
-      </div>
-
-      <!-- DESNA STRANA: BALANSIRAN TEKST I DUGME -->
-      <div class="promo-content">
-        <h2>
-          Napravite svoju igračku!
-        </h2>
-
-        <ul class="promo-features">
-          <li><span class="feature-icon">🎨</span> Personalizacija osnovnog oblika, boja i tekstura</li>
-          <li><span class="feature-icon">✨</span> Različite senzorne modifikacije</li>
-          <li><span class="feature-icon">📥</span> Izvoz i preuzimanje modela</li>
+      <nav class="main-nav" aria-label="Glavna navigacija">
+        <ul>
+          <li><a href="index.html" class="active">Početna</a></li>
+          <li><a href="catalog.html">Katalog</a></li>
+          <li><a href="configurator.html">Konfigurator</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
         </ul>
-
-        <div class="promo-actions">
-          <a href="configurator.html" class="btn btn-accent">ISPROBAJ KONFIGURATOR &rarr;</a>
-        </div>
-      </div>
-
+      </nav>
     </div>
-  </div>
-</section>
+  </header>
 
- <!-- SEKCIJA: O NAMA -->
-<section class="about-section">
-  <div class="container">
-    <h2 class="section-title">O NAMA</h2>
-    
-    <div class="values-grid">
-      <!-- Misija -->
-      <div class="value-card">
-        <div class="value-card-header">
-          <div class="value-icon">🎯</div>
-          <h3>MISIJA</h3>
+  <main>
+    <!-- ===================== HERO SEKCIJA ===================== -->
+    <section class="hero hero-split hero-watermark">
+      <div class="container hero-split-inner">
+
+        <div class="hero-text-content">
+          <div class="hero-logo-brand" aria-hidden="true">
+            <svg width="52" height="52" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z"
+                stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+              <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+            </svg>
+            <span class="logo-text hero-logo-text"><span class="logo-accent">N</span>o<span
+                class="logo-accent">L</span>imits</span>
+          </div>
+
+          <h1>Igračke koje razumeju svako dete</h1>
+          <p class="hero-subtitle">
+            Za lepa sećanja na detinjstvo uprkos svim izazovima.
+          </p>
+          <div class="hero-actions">
+            <!-- Promenjeno u btn-accent za novu koralnu boju -->
+            <a href="catalog.html" class="btn btn-primary">KATALOG</a>
+            <a href="configurator.html" class="btn btn-accent">KONFIGURATOR</a>
+          </div>
         </div>
-        <p>
-          Omogućiti deci sa smetnjama u razvoju potpunu inkluziju kroz samu igru. 
-          Na taj način omogućavamo im da se bez granica i ravnopravno igraju sa svojim vršnjacima u svom okruženju.
-        </p>
+
+        <div class="hero-image-container">
+          <img src="slike/draw2.png" alt="Ilustracija prilagođenih igračaka" class="hero-split-img">
+        </div>
+
       </div>
+    </section>
+    <!-- ===================== INTERAKTIVNE KATEGORIJE I RAZLOZI ===================== -->
+    <section class="interactive-explore-section" aria-labelledby="explore-naslov">
+      <div class="container">
 
-      <!-- Vizija -->
-      <div class="value-card">
-        <div class="value-card-header">
-          <div class="value-icon">🚀</div>
-          <h3>VIZIJA</h3>
+        <div class="explore-header">
+          <h2 id="explore-naslov" class="section-title">Zašto prilagođene igračke?</h2>
+          <!-- <p class="section-subtitle">Kliknite na razloge sa leve strane da otkrijete kako naše igračke rešavaju konkretne razvojne izazove.</p>-->
         </div>
-        <p>
-          Vizija kompanije "NoLimits d.o.o." jeste da postane moderno, socijalno i društveno odgovorno 
-          preduzeće koje proizvodi igračke i društvene igre visokog kvaliteta i u budućnosti razvija poslovanje na tržištima u regionu.
-        </p>
+
+        <div class="explore-grid">
+
+          <!-- LEVA STRANA: TABOVI (RAZLOZI) -->
+          <div class="explore-tabs" role="tablist">
+
+            <button class="explore-tab active" data-target="panel-senzorna" role="tab" aria-selected="true">
+              <span class="tab-icon">🧠</span>
+              <div class="tab-text">
+                <strong>Senzorna stimulacija</strong>
+                <span>Podstiče čula i pažnju deteta</span>
+              </div>
+            </button>
+
+            <button class="explore-tab" data-target="panel-inkluzija" role="tab" aria-selected="false">
+              <span class="tab-icon">🤝</span>
+              <div class="tab-text">
+                <strong>Inkluzivna igra</strong>
+                <span>Ravnopravna igra sa vršnjacima</span>
+              </div>
+            </button>
+
+            <button class="explore-tab" data-target="panel-razvoj" role="tab" aria-selected="false">
+              <span class="tab-icon">🎯</span>
+              <div class="tab-text">
+                <strong>Ciljani razvoj</strong>
+                <span>Fina motorika i govor</span>
+              </div>
+            </button>
+
+            <button class="explore-tab" data-target="panel-emocije" role="tab" aria-selected="false">
+              <span class="tab-icon">💬</span>
+              <div class="tab-text">
+                <strong>Emocionalna podrška</strong>
+                <span>Izražavanje emocija i potreba</span>
+              </div>
+            </button>
+
+            <button class="explore-tab" data-target="panel-motorika" role="tab" aria-selected="false">
+              <span class="tab-icon">⚖️</span>
+              <div class="tab-text">
+                <strong>Fizička aktivnost</strong>
+                <span>Balans i koordinacija tela</span>
+              </div>
+            </button>
+
+          </div>
+
+          <!-- DESNA STRANA: PANELI (KATEGORIJE IGRAČAKA) -->
+          <div class="explore-content-area">
+
+            <!-- Panel 1: Senzorna -->
+            <div class="explore-panel active" id="panel-senzorna" role="tabpanel">
+              <div class="panel-icon-large">🛠️</div>
+              <h3>Senzorno-motorne table i paneli</h3>
+              <p>Služe za vežbanje fine motorike i svakodnevnih veština. Posebno su značajni kod dece sa autizmom i dece
+                sa motoričkim poremećajima jer podstiču samostalnost i koordinaciju pokreta.</p>
+              <a href="catalog.html?tip=table" class="btn btn-accent">Pogledaj table u katalogu</a>
+            </div>
+
+            <!-- Panel 2: Inkluzija -->
+            <div class="explore-panel" id="panel-inkluzija" role="tabpanel" hidden>
+              <div class="panel-icon-large">🎲</div>
+              <h3>Taktilne i visokokontrastne društvene igre</h3>
+              <p>Inkluzivne društvene igre poput "Ne ljuti se čoveče" ili "IX-OX" koje deca sa invaliditetom ravnopravno
+                igraju sa vršnjacima. Posebno su značajne za slepu, slabovidu i decu sa ADHD-om.</p>
+              <a href="catalog.html?tip=taktilne" class="btn btn-accent">Pogledaj igre u katalogu</a>
+            </div>
+
+            <!-- Panel 3: Razvoj -->
+            <div class="explore-panel" id="panel-razvoj" role="tabpanel" hidden>
+              <div class="panel-icon-large">✏️</div>
+              <h3>Logopedski i grafomotorički šabloni</h3>
+              <p>Didaktičke table za "prohodavanje ruku". Značajne su za pripremu šake za pisanje, jačanje mišića
+                prstiju i direktnu stimulaciju mozga i govora kod dece u razvoju.</p>
+              <a href="catalog.html?tip=grafomotorika" class="btn btn-accent">Pogledaj šablone u katalogu</a>
+            </div>
+
+            <!-- Panel 4: Emocije -->
+            <div class="explore-panel" id="panel-emocije" role="tabpanel" hidden>
+              <div class="panel-icon-large">💬</div>
+              <h3>Emocionalne i komunikacijske kartice</h3>
+              <p>Pomagala izuzetno značajna u radu sa decom sa autizmom i govorno-jezičkim problemima. Pomažu u
+                vizuelnom izražavanju emocija, potreba i praćenju dnevnih rutina.</p>
+              <a href="catalog.html?tip=kartice" class="btn btn-accent">Pogledaj kartice u katalogu</a>
+            </div>
+
+            <!-- Panel 5: Motorika -->
+            <div class="explore-panel" id="panel-motorika" role="tabpanel" hidden>
+              <div class="panel-icon-large">⚖️</div>
+              <h3>Balanseri i krupno-motorne igračke</h3>
+              <p>Predstavljaju poligone za senzornu integraciju. Veoma su značajne kod dece sa problemom senzorne
+                integracije, održavanja balansa i opšte koordinacije celog tela.</p>
+              <a href="catalog.html?tip=balans" class="btn btn-accent">Pogledaj balansere u katalogu</a>
+            </div>
+
+          </div>
+
+        </div>
       </div>
+    </section>
 
-      <!-- Ciljevi -->
-      <div class="value-card">
-        <div class="value-card-header">
-          <div class="value-icon">🏆</div>
-          <h3>CILJEVI</h3>
+
+    <!-- KONFIGURATOR -->
+    <section class="configurator-promo">
+      <div class="container">
+        <h2>INTERAKTIVNI KONFIGURATOR IGRAČAKA</h2>
+        <div class="promo-card">
+
+          <!-- LEVA STRANA: PROVIDAN PNG MEDA DIREKTNO NA GRADIENTU -->
+          <div class="promo-image-container">
+            <img src="slike/tedi.png" alt="Plišani meda Tedi - NoLimits Konfigurator" class="promo-image">
+          </div>
+
+          <!-- DESNA STRANA: BALANSIRAN TEKST I DUGME -->
+          <div class="promo-content">
+            <h2>
+              Napravite svoju igračku!
+            </h2>
+
+            <ul class="promo-features">
+              <li><span class="feature-icon">🎨</span> Personalizacija osnovnog oblika, boja i tekstura</li>
+              <li><span class="feature-icon">✨</span> Različite senzorne modifikacije</li>
+              <li><span class="feature-icon">📥</span> Izvoz i preuzimanje modela</li>
+            </ul>
+
+            <div class="promo-actions">
+              <a href="configurator.html" class="btn btn-accent">ISPROBAJ KONFIGURATOR &rarr;</a>
+            </div>
+          </div>
+
         </div>
-        <ul class="goals-list">
-          <li>Proizvodnja kvalitetnih i inkluzivnih igračaka i društvenih igara.</li>
-          <li>Razvoj i proširenje poslovanja na tržištu u regionu.</li>
-          <li>Sprovođenje kampanja i saradnja sa neprofitnim organizacijama i udruženjima koja pomažu rast i razvoj osoba sa invaliditetom.</li>
+      </div>
+    </section>
+
+    <!-- SEKCIJA: O NAMA -->
+    <section class="about-section">
+      <div class="container">
+        <h2 class="section-title">O NAMA</h2>
+
+        <div class="values-grid">
+          <!-- Misija -->
+          <div class="value-card">
+            <div class="value-card-header">
+              <div class="value-icon">🎯</div>
+              <h3>MISIJA</h3>
+            </div>
+            <p>
+              Omogućiti deci sa smetnjama u razvoju potpunu inkluziju kroz samu igru.
+              Na taj način omogućavamo im da se bez granica i ravnopravno igraju sa svojim vršnjacima u svom okruženju.
+            </p>
+          </div>
+
+          <!-- Vizija -->
+          <div class="value-card">
+            <div class="value-card-header">
+              <div class="value-icon">🚀</div>
+              <h3>VIZIJA</h3>
+            </div>
+            <p>
+              Vizija kompanije "NoLimits d.o.o." jeste da postane moderno, socijalno i društveno odgovorno
+              preduzeće koje proizvodi igračke i društvene igre visokog kvaliteta i u budućnosti razvija poslovanje na
+              tržištima u regionu.
+            </p>
+          </div>
+
+          <!-- Ciljevi -->
+          <div class="value-card">
+            <div class="value-card-header">
+              <div class="value-icon">🏆</div>
+              <h3>CILJEVI</h3>
+            </div>
+            <p>Proizvodnja kvalitetnih i inkluzivnih igračaka i društvenih igara i razvoj i proširenje poslovanja na
+              tržištu u regionu,
+              kao i sprovođenje kampanja i saradnja sa neprofitnim organizacijama i udruženjima.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <h3>Linkovi</h3>
+        <ul class="footer-links horizontal-links">
+          <li><a href="catalog.html">Katalog</a></li>
+          <li><a href="configurator.html">Konfigurator</a></li>
+          <li><a href="contact.html">Kontakt</a></li>
         </ul>
       </div>
+      <div class="footer-brand">
+        <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true">
+            <path
+              d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z"
+              stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+            <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
+            <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
+          </svg>
+          <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
+        </a>
+        <p>Igračke koje razumeju svako dete.</p>
+      </div>
+      <div>
+        <h3>Kontakt</h3>
+        <p>Email: info@nolimits.rs</p>
+        <p>Telefon: 037/007-004</p>
+      </div>
     </div>
+    <p class="footer-bottom">&copy; 2026 NoLimits</p>
+  </footer>
 
-  </div>
-</section>
-</main>
-
-<footer class="site-footer">
-  <div class="container footer-inner">
-    <div>
-      <h3>Linkovi</h3>
-      <ul class="footer-links horizontal-links">
-        <li><a href="catalog.html">Katalog</a></li>
-        <li><a href="configurator.html">Konfigurator</a></li>
-        <li><a href="contact.html">Kontakt</a></li>
-      </ul>
-    </div>
-  <div class="footer-brand">
-    <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
-      <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M 30,50 C 20,35 10,40 10,55 C 10,70 25,75 35,65 C 45,55 45,45 65,35 C 75,25 90,30 90,45 C 90,60 80,65 70,50 C 60,35 40,65 30,50 Z" 
-              stroke="var(--color-primary)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="70" cy="35" r="8" fill="var(--color-secondary)" />
-        <circle cx="30" cy="65" r="8" fill="var(--color-secondary)" />
-      </svg>
-      <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
-    </a>
-    <p>Igračke koje razumeju svako dete.</p>
-  </div>
-    <div>
-      <h3>Kontakt</h3>
-      <p>Email: info@nolimits.rs</p>
-      <p>Telefon: 011/123-456</p>
-    </div>
-  </div>
-  <p class="footer-bottom">&copy; 2026 NoLimits</p>
-</footer>
-
-<script src="js/main.js" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
-</html> 
+
+</html>

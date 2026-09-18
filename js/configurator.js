@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!audioCtx) audioCtx = new AudioContext();
     if (audioCtx.state === 'suspended') audioCtx.resume();
 
-    let ukupanBrojKlikova = 16; 
+    let ukupanBrojKlikova = 16;
     let intervalMs = (trajanjeSekundi * 1000) / ukupanBrojKlikova;
     let brojac = 0;
 
@@ -175,7 +175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let trenutnaBoja = "#ed8936";
   let trenutniMaterijal = "plis";
   let trenutniNivoKoraka = 1;
-  
+
   let postavljeniElementi = {
     meda: [],
     valjak: [],
@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   // CENTRIRANO UPUTSTVO SA POVEĆANIM FONTOVIMA UNUTAR CANVAS-A
- // CENTRIRANO UPUTSTVO SA UPPERCASE TEKSTOM I VERTIKALNO CENTRIRANOM ZNAČKOM
+  // CENTRIRANO UPUTSTVO SA UPPERCASE TEKSTOM I VERTIKALNO CENTRIRANOM ZNAČKOM
   function crtajUputstvo(nivo) {
     if (nivo) trenutniNivoKoraka = nivo;
     slojUputstvo.destroyChildren();
@@ -441,7 +441,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const btn = document.createElement("button");
       btn.className = "btn-element";
       btn.innerHTML = `<span class="el-icon">${el.ikona}</span><span class="el-name">${el.naziv}</span>`;
-      
+
       btn.onclick = () => {
         ukloniVizuelniOpseg();
 
@@ -539,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.cancelBubble = true;
       ukloniVizuelniOpseg();
       selektovaniElementId = modulObj.id;
-      
+
       transformer.nodes([grupa]);
       slojElementi.batchDraw();
 
@@ -858,13 +858,3 @@ document.addEventListener("DOMContentLoaded", () => {
     crtajBazu();
   });
 });
-
-
-
-
-
-
-
-
-
-

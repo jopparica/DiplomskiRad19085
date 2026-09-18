@@ -1,186 +1,240 @@
-// ===================== MENI ZA PRISTUPAČNOST (WIDGET) =====================
+// ===================== MENI ZA PRISTUPAČNOST (TOGGLE ISPRAVKA) =====================
 document.addEventListener("DOMContentLoaded", () => {
 
   const triggerBtn = document.getElementById("accessibility-trigger");
   const widget = document.getElementById("accessibility-widget");
   const closeBtn = document.getElementById("close-accessibility");
+  const vkModal = document.getElementById("virtual-keyboard-modal");
   const body = document.body;
 
-  // Akciona dugmad u panelu
-  const btnFontIncrease = document.getElementById("btn-font-increase");
-  const btnFontDecrease = document.getElementById("btn-font-decrease");
-  const btnHighContrast = document.getElementById("btn-high-contrast");
-  const btnDyslexiaFont = document.getElementById("btn-dyslexia-font");
-  const btnSpacing = document.getElementById("btn-spacing"); // Novo: Prored
-  const btnPauseAnim = document.getElementById("btn-pause-anim"); // Novo: Animacije
+  // OSIGURANJE: Premeštamo elemente da budu direktna deca body taga kako filteri ne bi lomili poziciju
+  if (triggerBtn && body) body.appendChild(triggerBtn);
+  if (widget && body) body.appendChild(widget);
+  if (vkModal && body) body.appendChild(vkModal);
+
+  // Selektujemo dugmad iz HTML-a
+  const btnMono = document.getElementById("btn-monochrome");
+  const btnDarkC = document.getElementById("btn-dark-contrast");
+  const btnBrightC = document.getElementById("btn-bright-contrast");
+  const btnLowSat = document.getElementById("btn-low-sat");
+  const btnHighSat = document.getElementById("btn-high-sat");
+
+  const btnFontInc = document.getElementById("btn-font-increase");
+  const btnFontDec = document.getElementById("btn-font-decrease");
+  const fontSizeDisp = document.getElementById("font-size-display");
+
+  const btnLineInc = document.getElementById("btn-line-increase");
+  const btnLineDec = document.getElementById("btn-line-decrease");
+  const lineSpaceDisp = document.getElementById("line-space-display");
+
+  const btnWordInc = document.getElementById("btn-word-increase");
+  const btnWordDec = document.getElementById("btn-word-decrease");
+  const wordSpaceDisp = document.getElementById("word-space-display");
+
+  const btnDyslexia = document.getElementById("btn-dyslexia-font");
+  const btnHighlightLinks = document.getElementById("btn-highlight-links");
+  const btnVirtualKey = document.getElementById("btn-virtual-keyboard");
   const btnReset = document.getElementById("btn-reset-accessibility");
 
-  const MIN_FONT_SIZE = 85;  // Minimalna veličina (85%)
-  const MAX_FONT_SIZE = 135; // Maksimalna veličina (135%)
-  const FONT_STEP = 2;       // Fini korak za menjanje
+  const vkClose = document.getElementById("vk-close");
+  const vkInput = document.getElementById("vk-input");
+  const vkKeys = document.querySelectorAll(".vk-key");
 
-  function getStyleTag() {
-    let styleTag = document.getElementById("accessibility-font-style");
-    if (!styleTag) {
-      styleTag = document.createElement("style");
-      styleTag.id = "accessibility-font-style";
-      document.head.appendChild(styleTag);
-    }
-    return styleTag;
+  let currentFontSize = parseInt(localStorage.getItem("a11y_fontSize")) || 100;
+  let currentLineSpace = parseFloat(localStorage.getItem("a11y_lineSpace")) || 1.6;
+  let currentWordSpace = parseInt(localStorage.getItem("a11y_wordSpace")) || 0;
+
+  function applySettings() {
+    document.querySelectorAll("p, h1, h2, h3, h4, h5, h6, span, a, li, button, label, input").forEach(el => {
+      // Ignorišemo elemente tastature i samog alata od skaliranja
+      if (el.closest('#accessibility-widget') || el.closest('#virtual-keyboard-modal')) return;
+
+      if (!el.dataset.baseSize) {
+        const computed = window.getComputedStyle(el).fontSize;
+        el.dataset.baseSize = parseFloat(computed);
+      }
+      const base = parseFloat(el.dataset.baseSize);
+      el.style.fontSize = (base * (currentFontSize / 100)) + "px";
+    });
+
+    if (fontSizeDisp) fontSizeDisp.textContent = currentFontSize + "%";
+
+    body.style.lineHeight = currentLineSpace;
+    if (lineSpaceDisp) lineSpaceDisp.textContent = currentLineSpace === 1.6 ? "Normal" : currentLineSpace.toFixed(1);
+
+    body.style.wordSpacing = currentWordSpace + "px";
+    if (wordSpaceDisp) wordSpaceDisp.textContent = currentWordSpace === 0 ? "Normal" : currentWordSpace + "px";
+
+    localStorage.setItem("a11y_fontSize", currentFontSize);
+    localStorage.setItem("a11y_lineSpace", currentLineSpace);
+    localStorage.setItem("a11y_wordSpace", currentWordSpace);
   }
 
-  function primeniVelicinuFonta(velicina) {
-    const styleTag = getStyleTag();
-    if (velicina === 100) {
-      styleTag.innerHTML = "";
-    } else {
-      styleTag.innerHTML = `
-        body, body *, p, h1, h2, h3, h4, h5, h6, span, a, li, button, input, label {
-          font-size: ${velicina}% !important;
-        }
-      `;
-    }
-    localStorage.setItem("fontSize", velicina);
+  function updateActiveButtons() {
+    [btnMono, btnDarkC, btnBrightC, btnLowSat, btnHighSat, btnDyslexia, btnHighlightLinks].forEach(b => {
+      if (b) b.classList.remove("active-mode");
+    });
+
+    if (body.classList.contains("mode-monochrome") && btnMono) btnMono.classList.add("active-mode");
+    if (body.classList.contains("mode-dark-contrast") && btnDarkC) btnDarkC.classList.add("active-mode");
+    if (body.classList.contains("mode-bright-contrast") && btnBrightC) btnBrightC.classList.add("active-mode");
+    if (body.classList.contains("mode-low-sat") && btnLowSat) btnLowSat.classList.add("active-mode");
+    if (body.classList.contains("mode-high-sat") && btnHighSat) btnHighSat.classList.add("active-mode");
+    if (body.classList.contains("dyslexia-font") && btnDyslexia) btnDyslexia.classList.add("active-mode");
+    if (body.classList.contains("highlight-links") && btnHighlightLinks) btnHighlightLinks.classList.add("active-mode");
   }
 
   function ucitajPodesavanja() {
-    const sacuvanaVelicina = localStorage.getItem("fontSize");
-    const visokiKontrast = localStorage.getItem("highContrast") === "true";
-    const fontDisleksija = localStorage.getItem("dyslexiaFont") === "true";
-    const prored = localStorage.getItem("increasedSpacing") === "true";
-    const pauzirajAnim = localStorage.getItem("pauseAnimations") === "true";
-
-    if (sacuvanaVelicina) {
-      primeniVelicinuFonta(parseInt(sacuvanaVelicina, 10));
-    }
-
-    if (visokiKontrast) body.classList.add("high-contrast");
-    if (fontDisleksija) body.classList.add("dyslexia-font");
-    if (prored) body.classList.add("increased-spacing");
-    if (pauzirajAnim) body.classList.add("pause-animations");
-  }
-
-  function trenutnaVelicinaFonta() {
-    const sacuvana = localStorage.getItem("fontSize");
-    if (sacuvana) return parseInt(sacuvana, 10);
-    return 100;
+    applySettings();
+    if (localStorage.getItem("a11y_dyslexia") === "true") body.classList.add("dyslexia-font");
+    if (localStorage.getItem("a11y_links") === "true") body.classList.add("highlight-links");
+    if (localStorage.getItem("a11y_mono") === "true") body.classList.add("mode-monochrome");
+    if (localStorage.getItem("a11y_darkC") === "true") body.classList.add("mode-dark-contrast");
+    if (localStorage.getItem("a11y_brightC") === "true") body.classList.add("mode-bright-contrast");
+    if (localStorage.getItem("a11y_lowSat") === "true") body.classList.add("mode-low-sat");
+    if (localStorage.getItem("a11y_highSat") === "true") body.classList.add("mode-high-sat");
+    updateActiveButtons();
   }
 
   ucitajPodesavanja();
 
-  // ===================== OTVARANJE I ZATVARANJE WIDGETA =====================
-
-  function otvoriWidget() {
-    widget.classList.add("open");
-    triggerBtn.setAttribute("aria-expanded", "true");
-    widget.setAttribute("aria-hidden", "false");
-  }
-
-  function zatvoriWidget() {
-    widget.classList.remove("open");
-    triggerBtn.setAttribute("aria-expanded", "false");
-    widget.setAttribute("aria-hidden", "true");
-  }
-
-  // Klik na lebdeće dugme
   if (triggerBtn && widget) {
     triggerBtn.addEventListener("click", (e) => {
       e.stopPropagation();
-      if (widget.classList.contains("open")) {
-        zatvoriWidget();
-      } else {
-        otvoriWidget();
-      }
+      widget.classList.toggle("open");
     });
   }
 
-  // Klik na dugme X u headeru widgeta
   if (closeBtn) {
-    closeBtn.addEventListener("click", zatvoriWidget);
+    closeBtn.addEventListener("click", () => widget.classList.remove("open"));
   }
 
-  // Zatvaranje na klik van panela
   document.addEventListener("click", (e) => {
-    if (
-      widget &&
-      widget.classList.contains("open") &&
-      !widget.contains(e.target) &&
-      triggerBtn &&
-      !triggerBtn.contains(e.target)
-    ) {
-      zatvoriWidget();
+    if (widget && widget.classList.contains("open") && !widget.contains(e.target) && triggerBtn && !triggerBtn.contains(e.target)) {
+      widget.classList.remove("open");
     }
   });
 
-  // ===================== FUNKCIONALNOSTI DUGMIĆA =====================
+  // Skaleri
+  if (btnFontInc) btnFontInc.onclick = () => { if (currentFontSize < 140) { currentFontSize += 10; applySettings(); } };
+  if (btnFontDec) btnFontDec.onclick = () => { if (currentFontSize > 90) { currentFontSize -= 10; applySettings(); } };
 
-  // Povećanje fonta
-  if (btnFontIncrease) {
-    btnFontIncrease.addEventListener("click", () => {
-      const nova = Math.min(trenutnaVelicinaFonta() + FONT_STEP, MAX_FONT_SIZE);
-      primeniVelicinuFonta(nova);
+  if (btnLineInc) btnLineInc.onclick = () => { if (currentLineSpace < 2.4) { currentLineSpace += 0.2; applySettings(); } };
+  if (btnLineDec) btnLineDec.onclick = () => { if (currentLineSpace > 1.4) { currentLineSpace -= 0.2; applySettings(); } };
+
+  if (btnWordInc) btnWordInc.onclick = () => { if (currentWordSpace < 8) { currentWordSpace += 2; applySettings(); } };
+  if (btnWordDec) btnWordDec.onclick = () => { if (currentWordSpace > 0) { currentWordSpace -= 2; applySettings(); } };
+
+  function clearColorModes() {
+    body.classList.remove("mode-monochrome", "mode-dark-contrast", "mode-bright-contrast", "mode-low-sat", "mode-high-sat");
+    localStorage.removeItem("a11y_mono");
+    localStorage.removeItem("a11y_darkC");
+    localStorage.removeItem("a11y_brightC");
+    localStorage.removeItem("a11y_lowSat");
+    localStorage.removeItem("a11y_highSat");
+  }
+
+  // Toggle logika za boje (drugi klik gasi funkciju)
+  if (btnMono) {
+    btnMono.onclick = () => {
+      const isAktivno = body.classList.contains("mode-monochrome");
+      clearColorModes();
+      if (!isAktivno) {
+        body.classList.add("mode-monochrome");
+        localStorage.setItem("a11y_mono", "true");
+      }
+      updateActiveButtons();
+    };
+  }
+
+  if (btnDarkC) {
+    btnDarkC.onclick = () => {
+      const isAktivno = body.classList.contains("mode-dark-contrast");
+      clearColorModes();
+      if (!isAktivno) {
+        body.classList.add("mode-dark-contrast");
+        localStorage.setItem("a11y_darkC", "true");
+      }
+      updateActiveButtons();
+    };
+  }
+
+  if (btnBrightC) {
+    btnBrightC.onclick = () => {
+      const isAktivno = body.classList.contains("mode-bright-contrast");
+      clearColorModes();
+      if (!isAktivno) {
+        body.classList.add("mode-bright-contrast");
+        localStorage.setItem("a11y_brightC", "true");
+      }
+      updateActiveButtons();
+    };
+  }
+
+  if (btnLowSat) {
+    btnLowSat.onclick = () => {
+      const isAktivno = body.classList.contains("mode-low-sat");
+      clearColorModes();
+      if (!isAktivno) {
+        body.classList.add("mode-low-sat");
+        localStorage.setItem("a11y_lowSat", "true");
+      }
+      updateActiveButtons();
+    };
+  }
+
+  if (btnHighSat) {
+    btnHighSat.onclick = () => {
+      const isAktivno = body.classList.contains("mode-high-sat");
+      clearColorModes();
+      if (!isAktivno) {
+        body.classList.add("mode-high-sat");
+        localStorage.setItem("a11y_highSat", "true");
+      }
+      updateActiveButtons();
+    };
+  }
+
+  // Ostali alati (OpenDyslexic i Istakni linkove već funkcionišu na toggle princip)
+  if (btnDyslexia) {
+    btnDyslexia.onclick = () => {
+      const active = body.classList.toggle("dyslexia-font");
+      localStorage.setItem("a11y_dyslexia", active);
+      updateActiveButtons();
+    };
+  }
+
+  if (btnHighlightLinks) {
+    btnHighlightLinks.onclick = () => {
+      const active = body.classList.toggle("highlight-links");
+      localStorage.setItem("a11y_links", active);
+      updateActiveButtons();
+    };
+  }
+
+  if (btnVirtualKey && vkModal) {
+    btnVirtualKey.onclick = () => vkModal.hidden = false;
+    vkClose.onclick = () => vkModal.hidden = true;
+    vkKeys.forEach(key => {
+      key.onclick = () => {
+        if (key.classList.contains("vk-clear")) vkInput.value = "";
+        else if (key.classList.contains("vk-space")) vkInput.value += " ";
+        else vkInput.value += key.textContent;
+      };
     });
   }
 
-  // Smanjenje fonta
-  if (btnFontDecrease) {
-    btnFontDecrease.addEventListener("click", () => {
-      const nova = Math.max(trenutnaVelicinaFonta() - FONT_STEP, MIN_FONT_SIZE);
-      primeniVelicinuFonta(nova);
-    });
-  }
-
-  // Visoki kontrast
-  if (btnHighContrast) {
-    btnHighContrast.addEventListener("click", () => {
-      const aktivno = body.classList.toggle("high-contrast");
-      localStorage.setItem("highContrast", aktivno);
-    });
-  }
-
-  // Font za disleksiju
-  if (btnDyslexiaFont) {
-    btnDyslexiaFont.addEventListener("click", () => {
-      const aktivno = body.classList.toggle("dyslexia-font");
-      localStorage.setItem("dyslexiaFont", aktivno);
-    });
-  }
-
-  // Povećan prored (razmak slova)
-  if (btnSpacing) {
-    btnSpacing.addEventListener("click", () => {
-      const aktivno = body.classList.toggle("increased-spacing");
-      localStorage.setItem("increasedSpacing", aktivno);
-    });
-  }
-
-  // Pauziranje animacija
-  if (btnPauseAnim) {
-    btnPauseAnim.addEventListener("click", () => {
-      const aktivno = body.classList.toggle("pause-animations");
-      localStorage.setItem("pauseAnimations", aktivno);
-    });
-  }
-
-  // ===================== RESETOVANJE =====================
   if (btnReset) {
-    btnReset.addEventListener("click", () => {
-      body.classList.remove(
-        "high-contrast", 
-        "dyslexia-font", 
-        "increased-spacing", 
-        "pause-animations"
-      );
-      
-      const styleTag = getStyleTag();
-      styleTag.innerHTML = "";
-
-      localStorage.removeItem("fontSize");
-      localStorage.removeItem("highContrast");
-      localStorage.removeItem("dyslexiaFont");
-      localStorage.removeItem("increasedSpacing");
-      localStorage.removeItem("pauseAnimations");
-    });
+    btnReset.onclick = () => {
+      body.className = "";
+      currentFontSize = 100;
+      currentLineSpace = 1.6;
+      currentWordSpace = 0;
+      applySettings();
+      localStorage.clear();
+      widget.classList.remove("open");
+      updateActiveButtons();
+    };
   }
 
 });
@@ -238,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cena: "7.100 RSD",
       tipovi: ["table"]
     },
-    { 
+    {
       id: "tabla-jezik",
       naziv: "Interaktivna tabla Jezik",
       opis: "Interaktivna tabla Jezik sadrži 3 edukativna panela – azbuku, godišnja doba i prostornu orijentaciju. Idealan materijal za učenje kroz igru i pokret.",
@@ -246,7 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cena: "8.850 RSD",
       tipovi: ["table"]
     },
-      { 
+    {
       id: "tabla-nizalica",
       naziv: "Nizalica cipela za interaktivne table",
       opis: "Didaktička nizalica u obliku cipele za vežbanje vezivanja pertli i mašne. Pomaže deci da razviju finu motoriku, strpljenje i samostalnost.",
@@ -254,7 +308,7 @@ document.addEventListener("DOMContentLoaded", () => {
       cena: "1.820 RSD",
       tipovi: ["table"]
     },
-    { 
+    {
       id: "prekidač-utikac",
       naziv: "Prekidač-Utikač za interaktivne table",
       opis: "Prekidač-Utikač za interaktivne table, koji pomaze pri ucenju vezano za osnove o struji i vezbanje fine motorike.",
@@ -408,9 +462,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let trenutnoIzabranaIgracka = null;
 
-function generisiKarticu(igracka) {
+  function generisiKarticu(igracka) {
     // Uzimamo samo prvu kategoriju za suptilan tekst
-    const kategorija = nazivTipa[igracka.tipovi[0]]; 
+    const kategorija = nazivTipa[igracka.tipovi[0]];
 
     return `
       <article class="toy-card">
@@ -509,7 +563,7 @@ function generisiKarticu(igracka) {
 
       const primalac = "info@nolimits.rs";
       const naslov = encodeURIComponent(`[Narudžbina] ${trenutnoIzabranaIgracka ? trenutnoIzabranaIgracka.naziv : "Igračka"}`);
-      
+
       const telo = encodeURIComponent(
         `Naručena igračka: ${trenutnoIzabranaIgracka ? trenutnoIzabranaIgracka.naziv : ""}\n` +
         `Cena: ${trenutnoIzabranaIgracka ? trenutnoIzabranaIgracka.cena : ""}\n\n` +
@@ -652,7 +706,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // 4. Pronađi odgovarajući panel i prikaži ga
       const targetId = button.getAttribute('data-target');
       const targetPanel = document.getElementById(targetId);
-      
+
       if (targetPanel) {
         targetPanel.classList.add('active');
         targetPanel.removeAttribute('hidden');
