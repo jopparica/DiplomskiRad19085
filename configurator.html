@@ -201,9 +201,12 @@
 
           <div id="konva-container" aria-label="Radna površina za konfigurisanje igračke"></div>
 
-          <div class="canvas-footer-actions">
-            <button id="btn-save" class="btn-save-dominant">
-              💾 SAČUVAJ IGRAČKU (PNG)
+          <div class="canvas-footer-actions dual-actions">
+            <button id="btn-save" class="btn-action-half btn-save">
+              💾 SAČUVAJ SLIKU
+            </button>
+            <button id="btn-order" class="btn-action-half btn-order">
+              📦 POŠALJI NA IZRADU
             </button>
           </div>
         </div>
@@ -318,6 +321,37 @@
     <button id="btn-exit-preview" class="btn-exit-preview">✕ Izađi iz pregleda</button>
     <div class="preview-modal-content">
       <img id="preview-modal-img" src="" alt="Pregled igračke" />
+    </div>
+  </div>
+
+  <div id="order-modal" class="preview-modal-overlay" style="display: none;">
+    <div class="order-modal-content">
+      <button id="btn-close-order" class="btn-close-modal" aria-label="Zatvori">✖</button>
+
+      <div class="order-modal-body">
+        <h3 class="order-title">Pošaljite upit za izradu</h3>
+        <p class="order-desc">Vaša konfiguracija je spremna. Ostavite podatke kako bismo vas kontaktirali.</p>
+
+        <div class="order-preview-container">
+          <img id="order-preview-img" src="" alt="Vaša igračka" />
+        </div>
+
+        <form id="order-form" class="order-form">
+          <div class="form-group">
+            <label>Ime i prezime</label>
+            <input type="text" id="order-name" placeholder="Unesite vaše ime..." required />
+          </div>
+          <div class="form-group">
+            <label>Email adresa</label>
+            <input type="email" id="order-email" placeholder="vas@email.com" required />
+          </div>
+          <div class="form-group">
+            <label>Broj telefona</label>
+            <input type="tel" id="order-phone" placeholder="06X/XXX-XXXX" required />
+          </div>
+          <button type="submit" class="btn-submit-order">POŠALJI UPIT</button>
+        </form>
+      </div>
     </div>
   </div>
 
