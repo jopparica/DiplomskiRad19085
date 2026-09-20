@@ -1,13 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
   const containerEl = document.getElementById("konva-container");
   if (!containerEl) return;
+  
+  containerEl.style.position = "relative"; 
+
+  const stage = new Konva.Stage({
+    container: "konva-container",
+    width: containerEl.clientWidth,
+    height: containerEl.clientHeight || 540
+  });
+
+  const slojOsnova = new Konva.Layer(); 
+  const slojOpseg = new Konva.Layer();
+  const slojElementi = new Konva.Layer(); 
+  const slojUputstvo = new Konva.Layer();
+  stage.add(slojOsnova); stage.add(slojOpseg); stage.add(slojElementi); stage.add(slojUputstvo);
 
   const AudioContext = window.AudioContext || window.webkitAudioContext;
   let audioCtx = null;
   let muzikaTimer = null;
   let sviraMuzika = false;
 
-  // --- ZVUČNE FUNKCIJE ---
   function pokreniMelodiju() {
     if (!audioCtx) audioCtx = new AudioContext();
     if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -18,12 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function odsvirajSledećiTon() {
       if (!sviraMuzika) return;
       const t = audioCtx.currentTime;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(tonovi[idx % tonovi.length], t);
-      gain.gain.setValueAtTime(0.1, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+      osc.type = "triangle"; osc.frequency.setValueAtTime(tonovi[idx % tonovi.length], t);
+      gain.gain.setValueAtTime(0.1, t); gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
       osc.connect(gain); gain.connect(audioCtx.destination);
       osc.start(t); osc.stop(t + 0.3);
       idx++; muzikaTimer = setTimeout(odsvirajSledećiTon, 320);
@@ -41,8 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
       osc.type = "sine"; osc.frequency.setValueAtTime(880, vreme);
       gain.gain.setValueAtTime(0.2, vreme); gain.gain.exponentialRampToValueAtTime(0.0001, vreme + 0.3);
-      osc.connect(gain); gain.connect(audioCtx.destination);
-      osc.start(vreme); osc.stop(vreme + 0.3);
+      osc.connect(gain); gain.connect(audioCtx.destination); osc.start(vreme); osc.stop(vreme + 0.3);
     }
     zvono(t); zvono(t + 0.15); 
   }
@@ -89,41 +98,34 @@ document.addEventListener("DOMContentLoaded", () => {
     return pCanvas;
   }
 
-  const stage = new Konva.Stage({
-    container: "konva-container",
-    width: containerEl.clientWidth,
-    height: containerEl.clientHeight || 540
-  });
-
-  const slojOsnova = new Konva.Layer();
-  const slojOpseg = new Konva.Layer();
-  const slojElementi = new Konva.Layer();
-  const slojUputstvo = new Konva.Layer();
-  stage.add(slojOsnova); stage.add(slojOpseg); stage.add(slojElementi); stage.add(slojUputstvo);
-
-  // OMOGUĆEN RESIZING OVDE (resizeEnabled: true)
+  // --- ISPRAVLJEN TRANSFORMER (S KOCKICAMA I ROTACIJOM) ---
   const transformer = new Konva.Transformer({
     rotateEnabled: true, 
     resizeEnabled: true, 
     keepRatio: true,
     enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
+    anchorSize: 18, 
+    anchorCornerRadius: 4,
+    anchorStrokeWidth: 2,
+    anchorStroke: '#2b6cb0',
+    anchorFill: '#ffffff',
+    borderStroke: '#2b6cb0',
+    borderStrokeWidth: 2,
+    borderDash: [5, 5],
+    padding: 15, // Odmiče okvir i kockice od elementa radi lakšeg hvatanja
     rotationSnaps: [0, 45, 90, 135, 180, 225, 270, 315]
   });
   slojElementi.add(transformer);
 
-  let trenutnaBaza = "meda";
-  let trenutnaBoja = "#ed8936";
-  let trenutniMaterijal = "plis";
-  let trenutniNivoKoraka = 1;
+  let trenutnaBaza = "meda"; let trenutnaBoja = "#ed8936";
+  let trenutniMaterijal = "plis"; let trenutniNivoKoraka = 1;
   let postavljeniElementi = { meda: [], valjak: [], volan: [] };
-  let history = [];
-  let historyStep = -1;
-  let selektovaniElementId = null;
+  let history = []; let historyStep = -1; let selektovaniElementId = null;
 
   const opisMaterijala = {
-    plis: "💡 <strong>Meki pliš:</strong> Pruža osjećaj sigurnosti, smanjuje anksioznost i podstiče emotivnu regulaciju djeteta.",
+    plis: "💡 <strong>Meki pliš:</strong> Pruža osećaj sigurnosti, smanjuje anksioznost i podstiče emotivnu regulaciju deteta.",
     glatko: "💡 <strong>Glatko:</strong> Pruža čist taktilni nadražaj, olakšava brisanje i održavanje higijene u terapijskim uslovima.",
-    silikon: "💡 <strong>Rebrasti silikon:</strong> Podstiče senzornu stimulaciju dlanova, olakšava stisak i sprječava klizanje igračke."
+    silikon: "💡 <strong>Rebrasti silikon:</strong> Podstiče senzornu stimulaciju dlanova, olakšava stisak i sprečava klizanje igračke."
   };
 
   function sacuvajStanjeIstorije() {
@@ -135,24 +137,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const elementiUI = {
     zip: { kategorija: "Fina motorika", ikona: "🧷", naziv: "Zip-mehanizam", opis: "🏥 <strong>Svrha:</strong> Razvoj fine motorike šake.", podesavanja: [{ id: "vrsta_zipa", naslov: "Tip mehanizma", opcije: [{ val: "metal", lab: "Klasični metalni", hint: "🎯 Za preciznije prste." }, { val: "plastika", lab: "Široki plastični", hint: "🎯 Ergonomski." }] }] },
     zupcanik: { kategorija: "Fina motorika", ikona: "⚙️", naziv: "Zupčanik", opis: "🏥 <strong>Svrha:</strong> Taktilno-proprioceptivni unos kroz rotaciju.", podesavanja: [{ id: "otpor", naslov: "Otpor rotacije", opcije: [{ val: "lako", lab: "Slobodno", hint: "🎯 Lako rotiranje." }, { val: "klik", lab: "Klik otpor", hint: "🎯 Usporeno prezubljivanje." }] }] },
-    bravica: { kategorija: "Fina motorika", ikona: "🔓", naziv: "Drvena bravica", opis: "🏥 <strong>Svrha:</strong> Rješavanje problema i snaga prstiju.", podesavanja: [{ id: "tip_brave", naslov: "Vrsta reze", opcije: [{ val: "klizna", lab: "Klizna", hint: "🎯 Lako." }, { val: "kukica", lab: "Kukica", hint: "🎯 Srednje." }] }] },
+    bravica: { kategorija: "Fina motorika", ikona: "🔓", naziv: "Drvena bravica", opis: "🏥 <strong>Svrha:</strong> Rešavanje problema i snaga prstiju.", podesavanja: [{ id: "tip_brave", naslov: "Vrsta reze", opcije: [{ val: "klizna", lab: "Klizna", hint: "🎯 Lako." }, { val: "kukica", lab: "Kukica", hint: "🎯 Srednje." }] }] },
     dugme_pertla: { kategorija: "Fina motorika", ikona: "🧵", naziv: "Dugme i pertla", opis: "🏥 <strong>Svrha:</strong> Učenje vezivanja i pincet hvat.", podesavanja: [{ id: "boja_pertle", naslov: "Boja pertle", opcije: [{ val: "crvena", lab: "Crvena", hint: "🎯 Upadljivo." }, { val: "plava", lab: "Plava", hint: "🎯 Mirno." }] }] },
     trake: { kategorija: "Senzorna stimulacija", ikona: "🟨", naziv: "Senzorne omče", opis: "🏥 <strong>Svrha:</strong> Taktilno-vizuelno istraživanje.", podesavanja: [{ id: "boje", naslov: "Paleta boja", opcije: [{ val: "visoki", lab: "Visoki kontrast", hint: "🎯 Za slabovidnost." }, { val: "pastel", lab: "Pastelne boje", hint: "🎯 Umirujuće." }] }] },
     popit: { kategorija: "Senzorna stimulacija", ikona: "🫧", naziv: "Pop-it silikon", opis: "🏥 <strong>Svrha:</strong> Fokus i smirivanje anksioznosti.", podesavanja: [{ id: "oblik", naslov: "Oblik", opcije: [{ val: "krug", lab: "Krug", hint: "🎯 Klasično." }, { val: "kvadrat", lab: "Kvadrat", hint: "🎯 Veća površina." }] }] },
     cicak: { kategorija: "Senzorna stimulacija", ikona: "🩹", naziv: "Čičak traka", opis: "🏥 <strong>Svrha:</strong> Snažan taktilni i auditivni odziv.", podesavanja: [{ id: "jacina", naslov: "Jačina čička", opcije: [{ val: "jako", lab: "Jako", hint: "🎯 Teže povlačenje." }, { val: "slabo", lab: "Slabo", hint: "🎯 Lako povlačenje." }] }] },
-    zvucnik: { kategorija: "Auditivna i Vizuelna percepcija", ikona: "🎵", naziv: "Zvučni modul", opis: "🏥 <strong>Svrha:</strong> Zvučna stimulacija i pažnja.", podesavanja: [{ id: "zvuk_tip", naslov: "Zvuk", opcije: [{ val: "melodija", lab: "Dječija melodija", hint: "🎯 Kontinualna stimulacija." }, { val: "zvono", lab: "Dvostruki akord", hint: "🎯 Kratak odziv." }] }] },
-    led: { kategorija: "Auditivna i Vizuelna percepcija", ikona: "💡", naziv: "LED Svetlo", opis: "🏥 <strong>Svrha:</strong> Vizuelno praćenje i fiksacija pogleda.", podesavanja: [{ id: "led_boja", naslov: "Boja svjetla", opcije: [{ val: "#ecc94b", lab: "Žuta", hint: "🎯 Topla boja." }, { val: "#63b3ed", lab: "Plava", hint: "🎯 Umirujuće." }] }, { id: "led_rezim", naslov: "Režim rada", opcije: [{ val: "puls", lab: "Pulsirajuće", hint: "🎯 Dinamičko praćenje." }, { val: "stalno", lab: "Stalno svjetlo", hint: "🎯 Blago osvjetljenje." }] }] },
-    ogledalo: { kategorija: "Auditivna i Vizuelna percepcija", ikona: "🪞", naziv: "Akrilno ogledalo", opis: "🏥 <strong>Svrha:</strong> Razvoj samosvijesti i prepoznavanje emocija.", podesavanja: [{ id: "okvir", naslov: "Boja okvira", opcije: [{ val: "narandzasta", lab: "Narandžasta", hint: "🎯 Stimulišuće." }, { val: "zelena", lab: "Zelena", hint: "🎯 Prirodno." }] }] },
-    ponderisano: { kategorija: "Fokus i umirenje", ikona: "⚖️", naziv: "Ponderisani modul", opis: "🏥 <strong>Svrha:</strong> Duboki pritisak umiruje dijete.", podesavanja: [{ id: "tezina", naslov: "Težina", opcije: [{ val: "200g", lab: "200g (Lako)", hint: "🎯 Blago opterećenje." }, { val: "500g", lab: "500g (Srednje)", hint: "🎯 Snažniji uticaj." }] }] }
+    zvucnik: { kategorija: "Auditivna i Vizuelna percepcija", ikona: "🎵", naziv: "Zvučni modul", opis: "🏥 <strong>Svrha:</strong> Zvučna stimulacija i pažnja.", podesavanja: [{ id: "zvuk_tip", naslov: "Zvuk", opcije: [{ val: "melodija", lab: "Dečija melodija", hint: "🎯 Kontinualna stimulacija." }, { val: "zvono", lab: "Dvostruki akord", hint: "🎯 Kratak odziv." }] }] },
+    led: { kategorija: "Auditivna i Vizuelna percepcija", ikona: "💡", naziv: "LED Svetlo", opis: "🏥 <strong>Svrha:</strong> Vizuelno praćenje i fiksacija pogleda.", podesavanja: [{ id: "led_boja", naslov: "Boja svetla", opcije: [{ val: "#ecc94b", lab: "Žuta", hint: "🎯 Topla boja." }, { val: "#63b3ed", lab: "Plava", hint: "🎯 Umirujuće." }] }, { id: "led_rezim", naslov: "Režim rada", opcije: [{ val: "puls", lab: "Pulsirajuće", hint: "🎯 Dinamičko praćenje." }, { val: "stalno", lab: "Stalno svetlo", hint: "🎯 Blago osvetljenje." }] }] },
+    ogledalo: { kategorija: "Auditivna i Vizuelna percepcija", ikona: "🪞", naziv: "Akrilno ogledalo", opis: "🏥 <strong>Svrha:</strong> Razvoj samosvesti i prepoznavanje emocija.", podesavanja: [{ id: "okvir", naslov: "Boja okvira", opcije: [{ val: "narandzasta", lab: "Narandžasta", hint: "🎯 Stimulišuće." }, { val: "zelena", lab: "Zelena", hint: "🎯 Prirodno." }] }] },
+    ponderisano: { kategorija: "Fokus i umirenje", ikona: "⚖️", naziv: "Ponderisani modul", opis: "🏥 <strong>Svrha:</strong> Duboki pritisak umiruje dete.", podesavanja: [{ id: "tezina", naslov: "Težina", opcije: [{ val: "200g", lab: "200g (Lako)", hint: "🎯 Blago opterećenje." }, { val: "500g", lab: "500g (Srednje)", hint: "🎯 Snažniji uticaj." }] }] }
   };
 
   function crtajUputstvo(nivo) {
     if (nivo) trenutniNivoKoraka = nivo;
     slojUputstvo.destroyChildren();
-    let naslovTekst = "KORAK 1";
-    let poruka = "IZABERITE BAZU, BOJU I MATERIJAL. KLIKNITE NA IGRAČKU ZA DODAVANJE MODULA.";
+    let naslovTekst = "KORAK 1"; let poruka = "IZABERITE BAZU, BOJU I MATERIJAL. KLIKNITE NA IGRAČKU ZA DODAVANJE MODULA.";
     if (trenutniNivoKoraka === 2) { naslovTekst = "KORAK 2"; poruka = "ODABERITE SENZORNI MODUL IZ DESNOG MENIJA ZA OVU POZICIJU."; }
-    else if (trenutniNivoKoraka === 3) { naslovTekst = "KORAK 3"; poruka = "PRILAGODITE, ROTIRAJTE I PROMIJENITE VELIČINU MODULA DIREKTNO NA IGRAČKI."; }
+    else if (trenutniNivoKoraka === 3) { naslovTekst = "KORAK 3"; poruka = "PRILAGODITE, ROTIRAJTE I PROMENITE VELIČINU MODULA DIREKTNO NA IGRAČKI."; }
 
     const grupa = new Konva.Group({ y: 14, listening: false });
     const maxSirina = Math.min(stage.width() - 40, 560);
@@ -174,7 +175,17 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function crtajBazu() {
-    slojOsnova.destroyChildren(); slojElementi.destroyChildren(); slojElementi.add(transformer);
+    slojOsnova.destroyChildren(); 
+    
+    // VAŽNO: Uništava module, ali NE uništava transformer objekat!
+    const sviElementi = slojElementi.getChildren().slice();
+    sviElementi.forEach(dete => {
+      if (dete !== transformer) {
+        dete.destroy();
+      }
+    });
+    transformer.nodes([]); // Skida selekciju
+    
     const cX = stage.width() / 2, cY = stage.height() / 2 + 15;
     const imgPattern = kreirajPattern(trenutniMaterijal, trenutnaBoja);
     const grupaCelaIgracka = new Konva.Group({ id: 'cela-igracka-grupa' });
@@ -208,8 +219,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   stage.on('click tap', (e) => {
+    // Klik na prazno ili igračku skida selekciju
     if (e.target === stage || e.target.hasName('cela-igracka-grupa')) {
       transformer.nodes([]); slojElementi.batchDraw();
+      selektovaniElementId = null;
     }
   });
 
@@ -239,22 +252,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     Object.keys(kategorije).forEach(katIme => {
-      const katDiv = document.createElement("div");
-      katDiv.className = "kategorija-sekcija";
+      const katDiv = document.createElement("div"); katDiv.className = "kategorija-sekcija";
       katDiv.innerHTML = `<h5 class="kategorija-naslov">${katIme}</h5>`;
-      const gridDiv = document.createElement("div");
-      gridDiv.className = "elementi-grid-unutrasnji";
+      const gridDiv = document.createElement("div"); gridDiv.className = "elementi-grid-unutrasnji";
 
       kategorije[katIme].forEach(el => {
         const btn = document.createElement("button");
-        btn.className = "btn-element";
+        btn.className = "btn-element"; btn.tabIndex = 0; 
         btn.innerHTML = `<span class="el-icon">${el.ikona}</span><span class="el-name">${el.naziv}</span>`;
 
         btn.onclick = () => {
           const postavljeni = postavljeniElementi[trenutnaBaza];
           const konflikt = postavljeni.find(p => elementiUI[p.tip].kategorija === el.kategorija);
           if (konflikt) {
-            alert(`⚠️ Restrikcija dizajna!\n\nVeć ste ugradili element iz grupe "${el.kategorija}" (${elementiUI[konflikt.tip].naziv}).\n\nRadi sprječavanja senzorne preopterećenosti, dozvoljen je samo 1 element po funkcionalnoj grupi. Uklonite postojeći da biste dodali novi.`);
+            alert(`⚠️ Restrikcija dizajna!\n\nVeć ste ugradili element iz grupe "${el.kategorija}". Uklonite postojeći da biste dodali novi.`);
             return;
           }
           ukloniVizuelniOpseg();
@@ -264,6 +275,12 @@ document.addEventListener("DOMContentLoaded", () => {
           postavljeniElementi[trenutnaBaza].push(noviObj);
           selektovaniElementId = noviObj.id;
           sacuvajStanjeIstorije(); crtajBazu(); otvoriPodesavanja(noviObj.id);
+          
+          const dodataGrupa = slojElementi.findOne(`#modul-${noviObj.id}`);
+          if(dodataGrupa) {
+            transformer.nodes([dodataGrupa]);
+            transformer.moveToTop(); // Uvek drži transformer na vrhu
+          }
         };
         gridDiv.appendChild(btn);
       });
@@ -326,7 +343,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const popBoje = ['#f56565', '#ed8936', '#4299e1', '#9f7aea'];
       for (let i = 0; i < 4; i++) grupa.add(new Konva.Circle({ x: (i % 2 === 0) ? -10 : 10, y: (i < 2) ? -10 : 10, radius: 8, fill: popBoje[i] }));
     } else if (tip === "cicak") {
-      // VIZUELNO RAZLIČITA ČIČAK TRAKA
       const jako = opcije.jacina === "jako";
       grupa.add(new Konva.Rect({ x: -20, y: -30, width: 40, height: 60, fill: jako ? '#a0aec0' : '#f1f5f9', cornerRadius: 4, stroke: '#718096', strokeWidth: 2 }));
       const razmak = jako ? 8 : 15;
@@ -339,8 +355,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     grupa.on("click tap", (e) => {
-      e.cancelBubble = true; ukloniVizuelniOpseg(); selektovaniElementId = modulObj.id;
-      transformer.nodes([grupa]); slojElementi.batchDraw();
+      e.cancelBubble = true; ukloniVizuelniOpseg(); 
+      selektovaniElementId = modulObj.id;
+      transformer.nodes([grupa]);
+      transformer.moveToTop(); // Drži kvadratiće vidljivim iznad svega
+      slojElementi.batchDraw();
       pokreniAnimacijuElementa(grupa, tip, opcije); otvoriPodesavanja(modulObj.id);
     });
 
@@ -352,7 +371,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     slojElementi.add(grupa);
-    if (selektovaniElementId === modulObj.id) transformer.nodes([grupa]);
+    if (selektovaniElementId === modulObj.id) {
+      transformer.nodes([grupa]);
+      transformer.moveToTop();
+    }
   }
 
   function prikaziPanel(nivo) {
@@ -374,16 +396,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     trNiz.forEach(item => {
       const data = elementiUI[item.tip];
-      const li = document.createElement("li");
-      li.className = "inventory-item";
-      li.innerHTML = `<span>${data.ikona} ${data.naziv}</span><button class="inventory-item-remove" title="Ukloni modul">✕</button>`;
+      const li = document.createElement("li"); li.className = "inventory-item";
+      li.tabIndex = 0; 
+      li.innerHTML = `<span>${data.ikona} ${data.naziv}</span><button class="inventory-item-remove" title="Ukloni modul" tabindex="0">✕</button>`;
+      
       li.querySelector(".inventory-item-remove").onclick = (e) => { e.stopPropagation(); ukloniElementById(item.id); };
+      
       li.onclick = () => {
         selektovaniElementId = item.id;
         const g = slojElementi.findOne(`#modul-${item.id}`);
-        if (g) { transformer.nodes([g]); slojElementi.batchDraw(); }
+        if (g) { transformer.nodes([g]); transformer.moveToTop(); slojElementi.batchDraw(); }
         otvoriPodesavanja(item.id);
       };
+      
+      li.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); li.click(); }
+      });
       listEl.appendChild(li);
     });
   }
@@ -391,7 +419,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function ukloniElementById(id) {
     zaustaviMuziku(); ukloniVizuelniOpseg(); transformer.nodes([]);
     postavljeniElementi[trenutnaBaza] = postavljeniElementi[trenutnaBaza].filter(i => i.id !== id);
-    if (selektovaniElementId === id) selektovaniElementId = null;
+    if (selektovaniElementId === id) { selektovaniElementId = null; }
     sacuvajStanjeIstorije(); crtajBazu(); prikaziPanel(1);
   }
 
@@ -400,8 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!elObj) return;
     const modulData = elementiUI[elObj.tip];
     document.getElementById("podesavanje-naslov").innerText = modulData.naziv;
-    const container = document.getElementById("fine-tuning-container");
-    container.innerHTML = "";
+    const container = document.getElementById("fine-tuning-container"); container.innerHTML = "";
     const descBox = document.getElementById("module-description-box");
     if (descBox) descBox.innerHTML = modulData.opis || "";
 
@@ -411,180 +438,84 @@ document.addEventListener("DOMContentLoaded", () => {
         const label = document.createElement("label"); label.innerText = p.naslov + ":"; grupa.appendChild(label);
         const tuneOpts = document.createElement("div"); tuneOpts.className = "tune-options";
         const hintBox = document.createElement("div"); hintBox.className = "sub-option-hint";
-        const osveziHint = (val) => {
-          const optObj = p.opcije.find(o => o.val === val);
-          if (optObj && optObj.hint) { hintBox.innerHTML = optObj.hint; hintBox.style.display = "block"; } else hintBox.style.display = "none";
-        };
+        const osveziHint = (val) => { const optObj = p.opcije.find(o => o.val === val); if (optObj && optObj.hint) { hintBox.innerHTML = optObj.hint; hintBox.style.display = "block"; } else hintBox.style.display = "none"; };
         const trenVal = elObj.opcije[p.id] || p.opcije[0].val;
         p.opcije.forEach(o => {
-          const btn = document.createElement("button");
-          btn.className = "tune-btn"; if (trenVal === o.val) btn.classList.add("active"); btn.innerText = o.lab;
-          btn.onclick = () => {
-            tuneOpts.querySelectorAll(".tune-btn").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active"); elObj.opcije[p.id] = o.val; osveziHint(o.val); sacuvajStanjeIstorije(); crtajBazu();
-          };
+          const btn = document.createElement("button"); btn.className = "tune-btn"; if (trenVal === o.val) btn.classList.add("active"); btn.innerText = o.lab;
+          btn.tabIndex = 0;
+          btn.onclick = () => { tuneOpts.querySelectorAll(".tune-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); elObj.opcije[p.id] = o.val; osveziHint(o.val); sacuvajStanjeIstorije(); crtajBazu(); };
           tuneOpts.appendChild(btn);
         });
         grupa.appendChild(tuneOpts); grupa.appendChild(hintBox); container.appendChild(grupa);
         osveziHint(trenVal);
       });
     }
-
-    const btnTest = document.getElementById("btn-test-element");
-    const moduliSaAnimacijom = ["zvucnik", "zip", "led", "zupcanik", "bravica", "cicak"];
-    if (btnTest) {
-      if (moduliSaAnimacijom.includes(elObj.tip)) {
-        btnTest.style.display = "block";
-      } else {
-        btnTest.style.display = "none";
-      }
-    }
+    const btnTest = document.getElementById("btn-test-element"); const moduliSaAnimacijom = ["zvucnik", "zip", "led", "zupcanik", "bravica", "cicak"];
+    if (btnTest) btnTest.style.display = moduliSaAnimacijom.includes(elObj.tip) ? "block" : "none";
     prikaziPanel(3);
   }
 
   function pokreniAnimacijuElementa(grupa, tip, opcije) {
-    if (tip === "zvucnik") { 
-      if (opcije.zvuk_tip === "zvono") reprodukujZvono(); else pokreniMelodiju(); 
-      new Konva.Tween({ node: grupa, duration: 0.35, scaleX: grupa.scaleX() * 1.15, scaleY: grupa.scaleY() * 1.15, yoyo: true, repeat: 1 }).play(); 
-    }
-    else if (tip === "zip") { 
-      reprodukujMehaniku(); const klizac = grupa.findOne('#zip-klizac'); 
-      if (klizac) new Konva.Tween({ node: klizac, duration: 0.7, x: 18, yoyo: true }).play(); 
-    }
-    else if (tip === "led") { 
-      const sjaj = grupa.findOne('#led-sjaj'); 
-      if (sjaj) { 
-        if (opcije.led_rezim === "stalno") {
-          new Konva.Tween({ node: sjaj, duration: 0.5, opacity: 1, scaleX: 1, scaleY: 1, yoyo: true }).play(); 
-        } else {
-          sjaj.opacity(0.1);
-          new Konva.Tween({ node: sjaj, duration: 0.35, opacity: 0.9, scaleX: 1.6, scaleY: 1.6, yoyo: true, repeat: 5 }).play(); 
-        }
-      } 
-    }
-    else if (tip === "zupcanik") { 
-      const zupcanik = grupa.findOne('#fidget-zupcanik'); 
-      if (zupcanik) { 
-        const trenRot = zupcanik.rotation(); 
-        if (opcije.otpor === "klik") { 
-          let skokovi = 8; let i = 0;
-          let interval = setInterval(() => {
-            reprodukujMehaniku(); zupcanik.rotation(trenRot + (i + 1) * 45); slojElementi.batchDraw(); i++;
-            if (i >= skokovi) clearInterval(interval);
-          }, 150);
-        } else { 
-          new Konva.Tween({ node: zupcanik, duration: 2.8, rotation: trenRot + 1440, easing: Konva.Easings.EaseOut }).play(); 
-        } 
-      } 
-    }
-    else if (tip === "bravica") {
-      reprodukujMehaniku();
-      if (opcije.tip_brave === "klizna") {
-        const klizac = grupa.findOne('#bravica-klizac');
-        if(klizac) new Konva.Tween({ node: klizac, duration: 0.3, x: 10, yoyo: true, repeat: 1 }).play();
-      } else {
-        const kuka = grupa.findOne('#bravica-kuka');
-        if(kuka) new Konva.Tween({ node: kuka, duration: 0.3, rotation: -45, yoyo: true, repeat: 1 }).play();
-      }
-    }
-    else if (tip === "cicak") {
-      const jako = opcije.jacina === "jako";
-      const brojPonavljanja = jako ? 5 : 2; 
-      const brzina = jako ? 110 : 70; 
-      const tipZvuka = jako ? "jako" : "slabo"; 
-      
-      let c = 0; 
-      let int = setInterval(() => { 
-        reprodukujMehaniku(tipZvuka); c++; 
-        if(c >= brojPonavljanja) clearInterval(int); 
-      }, brzina);
-      
-      new Konva.Tween({ node: grupa, duration: 0.08, x: grupa.x() + (jako ? 4 : 2), yoyo: true, repeat: brojPonavljanja * 2 - 1 }).play();
-    }
+    if (tip === "zvucnik") { if (opcije.zvuk_tip === "zvono") reprodukujZvono(); else pokreniMelodiju(); new Konva.Tween({ node: grupa, duration: 0.35, scaleX: grupa.scaleX() * 1.15, scaleY: grupa.scaleY() * 1.15, yoyo: true, repeat: 1 }).play(); }
+    else if (tip === "zip") { reprodukujMehaniku(); const klizac = grupa.findOne('#zip-klizac'); if (klizac) new Konva.Tween({ node: klizac, duration: 0.7, x: 18, yoyo: true }).play(); }
+    else if (tip === "led") { const sjaj = grupa.findOne('#led-sjaj'); if (sjaj) { if (opcije.led_rezim === "stalno") { new Konva.Tween({ node: sjaj, duration: 0.5, opacity: 1, scaleX: 1, scaleY: 1, yoyo: true }).play(); } else { sjaj.opacity(0.1); new Konva.Tween({ node: sjaj, duration: 0.35, opacity: 0.9, scaleX: 1.6, scaleY: 1.6, yoyo: true, repeat: 5 }).play(); } } }
+    else if (tip === "zupcanik") { const zupcanik = grupa.findOne('#fidget-zupcanik'); if (zupcanik) { const trenRot = zupcanik.rotation(); if (opcije.otpor === "klik") { let skokovi = 8; let i = 0; let interval = setInterval(() => { reprodukujMehaniku(); zupcanik.rotation(trenRot + (i + 1) * 45); slojElementi.batchDraw(); i++; if (i >= skokovi) clearInterval(interval); }, 150); } else { new Konva.Tween({ node: zupcanik, duration: 2.8, rotation: trenRot + 1440, easing: Konva.Easings.EaseOut }).play(); } } }
+    else if (tip === "bravica") { reprodukujMehaniku(); if (opcije.tip_brave === "klizna") { const klizac = grupa.findOne('#bravica-klizac'); if(klizac) new Konva.Tween({ node: klizac, duration: 0.3, x: 10, yoyo: true, repeat: 1 }).play(); } else { const kuka = grupa.findOne('#bravica-kuka'); if(kuka) new Konva.Tween({ node: kuka, duration: 0.3, rotation: -45, yoyo: true, repeat: 1 }).play(); } }
+    else if (tip === "cicak") { const jako = opcije.jacina === "jako"; const brojPonavljanja = jako ? 5 : 2; const brzina = jako ? 110 : 70; const tipZvuka = jako ? "jako" : "slabo"; let c = 0; let int = setInterval(() => { reprodukujMehaniku(tipZvuka); c++; if(c >= brojPonavljanja) clearInterval(int); }, brzina); new Konva.Tween({ node: grupa, duration: 0.08, x: grupa.x() + (jako ? 4 : 2), yoyo: true, repeat: brojPonavljanja * 2 - 1 }).play(); }
   }
 
-  // --- BUTTON EVENTS ---
   document.getElementById("btn-back-to-1").onclick = () => { ukloniVizuelniOpseg(); prikaziPanel(1); };
   document.getElementById("btn-back-to-2").onclick = () => { ukloniVizuelniOpseg(); prikaziPanel(1); };
   document.getElementById("btn-ukloni-element").onclick = () => { if (selektovaniElementId) ukloniElementById(selektovaniElementId); };
   document.getElementById("btn-test-element").onclick = () => { if (selektovaniElementId) { const elObj = postavljeniElementi[trenutnaBaza].find(i => i.id === selektovaniElementId); if (elObj) { const grupa = slojElementi.findOne(`#modul-${elObj.id}`); if (grupa) pokreniAnimacijuElementa(grupa, elObj.tip, elObj.opcije); } } };
 
-  document.querySelectorAll(".btn-base").forEach(btn => {
-    btn.onclick = () => { zaustaviMuziku(); ukloniVizuelniOpseg(); transformer.nodes([]); document.querySelectorAll(".btn-base").forEach(b => b.classList.remove("active")); btn.classList.add("active"); trenutnaBaza = btn.dataset.base; crtajBazu(); prikaziPanel(1); };
-  });
-  document.querySelectorAll(".color-btn").forEach(btn => {
-    btn.onclick = () => { document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); trenutnaBoja = btn.dataset.color; crtajBazu(); };
-  });
-  document.querySelectorAll(".btn-global-texture").forEach(btn => {
-    btn.onclick = () => { document.querySelectorAll(".btn-global-texture").forEach(b => b.classList.remove("active")); btn.classList.add("active"); trenutniMaterijal = btn.dataset.texture; const descBox = document.getElementById("material-description"); if (descBox) descBox.innerHTML = opisMaterijala[trenutniMaterijal]; crtajBazu(); };
-  });
+  document.querySelectorAll(".btn-base").forEach(btn => { btn.onclick = () => { zaustaviMuziku(); ukloniVizuelniOpseg(); transformer.nodes([]); document.querySelectorAll(".btn-base").forEach(b => b.classList.remove("active")); btn.classList.add("active"); trenutnaBaza = btn.dataset.base; crtajBazu(); prikaziPanel(1); }; });
+  document.querySelectorAll(".color-btn").forEach(btn => { btn.onclick = () => { document.querySelectorAll(".color-btn").forEach(b => b.classList.remove("active")); btn.classList.add("active"); trenutnaBoja = btn.dataset.color; crtajBazu(); }; });
+  document.querySelectorAll(".btn-global-texture").forEach(btn => { btn.onclick = () => { document.querySelectorAll(".btn-global-texture").forEach(b => b.classList.remove("active")); btn.classList.add("active"); trenutniMaterijal = btn.dataset.texture; const descBox = document.getElementById("material-description"); if (descBox) descBox.innerHTML = opisMaterijala[trenutniMaterijal]; crtajBazu(); }; });
 
   document.getElementById("btn-undo").onclick = () => { if (historyStep > 0) { historyStep--; postavljeniElementi = JSON.parse(history[historyStep]); crtajBazu(); } };
   document.getElementById("btn-redo").onclick = () => { if (historyStep < history.length - 1) { historyStep++; postavljeniElementi = JSON.parse(history[historyStep]); crtajBazu(); } };
-  document.getElementById("btn-reset").onclick = () => { if (confirm("Da li ste sigurni da želite da resetujete sve izmjene na igrački?")) { zaustaviMuziku(); ukloniVizuelniOpseg(); transformer.nodes([]); postavljeniElementi = { meda: [], valjak: [], volan: [] }; selektovaniElementId = null; sacuvajStanjeIstorije(); crtajBazu(); prikaziPanel(1); } };
+  document.getElementById("btn-reset").onclick = () => { if (confirm("Da li ste sigurni da želite da resetujete sve izmene na igrački?")) { zaustaviMuziku(); ukloniVizuelniOpseg(); transformer.nodes([]); postavljeniElementi = { meda: [], valjak: [], volan: [] }; selektovaniElementId = null; sacuvajStanjeIstorije(); crtajBazu(); prikaziPanel(1); } };
 
   function kreirajSlikuIgracke() {
     transformer.nodes([]); slojUputstvo.hide(); stage.batchDraw();
-    const size = 360; 
-    const cX = stage.width() / 2;
-    const cY = stage.height() / 2;
+    const size = 360; const cX = stage.width() / 2; const cY = stage.height() / 2;
     const dataURL = stage.toDataURL({ x: cX - size / 2, y: cY - size / 2, width: size, height: size, pixelRatio: 2 });
     slojUputstvo.show(); stage.batchDraw();
+    if(selektovaniElementId) { 
+      const g = slojElementi.findOne(`#modul-${selektovaniElementId}`);
+      if(g) { transformer.nodes([g]); }
+    }
     return dataURL;
   }
 
   const btnPreview = document.getElementById("btn-preview"), btnExitPreview = document.getElementById("btn-exit-preview"), previewModal = document.getElementById("preview-modal"), previewModalImg = document.getElementById("preview-modal-img");
   btnPreview.onclick = () => { previewModalImg.src = kreirajSlikuIgracke(); previewModal.style.display = "flex"; };
   btnExitPreview.onclick = () => { previewModal.style.display = "none"; };
-  
-  document.getElementById("btn-save").onclick = () => { 
-    const link = document.createElement("a"); 
-    link.download = `medicinska-igracka-${trenutnaBaza}.png`; 
-    link.href = kreirajSlikuIgracke(); 
-    link.click(); 
-  };
+  document.getElementById("btn-save").onclick = () => { const link = document.createElement("a"); link.download = `medicinska-igracka-${trenutnaBaza}.png`; link.href = kreirajSlikuIgracke(); link.click(); };
 
-  const btnOrder = document.getElementById("btn-order");
-  const orderModal = document.getElementById("order-modal");
-  const orderPreviewImg = document.getElementById("order-preview-img");
-  const btnCloseOrder = document.getElementById("btn-close-order");
-  const orderForm = document.getElementById("order-form");
+  const btnOrder = document.getElementById("btn-order"); const orderModal = document.getElementById("order-modal"); const orderPreviewImg = document.getElementById("order-preview-img"); const btnCloseOrder = document.getElementById("btn-close-order"); const orderForm = document.getElementById("order-form");
 
   if (btnOrder) {
     btnOrder.onclick = () => {
-      orderPreviewImg.src = kreirajSlikuIgracke();
-      orderModal.style.display = "flex"; 
-      
+      orderPreviewImg.src = kreirajSlikuIgracke(); orderModal.style.display = "flex"; 
       let btnOtvoriPreview = document.getElementById('btn-otvori-preview-iz-narudzbe');
       if (!btnOtvoriPreview) {
-         btnOtvoriPreview = document.createElement('button');
-         btnOtvoriPreview.id = 'btn-otvori-preview-iz-narudzbe';
-         btnOtvoriPreview.innerText = '🔍 Uvećaj';
-         btnOtvoriPreview.style.cssText = 'position: absolute; bottom: 15px; right: 15px; padding: 6px 14px; background: #2b6cb0; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.2s ease;';
-         const containerP = orderPreviewImg.parentElement;
-         containerP.appendChild(btnOtvoriPreview);
+         btnOtvoriPreview = document.createElement('button'); btnOtvoriPreview.id = 'btn-otvori-preview-iz-narudzbe'; btnOtvoriPreview.innerText = '🔍 Uvećaj';
+         btnOtvoriPreview.style.cssText = 'position: absolute; bottom: 15px; right: 15px; padding: 6px 14px; background: #2b6cb0; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: all 0.2s ease; z-index: 1010;';
+         const containerP = orderPreviewImg.parentElement; containerP.appendChild(btnOtvoriPreview);
       }
-      
-      btnOtvoriPreview.onclick = (e) => {
-         e.preventDefault(); 
-         previewModalImg.src = orderPreviewImg.src;
-         previewModal.style.display = "flex"; 
-      };
+      btnOtvoriPreview.onclick = (e) => { e.preventDefault(); previewModalImg.src = orderPreviewImg.src; previewModal.style.display = "flex"; };
     };
   }
 
-  if (btnCloseOrder) {
-    btnCloseOrder.onclick = () => { orderModal.style.display = "none"; };
-  }
+  if (btnCloseOrder) btnCloseOrder.onclick = () => { orderModal.style.display = "none"; };
 
   if (orderForm) {
     orderForm.onsubmit = (e) => {
-      e.preventDefault(); 
-      const ime = document.getElementById("order-name").value;
-      const email = document.getElementById("order-email").value;
-      alert(`Hvala Vam, ${ime}! \n\nVaš upit za prilagođenu igračku je uspješno generisan i poslat na email. Naši stručnjaci će Vas uskoro kontaktirati na adresu: ${email}.`);
-      orderModal.style.display = "none";
-      orderForm.reset();
+      e.preventDefault(); const ime = document.getElementById("order-name").value; const email = document.getElementById("order-email").value;
+      alert(`Hvala Vam, ${ime}! \n\nVaš upit za prilagođenu igračku je uspešno generisan i poslat na email. Naši stručnjaci će Vas uskoro kontaktirati na adresu: ${email}.`);
+      orderModal.style.display = "none"; orderForm.reset();
     };
   }
 
