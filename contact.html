@@ -27,32 +27,26 @@
   <div id="accessibility-widget" class="access-widget" aria-hidden="true">
     <div class="access-widget-header">
       <h3>Pristupačnost</h3>
-      <button id="close-accessibility" aria-label="Zatvori">✖</button>
+      <button id="close-accessibility" class="flex-center" aria-label="Zatvori">✖</button>
     </div>
 
     <div class="access-widget-body">
-
       <div class="access-section-title">Boje i kontrast</div>
       <div class="access-grid">
         <button class="access-grid-btn" id="btn-monochrome">
-          <span class="access-grid-icon">⬛</span>
-          <span class="access-grid-label">Monohrom</span>
+          <span class="access-grid-icon">⬛</span><span class="access-grid-label">Monohrom</span>
         </button>
         <button class="access-grid-btn" id="btn-dark-contrast">
-          <span class="access-grid-icon">🖤</span>
-          <span class="access-grid-label">Tamni kontrast</span>
+          <span class="access-grid-icon">🖤</span><span class="access-grid-label">Tamni kontrast</span>
         </button>
         <button class="access-grid-btn" id="btn-bright-contrast">
-          <span class="access-grid-icon">☀️</span>
-          <span class="access-grid-label">Svetli kontrast</span>
+          <span class="access-grid-icon">☀️</span><span class="access-grid-label">Svetli kontrast</span>
         </button>
         <button class="access-grid-btn" id="btn-low-sat">
-          <span class="access-grid-icon">🧊</span>
-          <span class="access-grid-label">Niska saturacija</span>
+          <span class="access-grid-icon">🧊</span><span class="access-grid-label">Niska saturacija</span>
         </button>
         <button class="access-grid-btn" id="btn-high-sat">
-          <span class="access-grid-icon">🎨</span>
-          <span class="access-grid-label">Visoka saturacija</span>
+          <span class="access-grid-icon">🎨</span><span class="access-grid-label">Visoka saturacija</span>
         </button>
       </div>
 
@@ -65,7 +59,6 @@
           <button id="btn-font-increase" class="scaler-btn">+</button>
         </div>
       </div>
-
       <div class="access-scaler-group">
         <div class="scaler-label">Prored:</div>
         <div class="scaler-controls">
@@ -74,7 +67,6 @@
           <button id="btn-line-increase" class="scaler-btn">+</button>
         </div>
       </div>
-
       <div class="access-scaler-group">
         <div class="scaler-label">Razmak reči:</div>
         <div class="scaler-controls">
@@ -84,25 +76,21 @@
         </div>
       </div>
 
-      <div class="access-grid" style="margin-top: 12px;">
+      <div class="access-grid" style="margin-top: 15px;">
         <button class="access-grid-btn" id="btn-dyslexia-font">
-          <span class="access-grid-icon">📖</span>
-          <span class="access-grid-label">OpenDyslexic</span>
+          <span class="access-grid-icon">📖</span><span class="access-grid-label">OpenDyslexic</span>
         </button>
         <button class="access-grid-btn" id="btn-highlight-links">
-          <span class="access-grid-icon">🔗</span>
-          <span class="access-grid-label">Istakni linkove</span>
+          <span class="access-grid-icon">🔗</span><span class="access-grid-label">Istakni linkove</span>
         </button>
       </div>
 
       <div class="access-section-title">Alati</div>
       <div class="access-grid">
         <button class="access-grid-btn" id="btn-virtual-keyboard" style="grid-column: span 2;">
-          <span class="access-grid-icon">⌨️</span>
-          <span class="access-grid-label">Virtuelna tastatura</span>
+          <span class="access-grid-icon">⌨️</span><span class="access-grid-label">Virtuelna tastatura</span>
         </button>
       </div>
-
     </div>
 
     <div class="access-widget-footer">
@@ -110,10 +98,11 @@
     </div>
   </div>
 
+  <!-- Virtuelna tastatura modal -->
   <div id="virtual-keyboard-modal" class="vk-modal" hidden>
     <div class="vk-header">
       <h4>Virtuelna tastatura</h4>
-      <button id="vk-close">✕</button>
+      <button id="vk-close" class="flex-center">✕</button>
     </div>
     <div class="vk-body">
       <input type="text" id="vk-input" placeholder="Kliknite tastere ispod..." readonly>
@@ -136,10 +125,11 @@
       </div>
     </div>
   </div>
+
   <!-- ===================== FLOATING HEADER ===================== -->
   <header class="site-header floating-header">
     <div class="container header-inner">
-      <a href="index.html" class="logo" aria-label="NoLimits Početna">
+      <a href="index.html" class="logo flex-center" aria-label="NoLimits Početna">
         <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true">
           <path
@@ -222,7 +212,7 @@
           <h2>Podaci o portalu</h2>
 
           <div class="contact-info-item">
-            <span class="contact-info-icon" aria-hidden="true">📧</span>
+            <span class="contact-info-icon flex-center" aria-hidden="true">📧</span>
             <div>
               <h3>Email adresa</h3>
               <p><a href="mailto:info@nolimits.rs">info@nolimits.rs</a></p>
@@ -230,7 +220,7 @@
           </div>
 
           <div class="contact-info-item">
-            <span class="contact-info-icon" aria-hidden="true">📞</span>
+            <span class="contact-info-icon flex-center" aria-hidden="true">📞</span>
             <div>
               <h3>Telefon</h3>
               <p><a href="tel:011123456">037 / 007 - 004</a></p>
@@ -238,7 +228,7 @@
           </div>
 
           <div class="contact-info-item">
-            <span class="contact-info-icon" aria-hidden="true">📍</span>
+            <span class="contact-info-icon flex-center" aria-hidden="true">📍</span>
             <div>
               <h3>Lokacija</h3>
               <p>Vuka Karadžića 27, Kruševac</p>
@@ -246,7 +236,7 @@
           </div>
 
           <div class="contact-info-item">
-            <span class="contact-info-icon" aria-hidden="true">🕒</span>
+            <span class="contact-info-icon flex-center" aria-hidden="true">🕒</span>
             <div>
               <h3>Radno vreme</h3>
               <p>Ponedeljak – petak, 09:00 – 17:00h</p>
@@ -256,10 +246,9 @@
           <div class="contact-info-note">
             <h3>Ukratko o nama</h3>
             <p>
-              NoLimits je nastao sa ciljem da olakša pronalaženje, kupovinu i
-              konfigurisanje prilagođenih igračaka za decu sa smetnjama u razvoju.
-              Obratite nam se ukoliko imate bilo koji predlog za unapređenje portala
-              ili bilo koje pitanje vezano za materijal.
+              NoLimits je nastao sa ciljem da olakša pronalaženje, kupovinu i konfigurisanje prilagođenih igračaka za
+              decu sa smetnjama u razvoju. Obratite nam se ukoliko imate bilo koji predlog za unapređenje portala ili
+              bilo koje pitanje vezano za materijal.
             </p>
           </div>
         </aside>
@@ -272,14 +261,14 @@
     <div class="container footer-inner">
       <div>
         <h3>Linkovi</h3>
-        <ul class="footer-links horizontal-links">
+        <ul class="footer-links horizontal-links flex-center">
           <li><a href="catalog.html">Katalog</a></li>
           <li><a href="configurator.html">Konfigurator</a></li>
           <li><a href="contact.html">Kontakt</a></li>
         </ul>
       </div>
-      <div class="footer-brand">
-        <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+      <div class="footer-brand flex-center">
+        <a href="index.html" class="logo logo-footer flex-center" aria-label="NoLimits Početna">
           <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">
             <path
@@ -290,7 +279,7 @@
           </svg>
           <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
         </a>
-        <p>Igračke koje razumeju svako dete.</p>
+        <p style="margin-top: 10px;">Igračke koje razumeju svako dete.</p>
       </div>
       <div>
         <h3>Kontakt</h3>

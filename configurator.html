@@ -26,32 +26,26 @@
   <div id="accessibility-widget" class="access-widget" aria-hidden="true">
     <div class="access-widget-header">
       <h3>Pristupačnost</h3>
-      <button id="close-accessibility" aria-label="Zatvori">✖</button>
+      <button id="close-accessibility" class="flex-center" aria-label="Zatvori">✖</button>
     </div>
 
     <div class="access-widget-body">
-
       <div class="access-section-title">Boje i kontrast</div>
       <div class="access-grid">
         <button class="access-grid-btn" id="btn-monochrome">
-          <span class="access-grid-icon">⬛</span>
-          <span class="access-grid-label">Monohrom</span>
+          <span class="access-grid-icon">⬛</span><span class="access-grid-label">Monohrom</span>
         </button>
         <button class="access-grid-btn" id="btn-dark-contrast">
-          <span class="access-grid-icon">🖤</span>
-          <span class="access-grid-label">Tamni kontrast</span>
+          <span class="access-grid-icon">🖤</span><span class="access-grid-label">Tamni kontrast</span>
         </button>
         <button class="access-grid-btn" id="btn-bright-contrast">
-          <span class="access-grid-icon">☀️</span>
-          <span class="access-grid-label">Svetli kontrast</span>
+          <span class="access-grid-icon">☀️</span><span class="access-grid-label">Svetli kontrast</span>
         </button>
         <button class="access-grid-btn" id="btn-low-sat">
-          <span class="access-grid-icon">🧊</span>
-          <span class="access-grid-label">Niska saturacija</span>
+          <span class="access-grid-icon">🧊</span><span class="access-grid-label">Niska saturacija</span>
         </button>
         <button class="access-grid-btn" id="btn-high-sat">
-          <span class="access-grid-icon">🎨</span>
-          <span class="access-grid-label">Visoka saturacija</span>
+          <span class="access-grid-icon">🎨</span><span class="access-grid-label">Visoka saturacija</span>
         </button>
       </div>
 
@@ -64,7 +58,6 @@
           <button id="btn-font-increase" class="scaler-btn">+</button>
         </div>
       </div>
-
       <div class="access-scaler-group">
         <div class="scaler-label">Prored:</div>
         <div class="scaler-controls">
@@ -73,7 +66,6 @@
           <button id="btn-line-increase" class="scaler-btn">+</button>
         </div>
       </div>
-
       <div class="access-scaler-group">
         <div class="scaler-label">Razmak reči:</div>
         <div class="scaler-controls">
@@ -83,25 +75,21 @@
         </div>
       </div>
 
-      <div class="access-grid" style="margin-top: 12px;">
+      <div class="access-grid" style="margin-top: 15px;">
         <button class="access-grid-btn" id="btn-dyslexia-font">
-          <span class="access-grid-icon">📖</span>
-          <span class="access-grid-label">OpenDyslexic</span>
+          <span class="access-grid-icon">📖</span><span class="access-grid-label">OpenDyslexic</span>
         </button>
         <button class="access-grid-btn" id="btn-highlight-links">
-          <span class="access-grid-icon">🔗</span>
-          <span class="access-grid-label">Istakni linkove</span>
+          <span class="access-grid-icon">🔗</span><span class="access-grid-label">Istakni linkove</span>
         </button>
       </div>
 
       <div class="access-section-title">Alati</div>
       <div class="access-grid">
         <button class="access-grid-btn" id="btn-virtual-keyboard" style="grid-column: span 2;">
-          <span class="access-grid-icon">⌨️</span>
-          <span class="access-grid-label">Virtuelna tastatura</span>
+          <span class="access-grid-icon">⌨️</span><span class="access-grid-label">Virtuelna tastatura</span>
         </button>
       </div>
-
     </div>
 
     <div class="access-widget-footer">
@@ -109,10 +97,11 @@
     </div>
   </div>
 
+  <!-- Virtuelna tastatura modal -->
   <div id="virtual-keyboard-modal" class="vk-modal" hidden>
     <div class="vk-header">
       <h4>Virtuelna tastatura</h4>
-      <button id="vk-close">✕</button>
+      <button id="vk-close" class="flex-center">✕</button>
     </div>
     <div class="vk-body">
       <input type="text" id="vk-input" placeholder="Kliknite tastere ispod..." readonly>
@@ -139,7 +128,7 @@
   <!-- ===================== FLOATING HEADER ===================== -->
   <header class="site-header floating-header">
     <div class="container header-inner">
-      <a href="index.html" class="logo" aria-label="NoLimits Početna">
+      <a href="index.html" class="logo flex-center" aria-label="NoLimits Početna">
         <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true">
           <path
@@ -188,7 +177,7 @@
 
           <!-- TOOLBAR S DUGMIĆIMA -->
           <div class="canvas-header-toolbar">
-            <div class="toolbar-centered">
+            <div class="toolbar-centered flex-center">
               <button id="btn-undo" class="btn-toolbar" title="Poništi (Undo)">↩ Nazad</button>
               <button id="btn-redo" class="btn-toolbar" title="Ponovi (Redo)">↪ Napred</button>
               <span class="toolbar-divider"></span>
@@ -221,21 +210,21 @@
               <p class="hint-text">Svaka baza ima različitu medicinsku i motornu namenu.</p>
               <div class="base-grid">
                 <button class="btn-base active" data-base="meda">
-                  <span class="base-icon">🧸</span>
+                  <span class="base-icon flex-center">🧸</span>
                   <div>
                     <strong>Ergonomski Meda</strong>
                     <p>Emotivna regulacija i zagrljaj</p>
                   </div>
                 </button>
                 <button class="btn-base" data-base="valjak">
-                  <span class="base-icon">🪵</span>
+                  <span class="base-icon flex-center">🪵</span>
                   <div>
                     <strong>Senzorni Valjak / Roler</strong>
                     <p>Dvoručno valjanje i fokus</p>
                   </div>
                 </button>
                 <button class="btn-base" data-base="volan">
-                  <span class="base-icon">⭕</span>
+                  <span class="base-icon flex-center">⭕</span>
                   <div>
                     <strong>Interaktivni Prsten</strong>
                     <p>Dvoručno hvatanje i snaga</p>
@@ -267,7 +256,7 @@
                 </div>
               </div>
 
-              <div class="next-step-hint">
+              <div class="next-step-hint" style="margin-top: 15px;">
                 👉 <strong>Kliknite bilo gde na igračku</strong> da postavite željeni modul.
               </div>
             </div>
@@ -293,9 +282,9 @@
               <div id="module-description-box" class="module-medical-hint"></div>
 
               <div class="action-buttons-group">
-                <button class="btn btn-secondary" id="btn-test-element" style="width: 100%; margin-bottom: 8px;">▶
-                  Isprobaj Efekat</button>
-                <button class="btn" id="btn-ukloni-element"
+                <button class="btn btn-secondary flex-center" id="btn-test-element"
+                  style="width: 100%; margin-bottom: 8px;">▶ Isprobaj Efekat</button>
+                <button class="btn flex-center" id="btn-ukloni-element"
                   style="width: 100%; background: #fff5f5; color: #e53e3e; border: 1px solid #feb2b2; font-weight: 700;">Ukloni
                   modul sa igračke</button>
               </div>
@@ -318,38 +307,39 @@
 
   <!-- MODAL PREVIEW OVERLAY -->
   <div id="preview-modal" class="preview-modal-overlay" style="display: none;">
-    <button id="btn-exit-preview" class="btn-exit-preview">✕ Izađi iz pregleda</button>
-    <div class="preview-modal-content">
+    <button id="btn-exit-preview" class="btn-exit-preview flex-center">✕ Izađi iz pregleda</button>
+    <div class="preview-modal-content flex-center">
       <img id="preview-modal-img" src="" alt="Pregled igračke" />
     </div>
   </div>
 
+  <!-- ORDER MODAL -->
   <div id="order-modal" class="preview-modal-overlay" style="display: none;">
     <div class="order-modal-content">
-      <button id="btn-close-order" class="btn-close-modal" aria-label="Zatvori">✖</button>
+      <button id="btn-close-order" class="btn-close-modal flex-center" aria-label="Zatvori">✖</button>
 
       <div class="order-modal-body">
         <h3 class="order-title">Pošaljite upit za izradu</h3>
         <p class="order-desc">Vaša konfiguracija je spremna. Ostavite podatke kako bismo vas kontaktirali.</p>
 
-        <div class="order-preview-container">
+        <div class="order-preview-container flex-center">
           <img id="order-preview-img" src="" alt="Vaša igračka" />
         </div>
 
         <form id="order-form" class="order-form">
           <div class="form-group">
             <label>Ime i prezime</label>
-            <input type="text" id="order-name" placeholder="Unesite vaše ime..." required />
+            <input type="text" id="order-name" class="form-input" placeholder="Unesite vaše ime..." required />
           </div>
           <div class="form-group">
             <label>Email adresa</label>
-            <input type="email" id="order-email" placeholder="vas@email.com" required />
+            <input type="email" id="order-email" class="form-input" placeholder="vas@email.com" required />
           </div>
           <div class="form-group">
             <label>Broj telefona</label>
-            <input type="tel" id="order-phone" placeholder="06X/XXX-XXXX" required />
+            <input type="tel" id="order-phone" class="form-input" placeholder="06X/XXX-XXXX" required />
           </div>
-          <button type="submit" class="btn-submit-order">POŠALJI UPIT</button>
+          <button type="submit" class="btn btn-primary btn-submit-order" style="width: 100%;">POŠALJI UPIT</button>
         </form>
       </div>
     </div>
@@ -359,14 +349,14 @@
     <div class="container footer-inner">
       <div>
         <h3>Linkovi</h3>
-        <ul class="footer-links horizontal-links">
+        <ul class="footer-links horizontal-links flex-center">
           <li><a href="catalog.html">Katalog</a></li>
           <li><a href="configurator.html">Konfigurator</a></li>
           <li><a href="contact.html">Kontakt</a></li>
         </ul>
       </div>
-      <div class="footer-brand">
-        <a href="index.html" class="logo logo-footer" aria-label="NoLimits Početna">
+      <div class="footer-brand flex-center">
+        <a href="index.html" class="logo logo-footer flex-center" aria-label="NoLimits Početna">
           <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
             aria-hidden="true">
             <path
@@ -377,7 +367,7 @@
           </svg>
           <span class="logo-text"><span class="logo-accent">N</span>o<span class="logo-accent">L</span>imits</span>
         </a>
-        <p>Igračke koje razumeju svako dete.</p>
+        <p style="margin-top: 10px;">Igračke koje razumeju svako dete.</p>
       </div>
       <div>
         <h3>Kontakt</h3>
