@@ -41,7 +41,10 @@ document.addEventListener("DOMContentLoaded", () => {
     odsvirajSledećiTon();
   }
 
-  function zaustaviMuziku() { sviraMuzika = false; if (muzikaTimer) clearTimeout(muzikaTimer); }
+  function zaustaviMuziku() { 
+    sviraMuzika = false;
+    if (muzikaTimer) clearTimeout(muzikaTimer);
+   }
 
   function reprodukujZvono() {
     if (!audioCtx) audioCtx = new AudioContext();
@@ -175,8 +178,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function crtajBazu() {
-    slojOsnova.destroyChildren(); 
-    
+    slojOsnova.destroyChildren();
+
     // VAŽNO: Uništava module, ali NE uništava transformer objekat!
     const sviElementi = slojElementi.getChildren().slice();
     sviElementi.forEach(dete => {
@@ -185,13 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     transformer.nodes([]); // Skida selekciju
-    
+
     const cX = stage.width() / 2, cY = stage.height() / 2 + 15;
     const imgPattern = kreirajPattern(trenutniMaterijal, trenutnaBoja);
     const grupaCelaIgracka = new Konva.Group({ id: 'cela-igracka-grupa' });
-    
-    const primeniStil = (oblik) => { 
-      if(trenutniMaterijal === "glatko") { oblik.fillPriority("color"); oblik.fill(trenutnaBoja); } 
+
+    const primeniStil = (oblik) => {
+      if (trenutniMaterijal === "glatko") { oblik.fillPriority("color"); oblik.fill(trenutnaBoja); }
       else { oblik.fillPriority("pattern"); oblik.fillPatternImage(imgPattern); }
     };
 
